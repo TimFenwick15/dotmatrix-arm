@@ -64,10 +64,14 @@ uint32_t uwPrescalerValue = 0;
 uint32_t uwCapturedValue = 0;
 
 uint8_t ledOn = 0;
+uint8_t gpioOn = 1;
 
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
 static void Error_Handler(void);
+
+void initGpio(void);
+void toggleGpio(void);
 
 /* Private functions ---------------------------------------------------------*/
 
@@ -99,6 +103,7 @@ int main(void)
   //BSP_LED_Init(LED3);
   //BSP_LED_Init(LED4);
   blink_led_init();
+  initGpio();
 
   
  /*##-1- Configure the TIM peripheral #######################################*/ 
@@ -159,6 +164,51 @@ int main(void)
   }
 }
 
+//#define GPIO_PORT (0)
+#define GPIO_PIN (0)
+
+void initGpio(void)
+{
+
+  // Copy the way the blink code initialises GPIO - it does it generically
+
+  // Enable GPIO Peripheral clock
+  RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;// BLINK_RCC_MASKx(GPIO_PORT);
+
+  GPIO_InitTypeDef GPIO_InitStructure;
+
+  // Configure pin in output push/pull mode
+  GPIO_InitStructure.Pin = 1 << GPIO_PIN;//  BLINK_PIN_MASK(BLINK_PIN_NUMBER);
+  GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStructure.Speed = GPIO_SPEED_FAST;
+  GPIO_InitStructure.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init((GPIO_TypeDef *)GPIOA_BASE, &GPIO_InitStructure);
+}
+
+void toggleGpio(void)
+{
+
+    // Ports are A B C D E H (6), have have a uint32_t where 0x00FF are sets, 0xFF00 are resets
+    // Does this mean we have 6 * 16 = 96 GPIO?
+    // A has 16, B has 16, C has 16, D has 16, E has 16, H has 2?
+    // The blink LED is PORT 3 (D) pin 12
+    if (1 == gpioOn)
+    {
+		HAL_GPIO_WritePin(
+				(GPIO_TypeDef *)GPIOA_BASE,
+				1 << GPIO_PIN,
+				GPIO_PIN_RESET);
+		gpioOn = 0;
+    }
+    else
+    {
+		HAL_GPIO_WritePin(
+				(GPIO_TypeDef *)GPIOA_BASE,
+				1 << GPIO_PIN,
+				GPIO_PIN_SET);
+		gpioOn = 1;
+    }
+}
 /**
   * @brief  Period elapsed callback in non blocking mode
   * @param  htim : TIM handle
@@ -177,6 +227,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     blink_led_on();
 	ledOn = 1;
   }
+
+  toggleGpio();
 }
 
 /**
