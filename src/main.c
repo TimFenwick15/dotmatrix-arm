@@ -37,6 +37,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "BlinkLed.h"
+#include "diag/Trace.h"
 
 /** @addtogroup STM32F4xx_HAL_Examples
   * @{
@@ -105,6 +106,7 @@ int main(void)
   blink_led_init();
   initGpio();
 
+  trace_printf("System clock: %u Hz\n", SystemCoreClock); // 100MHz
   
  /*##-1- Configure the TIM peripheral #######################################*/ 
   /* -----------------------------------------------------------------------
@@ -127,7 +129,7 @@ int main(void)
       3) each time HAL_RCC_ClockConfig() is called to configure the system clock frequency  
   ----------------------------------------------------------------------- */  
   
-  /* Compute the prescaler value to have TIM3 counter clock equal to 10 KHz */
+  /* Compute the prescaler value to have TIM3 counter clock equal to 10 KHz */ // 100us
   uwPrescalerValue = (uint32_t) ((SystemCoreClock / 10000) - 1);
   
   /* Set TIMx instance */
@@ -139,7 +141,8 @@ int main(void)
        + ClockDivision = 0
        + Counter direction = Up
   */
-  TimHandle.Init.Period = 10000 - 1;
+  //TimHandle.Init.Period = 10000 - 1; // Once per second
+  TimHandle.Init.Period = 50000 - 1; // Once per 5 seconds
   TimHandle.Init.Prescaler = uwPrescalerValue;
   TimHandle.Init.ClockDivision = 0;
   TimHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
