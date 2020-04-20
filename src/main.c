@@ -38,6 +38,8 @@
 #include "main.h"
 #include "BlinkLed.h"
 #include "diag/Trace.h"
+#include "LedMatrix.h"
+#include "Graphics.h"
 
 /** @addtogroup STM32F4xx_HAL_Examples
   * @{
@@ -49,7 +51,6 @@
 
 /* Private typedef -----------------------------------------------------------*/
 #define  PERIOD_VALUE       (65535)      /* Period Value  */
-
 #define  PULSE1_VALUE       40961       /* Capture Compare 1 Value  */
 #define  PULSE2_VALUE       27309       /* Capture Compare 2 Value  */
 #define  PULSE3_VALUE       13654       /* Capture Compare 3 Value  */
@@ -64,15 +65,15 @@ TIM_OC_InitTypeDef   sConfig;
 uint32_t uwPrescalerValue = 0;
 uint32_t uwCapturedValue = 0;
 
-uint8_t ledOn = 0;
-uint8_t gpioOn = 1;
+//uint8_t ledOn = 0;
+//uint8_t gpioOn = 1;
 
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
 static void Error_Handler(void);
 
-void initGpio(void);
-void toggleGpio(void);
+//void initGpio(void);
+//void toggleGpio(void);
 
 /* Private functions ---------------------------------------------------------*/
 
@@ -103,10 +104,19 @@ int main(void)
   /* Configure LED3 and LED4 */
   //BSP_LED_Init(LED3);
   //BSP_LED_Init(LED4);
-  blink_led_init();
-  initGpio();
 
   trace_printf("System clock: %u Hz\n", SystemCoreClock); // 100MHz
+
+  GRAPHICS_vInit();
+
+  /* Draw a red pixel in the top left */
+  uint8_t sprite[1];
+  sprite[0] = 1;
+  GRAPHICS_draw(&sprite, 0, 0, 1, 1);
+
+  blink_led_init();
+  LEDMATRIX_vInit();
+
   
  /*##-1- Configure the TIM peripheral #######################################*/ 
   /* -----------------------------------------------------------------------
@@ -141,8 +151,8 @@ int main(void)
        + ClockDivision = 0
        + Counter direction = Up
   */
-  //TimHandle.Init.Period = 10000 - 1; // Once per second
-  TimHandle.Init.Period = 50000 - 1; // Once per 5 seconds
+  TimHandle.Init.Period = 10000 - 1; // Once per second
+  //TimHandle.Init.Period = 50000 - 1; // Once per 5 seconds
   TimHandle.Init.Prescaler = uwPrescalerValue;
   TimHandle.Init.ClockDivision = 0;
   TimHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
@@ -167,9 +177,9 @@ int main(void)
   }
 }
 
+/*
 //#define GPIO_PORT (0)
 #define GPIO_PIN (0)
-
 void initGpio(void)
 {
 
@@ -211,7 +221,7 @@ void toggleGpio(void)
 				GPIO_PIN_SET);
 		gpioOn = 1;
     }
-}
+}*/
 /**
   * @brief  Period elapsed callback in non blocking mode
   * @param  htim : TIM handle
@@ -219,6 +229,8 @@ void toggleGpio(void)
   */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
+	LEDMATRIX_vDrawRow();
+	/*
   //BSP_LED_Toggle(LED4);
   if (1 == ledOn)
   {
@@ -232,6 +244,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   }
 
   toggleGpio();
+  */
 }
 
 /**

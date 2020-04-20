@@ -59,6 +59,8 @@
 #define BLINK_PIN_MASK(_N)              (1 << (_N))
 #define BLINK_RCC_MASKx(_N)             (RCC_AHB1ENR_GPIOAEN << (_N))
 
+#define GPIO_PORT_NUMBER (0)
+
 // ----------------------------------------------------------------------------
 
 extern
@@ -72,6 +74,9 @@ blink_led_on(void);
 
 inline void
 blink_led_off(void);
+
+inline void GPIO_on(uint16_t pinBitField);
+inline void GPIO_off(uint16_t pinBitField);
 
 // ----------------------------------------------------------------------------
 
@@ -99,6 +104,16 @@ blink_led_off(void)
     HAL_GPIO_WritePin(BLINK_GPIOx(BLINK_PORT_NUMBER),
         BLINK_PIN_MASK(BLINK_PIN_NUMBER), GPIO_PIN_RESET);
 #endif
+}
+
+void GPIO_vInit(uint8_t u8Port, uint8_t u8Pin);
+
+/* Providing two functions should prioritise code speed over code space */
+inline void __attribute__((always_inline)) GPIO_on(uint16_t pinBitField) {
+    HAL_GPIO_WritePin(BLINK_GPIOx( GPIO_PORT_NUMBER), pinBitField, GPIO_PIN_SET);
+}
+inline void __attribute__((always_inline)) GPIO_off(uint16_t pinBitField) {
+    HAL_GPIO_WritePin(BLINK_GPIOx(GPIO_PORT_NUMBER), pinBitField, GPIO_PIN_RESET);
 }
 
 // ----------------------------------------------------------------------------
