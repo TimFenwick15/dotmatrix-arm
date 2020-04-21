@@ -36,7 +36,7 @@ void GRAPHICS_update(void) {
 	}
 }
 
-__uint8_t GRAPHICS_draw(uint8_t* sprite, // where each element is 3 bits: RGB
+__uint8_t GRAPHICS_vDraw(uint8_t* sprite, // where each element is 3 bits: RGB
 		                uint8_t x,
 			            uint8_t y,
 			            uint8_t width,

@@ -65,7 +65,8 @@ TIM_OC_InitTypeDef   sConfig;
 uint32_t uwPrescalerValue = 0;
 uint32_t uwCapturedValue = 0;
 
-//uint8_t ledOn = 0;
+uint8_t ledOn = 0;
+uint8_t m_u8AllowInterrupt = 0;
 //uint8_t gpioOn = 1;
 
 /* Private function prototypes -----------------------------------------------*/
@@ -112,12 +113,11 @@ int main(void)
   /* Draw a red pixel in the top left */
   uint8_t sprite[1];
   sprite[0] = 1;
-  GRAPHICS_draw(&sprite, 0, 0, 1, 1);
+  GRAPHICS_vDraw(sprite, 0, 0, 1, 1);
 
   blink_led_init();
   LEDMATRIX_vInit();
 
-  
  /*##-1- Configure the TIM peripheral #######################################*/ 
   /* -----------------------------------------------------------------------
     In this example TIM3 input clock (TIM3CLK) is set to 2 * APB1 clock (PCLK1), 
@@ -171,6 +171,8 @@ int main(void)
     Error_Handler();
   }
   
+  m_u8AllowInterrupt = 1; // remove this
+
   /* Infinite loop */
   while (1)
   {
@@ -229,22 +231,18 @@ void toggleGpio(void)
   */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-	LEDMATRIX_vDrawRow();
-	/*
-  //BSP_LED_Toggle(LED4);
-  if (1 == ledOn)
-  {
-	blink_led_off();
-	ledOn = 0;
-  }
-  else
-  {
-    blink_led_on();
-	ledOn = 1;
-  }
-
-  toggleGpio();
-  */
+	trace_printf("About to try draw\n");
+	if (1 == m_u8AllowInterrupt)
+	{
+		LEDMATRIX_vDrawRow();
+		if (1 == ledOn) {
+			blink_led_off();
+			ledOn = 0;
+		} else {
+			blink_led_on();
+			ledOn = 1;
+		}
+	}
 }
 
 /**
