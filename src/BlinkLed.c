@@ -61,10 +61,14 @@ void GPIO_vInit(uint8_t u8Port, uint8_t u8Pin) {
 
 /* Providing two functions should prioritise code speed over code space */
 void GPIO_on(uint16_t pinBitField) {
-    HAL_GPIO_WritePin(BLINK_GPIOx(GPIO_PORT_NUMBER), pinBitField, GPIO_PIN_SET);
+	if (0 != pinBitField) {
+		HAL_GPIO_WritePin(BLINK_GPIOx(GPIO_PORT_NUMBER), pinBitField, GPIO_PIN_SET);
+	}
 }
 void GPIO_off(uint16_t pinBitField) {
-    HAL_GPIO_WritePin(BLINK_GPIOx(GPIO_PORT_NUMBER), pinBitField, GPIO_PIN_RESET);
+	if (0 != pinBitField) {
+		HAL_GPIO_WritePin(BLINK_GPIOx(GPIO_PORT_NUMBER), pinBitField, GPIO_PIN_RESET);
+	}
 }
 
 // ----------------------------------------------------------------------------

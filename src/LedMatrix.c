@@ -36,10 +36,13 @@
 #define PIN_OE  (1 << PIN_NUMBER_OE)
 #define PIN_LAT (1 << PIN_NUMBER_LAT)
 
+#define ADDRESS_PORT_ON(x) ((x << PIN_NUMBER_A) & 0x3C0)
+#define ADDRESS_PORT_OFF(x) (~(x << PIN_NUMBER_A) & 0x3C0)
+
 #define ADRESS_PORT_SHIFT (PIN_NUMBER_A)
-#define ADDRESS_MAX (DISPLAY_ROWS)
-static uint8_t m_u8Address = 0;
-//static uint8_t myLedOn = 0;
+#define ADDRESS_MAX (DISPLAY_ROWS >> 1) /* Each address covers two rows. Address 0 is row 0 and row 16, address 1 is row 1 and row 17 etc */
+static uint16_t m_u16Address = 0;
+static uint16_t m_u16DelayCounter = 0;
 
 void LEDMATRIX_vInit(void) {
 	GPIO_vInit(GPIO_PORT_NUMBER, PIN_NUMBER_R1);
@@ -63,29 +66,31 @@ void LEDMATRIX_vInit(void) {
 }
 
 void LEDMATRIX_vDrawRow(void) {
-	//GPIO_on(PIN_OE | PIN_LAT | (m_u8Address << ADRESS_PORT_SHIFT));
-	//GPIO_off(PIN_OE | PIN_LAT | ((~m_u8Address) << ADRESS_PORT_SHIFT)); // Not entirely convinced this will work...
-	GPIO_off(PIN_OE);
-	GPIO_on(PIN_LAT);
-	//GPIO_on(m_u8Address << ADRESS_PORT_SHIFT);
-	//GPIO_off((~m_u8Address) << ADRESS_PORT_SHIFT);
+	GPIO_on(PIN_OE | PIN_LAT);
 
-	m_u8Address++;
-	if (m_u8Address > ADDRESS_MAX) {
-		m_u8Address = 0;
+	GPIO_on(ADDRESS_PORT_ON(m_u16Address));
+	GPIO_off(ADDRESS_PORT_OFF(m_u16Address));
+
+	GPIO_off(PIN_OE | PIN_LAT);
+
+	m_u16Address++;
+	if (m_u16Address > ADDRESS_MAX) {
+		m_u16Address = 0;
 	}
 
     uint16_t x = 0;
     uint8_t colourPort = 0;
-    const uint16_t indexOffset = m_u8Address * DISPLAY_COLUMNS / 2; // This would not work for a odd number of pixels in a row
+    const uint16_t indexOffset = m_u16Address * DISPLAY_COLUMNS / 2; // This would not work for a odd number of pixels in a row
 
     // GRAPHICS_pu8Buffer[x++ + indexOffset];
     /* Loop unrolling, idea taken from Adafruits Arduino code for a dot matrix display */
 #define pew \
-        colourPort = 0x1;\
+        colourPort = 0x21;\
         GPIO_on(colourPort & /*0x3B*/0x3F);\
         GPIO_off((~colourPort) & /*0x3B*/0x3F);\
+		for(m_u16DelayCounter=0;m_u16DelayCounter<1000;m_u16DelayCounter++);\
         GPIO_on(PIN_CLK);\
+        for(m_u16DelayCounter=0;m_u16DelayCounter<1000;m_u16DelayCounter++);\
         GPIO_off(PIN_CLK);
 
 	pew pew pew pew pew pew pew pew

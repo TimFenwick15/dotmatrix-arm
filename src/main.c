@@ -106,7 +106,7 @@ int main(void)
   //BSP_LED_Init(LED3);
   //BSP_LED_Init(LED4);
 
-  trace_printf("System clock: %u Hz\n", SystemCoreClock); // 100MHz
+  //trace_printf("System clock: %u Hz\n", SystemCoreClock); // 100MHz
 
   GRAPHICS_vInit();
 
@@ -151,7 +151,8 @@ int main(void)
        + ClockDivision = 0
        + Counter direction = Up
   */
-  TimHandle.Init.Period = 10000 - 1; // Once per second
+  //TimHandle.Init.Period = 10 - 1; // Once per 1ms
+  TimHandle.Init.Period = 5000 - 1; // Once per 500ms
   //TimHandle.Init.Period = 50000 - 1; // Once per 5 seconds
   TimHandle.Init.Prescaler = uwPrescalerValue;
   TimHandle.Init.ClockDivision = 0;
@@ -231,7 +232,7 @@ void toggleGpio(void)
   */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-	trace_printf("About to try draw\n");
+	//trace_printf("About to try draw\n");
 	if (1 == m_u8AllowInterrupt)
 	{
 		LEDMATRIX_vDrawRow();
