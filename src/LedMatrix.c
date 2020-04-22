@@ -74,19 +74,21 @@ void LEDMATRIX_vDrawRow(void) {
 	 */
 
 	GPIO_on(/*PIN_OE | */PIN_LAT);
-	GPIO_off(PIN_OE); // Dim the display
+	//GPIO_off(PIN_OE); // Dim the display
 	GPIO_on(ADDRESS_PORT_ON(m_u16Address));
 	GPIO_off(ADDRESS_PORT_OFF(m_u16Address));
 	GPIO_off(/*PIN_OE | */PIN_LAT);
-	GPIO_on(PIN_OE); // Light the display with the data clocked out last time
+	//GPIO_on(PIN_OE); // Light the display with the data clocked out last time
 
 	m_u16Address++;
 	if (m_u16Address >= ADDRESS_MAX) {
 		m_u16Address = 0;
+		GPIO_off(PIN_OE);
+		GPIO_on(PIN_OE);
 	}
 
     //uint16_t x = 0;
-    uint8_t colourPort = 0x21;
+    uint8_t colourPort = 0x9;
     //const uint16_t indexOffset = m_u16Address * DISPLAY_COLUMNS / 2; // This would not work for a odd number of pixels in a row
 
     // GRAPHICS_pu8Buffer[x++ + indexOffset]; // 0x21 is top red bottom blue
