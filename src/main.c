@@ -151,8 +151,9 @@ int main(void)
        + ClockDivision = 0
        + Counter direction = Up
   */
-  //TimHandle.Init.Period = 10 - 1; // Once per 1ms
-  TimHandle.Init.Period = 5000 - 1; // Once per 500ms
+  //TimHandle.Init.Period = 5 - 1; // Once per 500us - prefered
+  TimHandle.Init.Period = 10 - 1; // Once per 1ms
+  //TimHandle.Init.Period = 2000 - 1; // Once per 200ms
   //TimHandle.Init.Period = 50000 - 1; // Once per 5 seconds
   TimHandle.Init.Prescaler = uwPrescalerValue;
   TimHandle.Init.ClockDivision = 0;
@@ -232,18 +233,7 @@ void toggleGpio(void)
   */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-	//trace_printf("About to try draw\n");
-	if (1 == m_u8AllowInterrupt)
-	{
-		LEDMATRIX_vDrawRow();
-		if (1 == ledOn) {
-			blink_led_off();
-			ledOn = 0;
-		} else {
-			blink_led_on();
-			ledOn = 1;
-		}
-	}
+	LEDMATRIX_vDrawRow();
 }
 
 /**

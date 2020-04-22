@@ -75,8 +75,8 @@ blink_led_on(void);
 inline void
 blink_led_off(void);
 
-/*inline*/ void GPIO_on(uint16_t pinBitField);
-/*inline*/ void GPIO_off(uint16_t pinBitField);
+inline void GPIO_on(uint16_t pinBitField);
+inline void GPIO_off(uint16_t pinBitField);
 
 // ----------------------------------------------------------------------------
 
@@ -107,15 +107,19 @@ blink_led_off(void)
 }
 
 void GPIO_vInit(uint8_t u8Port, uint8_t u8Pin);
-#if 0
+
 /* Providing two functions should prioritise code speed over code space */
-/*inline void __attribute__((always_inline))*/void GPIO_on(uint16_t pinBitField) {
-    HAL_GPIO_WritePin(BLINK_GPIOx( GPIO_PORT_NUMBER), pinBitField, GPIO_PIN_SET);
+inline void __attribute__((always_inline)) GPIO_on(uint16_t pinBitField) {
+	if (0 != pinBitField) {
+		HAL_GPIO_WritePin(BLINK_GPIOx(GPIO_PORT_NUMBER), pinBitField, GPIO_PIN_SET);
+	}
 }
-/*inline void __attribute__((always_inline))*/void GPIO_off(uint16_t pinBitField) {
-    HAL_GPIO_WritePin(BLINK_GPIOx(GPIO_PORT_NUMBER), pinBitField, GPIO_PIN_RESET);
+inline void __attribute__((always_inline)) GPIO_off(uint16_t pinBitField) {
+	if (0 != pinBitField) {
+		HAL_GPIO_WritePin(BLINK_GPIOx(GPIO_PORT_NUMBER), pinBitField, GPIO_PIN_RESET);
+	}
 }
-#endif
+
 // ----------------------------------------------------------------------------
 
 #endif // BLINKLED_H_

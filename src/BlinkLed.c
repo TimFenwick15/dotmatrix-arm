@@ -53,22 +53,26 @@ void GPIO_vInit(uint8_t u8Port, uint8_t u8Pin) {
 	GPIO_InitStructure.Pin = BLINK_PIN_MASK(u8Pin);
 	GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStructure.Speed = GPIO_SPEED_FAST;
-	//GPIO_InitStructure.Pull = GPIO_PULLUP;//
 	GPIO_InitStructure.Pull = GPIO_PULLDOWN;
 	HAL_GPIO_Init(BLINK_GPIOx(u8Port), &GPIO_InitStructure);
-
 }
 
+#if 0
 /* Providing two functions should prioritise code speed over code space */
 void GPIO_on(uint16_t pinBitField) {
 	if (0 != pinBitField) {
+		//uint16_t m_u16DelayCounter;
 		HAL_GPIO_WritePin(BLINK_GPIOx(GPIO_PORT_NUMBER), pinBitField, GPIO_PIN_SET);
+		//for(m_u16DelayCounter=0;m_u16DelayCounter<1000;m_u16DelayCounter++);
 	}
 }
 void GPIO_off(uint16_t pinBitField) {
 	if (0 != pinBitField) {
+		//uint16_t m_u16DelayCounter;
 		HAL_GPIO_WritePin(BLINK_GPIOx(GPIO_PORT_NUMBER), pinBitField, GPIO_PIN_RESET);
+		//for(m_u16DelayCounter=0;m_u16DelayCounter<1000;m_u16DelayCounter++);
 	}
 }
+#endif
 
 // ----------------------------------------------------------------------------
