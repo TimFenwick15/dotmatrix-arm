@@ -9,13 +9,13 @@
 #include <string.h> /* memset */
 
 #define BUFFER_1 (0)
-#define BUFFER_2 (0)
+#define BUFFER_2 (1)
 
 #define RGB2_SHIFT (3)
 
 static uint8_t m_buffer1[DISPLAY_PIXELS / 2];
 static uint8_t m_buffer2[DISPLAY_PIXELS / 2];
-static uint8_t m_u8CurrentBuffer = 0;
+static uint8_t m_u8CurrentBuffer = BUFFER_1;
 static uint8_t m_u8SpriteId;
 
 void GRAPHICS_vInit(void) {
@@ -24,7 +24,7 @@ void GRAPHICS_vInit(void) {
 	GRAPHICS_pu8Buffer = m_buffer1;
 }
 
-void GRAPHICS_update(void) {
+void GRAPHICS_vUpdate(void) {
 	if (BUFFER_1 == m_u8CurrentBuffer) { // This isn't "thread safe"
 		GRAPHICS_pu8Buffer = m_buffer2;
 		m_u8CurrentBuffer = BUFFER_2;
@@ -56,10 +56,10 @@ __uint8_t GRAPHICS_vDraw(uint8_t* sprite, // where each element is 3 bits: RGB
 		if (u16TargetPixel < DISPLAY_PIXELS) {
 			if (u16TargetPixel < DISPLAY_INDICES) {
 				u16TargetBufferIndex = u16TargetPixel;
-	            pu8InactiveBuffer[u16TargetBufferIndex] = (*sprite)++;
+	            pu8InactiveBuffer[u16TargetBufferIndex] = *(sprite + 1);
 			} else {
 				u16TargetBufferIndex = u16TargetPixel - DISPLAY_INDICES;
-				pu8InactiveBuffer[u16TargetBufferIndex] = ((*sprite)++) << RGB2_SHIFT;
+				pu8InactiveBuffer[u16TargetBufferIndex] = (*(sprite + 1)) << RGB2_SHIFT;
 			}
 		} else {
 			break;

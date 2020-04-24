@@ -34,6 +34,10 @@ Calling GPIO_on or GPIO_off with 0 arguments caused the code to crash, so added 
 ## Display image defects
 Can see some non-selected rows lighting up, and can see some lights being missed.
 
+Some attempts at resolving are written below. The issue turned out to be electrical noise coming from my 5V mains power supply. The problem goes away when I drive the LED matrix with a 5V USB battery.
+
+## Display image defects (Log)
+
 Timing
 - Can't have test going to the log while running this, it slows the code down significantly
 - slowing the interrupt down, and delaying GPIO switches does not eliminate these errors

@@ -50,11 +50,9 @@
   */ 
 
 /* Private typedef -----------------------------------------------------------*/
-#define  PERIOD_VALUE       (65535)      /* Period Value  */
-#define  PULSE1_VALUE       40961       /* Capture Compare 1 Value  */
-#define  PULSE2_VALUE       27309       /* Capture Compare 2 Value  */
-#define  PULSE3_VALUE       13654       /* Capture Compare 3 Value  */
-#define  PULSE4_VALUE       6826        /* Capture Compare 4 Value  */
+#define INTERRUPT_PERIOD_500us (5 - 1)
+#define INTERRUPT_PERIOD_10ms (100 - 1)
+#define INTERRUPT_PERIOD_500ms (5000 - 1)
 
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -65,16 +63,9 @@ TIM_OC_InitTypeDef   sConfig;
 uint32_t uwPrescalerValue = 0;
 uint32_t uwCapturedValue = 0;
 
-uint8_t ledOn = 0;
-uint8_t m_u8AllowInterrupt = 0;
-//uint8_t gpioOn = 1;
-
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
 static void Error_Handler(void);
-
-//void initGpio(void);
-//void toggleGpio(void);
 
 /* Private functions ---------------------------------------------------------*/
 
@@ -83,8 +74,7 @@ static void Error_Handler(void);
   * @param  None
   * @retval None
   */
-int main(void)
-{
+int main(void) {
 
   /* STM32F4xx HAL library initialization:
        - Configure the Flash prefetch, instruction and Data caches
@@ -101,12 +91,6 @@ int main(void)
 
   /* Configure the system clock to 100 MHz */
   SystemClock_Config();
-
-  /* Configure LED3 and LED4 */
-  //BSP_LED_Init(LED3);
-  //BSP_LED_Init(LED4);
-
-  //trace_printf("System clock: %u Hz\n", SystemCoreClock); // 100MHz
 
   GRAPHICS_vInit();
 
@@ -151,14 +135,10 @@ int main(void)
        + ClockDivision = 0
        + Counter direction = Up
   */
-  //TimHandle.Init.Period = 5 - 1; // Once per 500us - prefered
-  TimHandle.Init.Period = 10 - 1; // Once per 1ms
-  //TimHandle.Init.Period = 2000 - 1; // Once per 200ms
-  //TimHandle.Init.Period = 50000 - 1; // Once per 5 seconds
+  TimHandle.Init.Period = INTERRUPT_PERIOD_500us;
   TimHandle.Init.Prescaler = uwPrescalerValue;
   TimHandle.Init.ClockDivision = 0;
   TimHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
-  //TimHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if(HAL_TIM_Base_Init(&TimHandle) != HAL_OK)
   {
     /* Initialization Error */
@@ -173,67 +153,8 @@ int main(void)
     Error_Handler();
   }
   
-  m_u8AllowInterrupt = 1; // remove this
-
   /* Infinite loop */
-  while (1)
-  {
-  }
-}
-
-/*
-//#define GPIO_PORT (0)
-#define GPIO_PIN (0)
-void initGpio(void)
-{
-
-  // Copy the way the blink code initialises GPIO - it does it generically
-
-  // Enable GPIO Peripheral clock
-  RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;// BLINK_RCC_MASKx(GPIO_PORT);
-
-  GPIO_InitTypeDef GPIO_InitStructure;
-
-  // Configure pin in output push/pull mode
-  GPIO_InitStructure.Pin = 1 << GPIO_PIN;//  BLINK_PIN_MASK(BLINK_PIN_NUMBER);
-  GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStructure.Speed = GPIO_SPEED_FAST;
-  GPIO_InitStructure.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init((GPIO_TypeDef *)GPIOA_BASE, &GPIO_InitStructure);
-}
-
-void toggleGpio(void)
-{
-
-    // Ports are A B C D E H (6), have have a uint32_t where 0x00FF are sets, 0xFF00 are resets
-    // Does this mean we have 6 * 16 = 96 GPIO?
-    // A has 16, B has 16, C has 16, D has 16, E has 16, H has 2?
-    // The blink LED is PORT 3 (D) pin 12
-    if (1 == gpioOn)
-    {
-		HAL_GPIO_WritePin(
-				(GPIO_TypeDef *)GPIOA_BASE,
-				1 << GPIO_PIN,
-				GPIO_PIN_RESET);
-		gpioOn = 0;
-    }
-    else
-    {
-		HAL_GPIO_WritePin(
-				(GPIO_TypeDef *)GPIOA_BASE,
-				1 << GPIO_PIN,
-				GPIO_PIN_SET);
-		gpioOn = 1;
-    }
-}*/
-/**
-  * @brief  Period elapsed callback in non blocking mode
-  * @param  htim : TIM handle
-  * @retval None
-  */
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-	LEDMATRIX_vDrawRow();
+  while (1) { }
 }
 
 /**
@@ -243,8 +164,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   */
 static void Error_Handler(void)
 {
-  /* Turn LED5 on */
-  //BSP_LED_On(LED3);
   while(1)
   {
   }

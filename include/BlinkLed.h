@@ -61,6 +61,9 @@
 
 #define GPIO_PORT_NUMBER (3)
 
+#define GPIO_OUTPUT (0)
+#define GPIO_OPEN_DRAIN (1)
+
 // ----------------------------------------------------------------------------
 
 extern
@@ -106,7 +109,7 @@ blink_led_off(void)
 #endif
 }
 
-void GPIO_vInit(uint8_t u8Port, uint8_t u8Pin);
+void GPIO_vInit(uint8_t u8Port, uint8_t u8Pin, uint8_t u8UseOpenDrain);
 
 /* Providing two functions should prioritise code speed over code space */
 inline void __attribute__((always_inline)) GPIO_on(uint16_t pinBitField) {

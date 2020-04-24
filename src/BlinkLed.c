@@ -46,14 +46,19 @@ void blink_led_init() {
 	blink_led_off();
 }
 
-void GPIO_vInit(uint8_t u8Port, uint8_t u8Pin) {
+void GPIO_vInit(uint8_t u8Port, uint8_t u8Pin, uint8_t u8UseOpenDrain) {
 	// Enable GPIO Peripheral clock
 	RCC->AHB1ENR |= BLINK_RCC_MASKx(u8Port);
 	GPIO_InitTypeDef GPIO_InitStructure;
 	GPIO_InitStructure.Pin = BLINK_PIN_MASK(u8Pin);
-	GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStructure.Speed = GPIO_SPEED_FAST;
-	GPIO_InitStructure.Pull = GPIO_PULLDOWN;
+	if (1 == u8UseOpenDrain) {
+		GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_OD;
+		GPIO_InitStructure.Pull = GPIO_NOPULL;
+	} else {
+		GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
+		GPIO_InitStructure.Pull = GPIO_PULLDOWN;
+	}
 	HAL_GPIO_Init(BLINK_GPIOx(u8Port), &GPIO_InitStructure);
 }
 
