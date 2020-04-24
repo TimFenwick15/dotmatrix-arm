@@ -34,7 +34,10 @@ Calling GPIO_on or GPIO_off with 0 arguments caused the code to crash, so added 
 ## Display image defects
 Can see some non-selected rows lighting up, and can see some lights being missed.
 
-Some attempts at resolving are written below. The issue turned out to be electrical noise coming from my 5V mains power supply. The problem goes away when I drive the LED matrix with a 5V USB battery.
+Some attempts at resolving are written below. The issue turned out to be electrical noise coming from my 5V mains power supply. The problem goes away when I drive the LED matrix with a 5V USB battery, or plug the display into an outlet with nothing else connected to it.
+
+## Optomised out variables
+Code on a branch seemed to be having trouble with code being optomised away. I tried making variables volatile, and turning off optomisations, but this for some reason didn't help. It's possible I changed something in .cproject by mistake that was causing this because the branch commit shows some large changes in .cproject
 
 ## Display image defects (Log)
 

@@ -65,14 +65,6 @@ void LEDMATRIX_vInit(void) {
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-
-	/* OE on = transistor closed. So DISPLAY_OE is shorted to ground. In this state, the display is lit
-	 * So OE off dims the display
-	 *
-	 *
-	 *
-	 */
-
 	GPIO_on(PIN_OE | PIN_LAT | ADDRESS_PORT_ON(m_u16Address));
 	GPIO_off(ADDRESS_PORT_OFF(m_u16Address));
 	GPIO_off(PIN_OE | PIN_LAT);
@@ -82,16 +74,20 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		m_u16Address = 0;
 	}
 
-    //uint16_t x = 0;
-    uint8_t colourPort = 0x9;
-    //const uint16_t indexOffset = m_u16Address * DISPLAY_COLUMNS / 2; // This would not work for a odd number of pixels in a row
+    uint16_t x = 0;
+    uint16_t colourPort, notColourPort;
+    const uint16_t indexOffset = m_u16Address * DISPLAY_COLUMNS;
 
-    // GRAPHICS_pu8Buffer[x++ + indexOffset]; // 0x21 is top red bottom blue
-    /* Loop unrolling, idea taken from Adafruits Arduino code for a dot matrix display */
-
-    // colour  port needs setting properly, and the buffer used in the below - look at the github code to rebuild this
+    /* Loop unrolling, idea taken from Adafruits Arduino code for a dot matrix display.
+     * When testing on a TI Picolo, this offered significant speed improvement.
+     * The disadvantage is it knows the display is 64 pixels wide. So we will need to drop this to get more display sizes
+     * (or #if some standard display sizes)
+     * https://github.com/adafruit/RGB-matrix-Panel/blob/5d14b09d67e87f733db91ae7a4f667e517393d17/RGBmatrixPanel.cpp#L842
+     */
 
 #define pew \
+		colourPort = GRAPHICS_pu8Buffer[x++ + indexOffset] & 0x3F;\
+    	notColourPort = (~colourPort) & 0x3F;\
         GPIO_on(colourPort & 0x3F);\
         GPIO_off((~colourPort) & 0x3F);\
         GPIO_on(PIN_CLK);\

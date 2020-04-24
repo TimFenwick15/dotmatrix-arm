@@ -20,4 +20,9 @@ uint8_t GRAPHICS_vDraw(uint8_t* sprite,
 			          uint8_t width,
 			          uint8_t height);
 
+uint8_t GRAPHICS_vDrawBox(uint8_t colour,
+		                  uint8_t x,
+						  uint8_t y,
+						  uint8_t width,
+						  uint8_t height);
 #endif

@@ -94,12 +94,16 @@ int main(void) {
 
   GRAPHICS_vInit();
 
-  /* Draw a red pixel in the top left */
-  uint8_t sprite[1];
-  sprite[0] = 1;
-  GRAPHICS_vDraw(sprite, 0, 0, 1, 1);
+  /*uint8_t sprite[2];
+  sprite[0] = 0x1;
+  sprite[1] = 0x1;
+  GRAPHICS_vDraw(sprite, 0, 0, 9, 1);*/
 
-  blink_led_init();
+  GRAPHICS_vDrawBox(0x01, 0, 0, 16, 16);
+  GRAPHICS_vDrawBox(0x02, 8, 8, 24, 24);
+  GRAPHICS_vDrawBox(0x04, 34, 3, 12, 12);
+  GRAPHICS_vDrawBox(0x05, 54, 20, 16, 16);
+
   LEDMATRIX_vInit();
 
  /*##-1- Configure the TIM peripheral #######################################*/ 
@@ -153,8 +157,15 @@ int main(void) {
     Error_Handler();
   }
   
+  GRAPHICS_vUpdate();
+
+  //uint32_t inittime = TimHandle.Instance->CNT;
+  //uint32_t time;
+
   /* Infinite loop */
-  while (1) { }
+  while (1) {
+	  // time = TimHandle.Instance->CNT;
+  }
 }
 
 /**
