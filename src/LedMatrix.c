@@ -21,8 +21,8 @@
 #define PIN_NUMBER_C   (8)
 #define PIN_NUMBER_D   (9)
 #define PIN_NUMBER_CLK (10)
-#define PIN_NUMBER_LAT (11)
-#define PIN_NUMBER_OE  (15) /* 12 is an LED on the discovery board */
+#define PIN_NUMBER_LAT (15)
+#define PIN_NUMBER_OE  (11) /* 12 is an LED on the discovery board */
 
 #define PIN_R1  (1 << PIN_NUMBER_R1)  /* These being consecutive allows us to write them all in one action, directly from the buffer */
 #define PIN_G1  (1 << PIN_NUMBER_G1)
@@ -72,7 +72,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	GPIO_on(PIN_OE | PIN_LAT | ADDRESS_PORT_ON(m_u16Address));
 	GPIO_off(ADDRESS_PORT_OFF(m_u16Address));
 	GPIO_off(PIN_OE | PIN_LAT);
-
 
 	m_u16Address++;
 	if (m_u16Address >= ADDRESS_MAX) {

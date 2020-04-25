@@ -32,11 +32,24 @@ The D port pins appeared to have no uses, so I took PD0 through PD13 (skipping P
 Calling GPIO_on or GPIO_off with 0 arguments caused the code to crash, so added guards against this.
 
 ## Display image defects
+
+### Electrical noise
 Can see some non-selected rows lighting up, and can see some lights being missed.
 
 Some attempts at resolving are written below. The issue turned out to be electrical noise coming from my 5V mains power supply. The problem goes away when I drive the LED matrix with a 5V USB battery, or plug the display into an outlet with nothing else connected to it.
 
 This issue was seen again when drawing using Graphics.c. This issue is mostly noise still, running the display from a battery gets rid of most of the defects. Some remain when drawing small numbers of pixels.
+
+### Other display mistakes
+When moving one red box around the screen, a defect is seen when the box moves into view from the top. It only happens on the first display row. Doing the pixel calculations by hand shows this is not a mistake in the draw code.
+
+Adding an always on row to the left of the display corrects this defect. This suggests the display is losing synchronisation with the clock signal, and a pulse at the start of each line helps to synchronise it.
+
+This line does not need to be the same colour as the moving box, and can be at the start or end of the row. Colouring the whole background also works. Using one [0,0] pixel does not work, at the start or the end of the line. Setting this colour before the data is being clocked out doesn't work. The "line" can be angled, it doens't need to be the full height of the display, but not much less than half. So at least one pixed per address, or slightly less works.
+
+This "sync line" lets me draw single pixels.
+
+It's unclear why I'd need this this time around, and not for the TI version.
 
 ## Optomised out variables
 Code on a branch seemed to be having trouble with code being optomised away. I tried making variables volatile, and turning off optomisations, but this for some reason didn't help. It's possible I changed something in .cproject by mistake that was causing this because the branch commit shows some large changes in .cproject
