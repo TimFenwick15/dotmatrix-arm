@@ -34,11 +34,13 @@ void GRAPHICS_vUpdate(void) {
 	if (BUFFER_1 == m_u8CurrentBuffer) { /* This will lead to tearing */
 		GRAPHICS_pu8Buffer = m_buffer2;
 		m_u8CurrentBuffer = BUFFER_2;
+		memset(m_buffer1, 0, sizeof m_buffer1);
 	}
 	else
 	{
 		GRAPHICS_pu8Buffer = m_buffer1;
 		m_u8CurrentBuffer = BUFFER_1;
+		memset(m_buffer2, 0, sizeof m_buffer2);
 	}
 }
 

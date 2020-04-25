@@ -3,4 +3,6 @@
 
 void LEDMATRIX_vInit(void);
 
+uint32_t LEDMATRIX_u32Counter_ms;
+
 #endif

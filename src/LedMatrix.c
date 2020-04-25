@@ -4,6 +4,8 @@
  *  Created on: 19 Apr 2020
  *      Author: Tim
  */
+//#include "main.h"
+#include "stm32f4xx_hal.h"
 #include "LedMatrix.h"
 #include "BlinkLed.h"
 #include "Graphics.h"
@@ -61,6 +63,8 @@ void LEDMATRIX_vInit(void) {
 	GPIO_off(PIN_R1  | PIN_G1  | PIN_B1  | PIN_R2  | PIN_G2  | PIN_B2  |
 			 PIN_A   | PIN_B   | PIN_C   | PIN_D   |
 			 PIN_CLK | PIN_OE  | PIN_LAT);
+
+	LEDMATRIX_u32Counter_ms = 0;
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
@@ -72,6 +76,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	m_u16Address++;
 	if (m_u16Address >= ADDRESS_MAX) {
 		m_u16Address = 0;
+	}
+	if (m_u16Address & 1) {
+		LEDMATRIX_u32Counter_ms++;
 	}
 
     uint16_t x = 0;
