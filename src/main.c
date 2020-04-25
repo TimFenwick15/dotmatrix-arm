@@ -94,11 +94,6 @@ int main(void) {
 
   GRAPHICS_vInit();
 
-  /*uint8_t sprite[2];
-  sprite[0] = 0x1;
-  sprite[1] = 0x1;
-  GRAPHICS_vDraw(sprite, 0, 0, 9, 1);*/
-
   LEDMATRIX_vInit();
 
  /*##-1- Configure the TIM peripheral #######################################*/ 
@@ -151,22 +146,18 @@ int main(void) {
     /* Starting Error */
     Error_Handler();
   }
+
+  /*uint8_t sprite[2];
+  sprite[0] = 0x1;
+  sprite[1] = 0x1;
+  GRAPHICS_vDraw(sprite, 0, 0, 9, 1);*/
   uint16_t x = 0;
-  GRAPHICS_vDrawBox(0x01, 0, 0, 16, 16);
-  GRAPHICS_vDrawBox(0x02, 8, 8, 24, 24);
-  GRAPHICS_vDrawBox(0x04, 34, 3, 12, 12);
-  GRAPHICS_vDrawBox(0x05, 54, 20, 16, 16);
-  GRAPHICS_vUpdate();
-  /*GRAPHICS_vDrawBox(0x03, 0, 0, 16, 16);
-  GRAPHICS_vDrawBox(0x06, 8, 8, 24, 24);
-  GRAPHICS_vDrawBox(0x07, 34, 3, 12, 12);
-  GRAPHICS_vDrawBox(0x00, 54, 20, 16, 16);*/
 
   /* Infinite loop */
   while (1) {
 	  if (LEDMATRIX_u32Counter_ms == 25) {
 		  x++;
-		  GRAPHICS_vDrawBox(0x01, (x +  0) % 64, (x +  0) % 32, 16, 16);
+		  GRAPHICS_vDrawBox(0x01, (x +  0) % 64, (x +  0) % 32, 32, 32);
 		  GRAPHICS_vDrawBox(0x02, (x +  8) % 64, (x +  8) % 32, 24, 24);
 		  GRAPHICS_vDrawBox(0x04, (x + 34) % 64, (x +  3) % 32, 12, 12);
 		  GRAPHICS_vDrawBox(0x05, (x + 54) % 64, (x + 20) % 32, 16, 16);

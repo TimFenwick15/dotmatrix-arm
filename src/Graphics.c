@@ -104,12 +104,12 @@ static uint8_t u8AddToBuffer(uint8_t* sprite,
 						/* Read the buffer with top half pixels masked out, OR in the new data, and write back */
 						pu8InactiveBuffer[u16TargetPixel] =
 							(pu8InactiveBuffer[u16TargetPixel] & 0x38) |
-								((*(sprite + 1)) & 0x07);
+								((*(sprite + u16Index)) & 0x07);
 					} else {
 						/* Read the buffer with bottom half pixels masked out, OR in the new data, and write back */
 						pu8InactiveBuffer[u16TargetPixel - DISPLAY_INDICES] =
 							(pu8InactiveBuffer[u16TargetPixel - DISPLAY_INDICES] & 0x07) |
-								(((*(sprite + 1)) << RGB2_SHIFT) & 0x38);
+								(((*(sprite + u16Index)) << RGB2_SHIFT) & 0x38);
 					}
 				}
 			} else {

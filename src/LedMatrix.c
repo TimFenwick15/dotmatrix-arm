@@ -73,6 +73,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	GPIO_off(ADDRESS_PORT_OFF(m_u16Address));
 	GPIO_off(PIN_OE | PIN_LAT);
 
+
 	m_u16Address++;
 	if (m_u16Address >= ADDRESS_MAX) {
 		m_u16Address = 0;
@@ -82,7 +83,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	}
 
     uint16_t x = 0;
-    uint16_t colourPort, notColourPort;
     const uint16_t indexOffset = m_u16Address * DISPLAY_COLUMNS;
 
     /* Loop unrolling, idea taken from Adafruits Arduino code for a dot matrix display.
@@ -91,14 +91,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
      * (or #if some standard display sizes)
      * https://github.com/adafruit/RGB-matrix-Panel/blob/5d14b09d67e87f733db91ae7a4f667e517393d17/RGBmatrixPanel.cpp#L842
      */
-
 #define pew \
-		colourPort = GRAPHICS_pu8Buffer[x++ + indexOffset] & 0x3F;\
-    	notColourPort = (~colourPort) & 0x3F;\
-        GPIO_on(colourPort & 0x3F);\
-        GPIO_off((~colourPort) & 0x3F);\
-        GPIO_on(PIN_CLK);\
-        GPIO_off(PIN_CLK);
+    	GPIO_off(PIN_R1 | PIN_G1 | PIN_B1 | PIN_R2 | PIN_G2 | PIN_B2);\
+		GPIO_on(GRAPHICS_pu8Buffer[x++ + indexOffset] & 0x3F);\
+		GPIO_on(PIN_CLK);\
+		GPIO_off(PIN_CLK);
 
 	pew pew pew pew pew pew pew pew
 	pew pew pew pew pew pew pew pew
@@ -108,4 +105,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	pew pew pew pew pew pew pew pew
 	pew pew pew pew pew pew pew pew
 	pew pew pew pew pew pew pew pew
+
+    /*for (x = 0; x < 64; x++) {
+    	GPIO_off(PIN_R1 | PIN_G1 | PIN_B1 | PIN_R2 | PIN_G2 | PIN_B2);
+		GPIO_on(GRAPHICS_pu8Buffer[x + indexOffset] & 0x3F);
+		GPIO_on(PIN_CLK);
+		GPIO_off(PIN_CLK);
+    }*/
 }
