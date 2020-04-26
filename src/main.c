@@ -150,7 +150,7 @@ int main(void) {
 
 /* IDE hint: click on a colour, the syntax highlighting will make the sprite somewhat visible */
 #define RED_SIZE (16)
-  GRAPHICS_tsColour sRed[RED_SIZE * RED_SIZE] = {
+  GRAPHICS_tsColour sRed_0[RED_SIZE * RED_SIZE] = {
 		  WHT, WHT, WHT, WHT, WHT, BLK, BLK, BLK, BLK, BLK, BLK, WHT, WHT, WHT, WHT, WHT,
 		  WHT, WHT, WHT, WHT, BLK, RED, RED, RED, RED, RED, RED, BLK, WHT, WHT, WHT, WHT,
 		  WHT, WHT, WHT, BLK, RED, RED, RED, RED, RED, RED, RED, RED, BLK, WHT, WHT, WHT,
@@ -167,6 +167,42 @@ int main(void) {
 		  WHT, WHT, WHT, BLK, RED, BLK, BLK, RED, RED, BLK, BLK, RED, BLK, WHT, WHT, WHT,
 		  WHT, WHT, WHT, BLK, RED, RED, RED, BLK, BLK, RED, RED, RED, BLK, WHT, WHT, WHT,
 		  WHT, WHT, WHT, WHT, BLK, BLK, BLK, WHT, WHT, BLK, BLK, BLK, WHT, WHT, WHT, WHT
+  };
+  GRAPHICS_tsColour sRed_1[RED_SIZE * RED_SIZE] = {
+		  WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT,
+		  WHT, WHT, WHT, WHT, WHT, BLK, BLK, BLK, BLK, BLK, BLK, WHT, WHT, WHT, WHT, WHT,
+		  WHT, WHT, WHT, WHT, BLK, RED, RED, RED, RED, RED, RED, BLK, WHT, WHT, WHT, WHT,
+		  WHT, WHT, WHT, BLK, RED, RED, RED, RED, RED, RED, RED, RED, BLK, WHT, WHT, WHT,
+		  WHT, WHT, WHT, BLK, RED, RED, RED, RED, RED, RED, RED, RED, BLK, WHT, WHT, WHT,
+		  WHT, WHT, BLK, BLK, BLK, RED, WHT, WHT, WHT, WHT, RED, BLK, BLK, BLK, WHT, WHT,
+		  WHT, WHT, BLK, BLK, WHT, BLK, BLK, BLK, BLK, BLK, BLK, WHT, BLK, BLK, WHT, WHT,
+		  WHT, BLK, WHT, BLK, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, BLK, WHT, BLK, WHT,
+		  WHT, BLK, WHT, WHT, WHT, WHT, BLK, WHT, WHT, BLK, WHT, WHT, WHT, WHT, BLK, WHT,
+		  WHT, BLK, BLK, BLK, WHT, WHT, BLK, WHT, WHT, BLK, WHT, WHT, BLK, BLK, RED, WHT,
+		  WHT, WHT, BLK, BLK, BLK, WHT, WHT, RED, RED, WHT, WHT, BLK, BLK, BLK, WHT, WHT,
+		  WHT, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, WHT,
+		  WHT, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, WHT, WHT, BLK, BLK, WHT,
+          WHT, WHT, BLK, BLK, BLK, RED, BLK, BLK, BLK, BLK, BLK, WHT, WHT, BLK, WHT, WHT,
+		  WHT, WHT, WHT, BLK, RED, BLK, BLK, RED, RED, BLK, BLK, BLK, BLK, WHT, WHT, WHT,
+		  WHT, WHT, WHT, BLK, RED, RED, RED, BLK, BLK, BLK, BLK, BLK, BLK, WHT, WHT, WHT
+  };
+  GRAPHICS_tsColour sRed_2[RED_SIZE * RED_SIZE] = {
+		  WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT,
+		  WHT, WHT, WHT, WHT, WHT, BLK, BLK, BLK, BLK, BLK, BLK, WHT, WHT, WHT, WHT, WHT,
+		  WHT, WHT, WHT, WHT, BLK, RED, RED, RED, RED, RED, RED, BLK, WHT, WHT, WHT, WHT,
+		  WHT, WHT, WHT, BLK, RED, RED, RED, RED, RED, RED, RED, RED, BLK, WHT, WHT, WHT,
+		  WHT, WHT, WHT, BLK, RED, RED, RED, RED, RED, RED, RED, RED, BLK, WHT, WHT, WHT,
+		  WHT, WHT, BLK, BLK, BLK, RED, WHT, WHT, WHT, WHT, RED, BLK, BLK, BLK, WHT, WHT,
+		  WHT, WHT, BLK, BLK, WHT, BLK, BLK, BLK, BLK, BLK, BLK, WHT, BLK, BLK, WHT, WHT,
+		  WHT, BLK, WHT, BLK, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, BLK, WHT, BLK, WHT,
+		  WHT, BLK, WHT, WHT, WHT, WHT, BLK, WHT, WHT, BLK, WHT, WHT, WHT, WHT, BLK, WHT,
+		  WHT, RED, BLK, BLK, WHT, WHT, BLK, WHT, WHT, BLK, WHT, WHT, BLK, BLK, BLK, WHT,
+		  WHT, WHT, BLK, BLK, BLK, WHT, WHT, RED, RED, WHT, WHT, BLK, BLK, BLK, WHT, WHT,
+		  WHT, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, WHT,
+		  WHT, BLK, BLK, WHT, WHT, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, WHT,
+          WHT, WHT, BLK, WHT, WHT, BLK, BLK, BLK, BLK, BLK, RED, BLK, BLK, BLK, WHT, WHT,
+		  WHT, WHT, WHT, BLK, BLK, BLK, BLK, RED, RED, BLK, BLK, RED, BLK, WHT, WHT, WHT,
+		  WHT, WHT, WHT, BLK, BLK, BLK, BLK, BLK, BLK, RED, RED, RED, BLK, WHT, WHT, WHT
   };
 
   uint16_t x = 0;
@@ -186,7 +222,18 @@ int main(void) {
 		  GRAPHICS_vDrawBox(GRAPHICS_tsBlue  , 64 - (int16_t)((x + 34) % 128), 32 - (int16_t)((x +  3) % 64), 12, 12);
 		  GRAPHICS_vDrawBox(GRAPHICS_tsPurple, 64 - (int16_t)((x + 54) % 128), (int16_t)((x + 20) % 64) - 32, 16, 16);
 
-		  GRAPHICS_vDrawByColourArray(sRed, 0, 0, RED_SIZE, RED_SIZE);
+		  if (x % 32 > 23) {
+			  GRAPHICS_vDrawByColourArray(sRed_2, 24, 8, RED_SIZE, RED_SIZE);
+		  }
+		  else if (x % 16 > 15) {
+			  GRAPHICS_vDrawByColourArray(sRed_0, 24, 8, RED_SIZE, RED_SIZE);
+		  }
+		  else if (x % 16 > 8) {
+			  GRAPHICS_vDrawByColourArray(sRed_1, 24, 8, RED_SIZE, RED_SIZE);
+		  }
+		  else {
+			  GRAPHICS_vDrawByColourArray(sRed_0, 24, 8, RED_SIZE, RED_SIZE);
+		  }
 
 		  GRAPHICS_vUpdate();
 		  LEDMATRIX_u32Counter_ms = 0;
