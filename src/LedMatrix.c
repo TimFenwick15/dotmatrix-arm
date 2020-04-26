@@ -77,13 +77,15 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	m_u16Address++;
 	if (m_u16Address >= ADDRESS_MAX) {
 		m_u16Address = 0;
+
+		/* Once we have drawn every line, update the colour depth */
+		m_u8ColourDepth++;
+		if (m_u8ColourDepth >= COLOUR_DEPTH) {
+			m_u8ColourDepth = 0;
+		}
 	}
 	if (m_u16Address & 1) {
 		LEDMATRIX_u32Counter_ms++;
-	}
-	m_u8ColourDepth++;
-	if (m_u8ColourDepth >= COLOUR_DEPTH) {
-		m_u8ColourDepth = 0;
 	}
 
     uint16_t x = 0;

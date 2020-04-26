@@ -13,7 +13,20 @@
 
 #define RGB2_SHIFT (3)
 
-static uint8_t u8AddToBuffer(uint8_t* sprite,
+#define RED_1   (0x01)
+#define GREEN_1 (0x02)
+#define BLUE_1  (0x04)
+#define RED_2   (0x08)
+#define GREEN_2 (0x10)
+#define BLUE_2  (0x20)
+
+#define COLOUR_BRIGHTNESS_FULL_ON    (4)
+#define COLOUR_BRIGHTNESS_75_Percent (3)
+#define COLOUR_BRIGHTNESS_50_Percent (2)
+#define COLOUR_BRIGHTNESS_25_Percent (1)
+#define COLOUR_BRIGHTNESS_OFF        (0)
+
+static uint8_t u8AddToBuffer(GRAPHICS_tsColour* sprite,
 		                     int8_t x,
 							 int8_t y,
 							 uint8_t width,
@@ -31,6 +44,26 @@ void GRAPHICS_vInit(void) {
 		memset(m_buffer2[u8Depth], 0, sizeof m_buffer2[u8Depth]);
 		GRAPHICS_pau8Buffer[u8Depth] = m_buffer1[u8Depth];
 	}
+
+	GRAPHICS_tsRed.red = COLOUR_BRIGHTNESS_FULL_ON;
+	GRAPHICS_tsRed.green = COLOUR_BRIGHTNESS_OFF;
+	GRAPHICS_tsRed.blue = COLOUR_BRIGHTNESS_OFF;
+	GRAPHICS_tsGreen.red = COLOUR_BRIGHTNESS_OFF;
+	GRAPHICS_tsGreen.green = COLOUR_BRIGHTNESS_FULL_ON;
+	GRAPHICS_tsGreen.blue = COLOUR_BRIGHTNESS_OFF;
+	GRAPHICS_tsBlue.red = COLOUR_BRIGHTNESS_OFF;
+	GRAPHICS_tsBlue.green = COLOUR_BRIGHTNESS_OFF;
+	GRAPHICS_tsBlue.blue = COLOUR_BRIGHTNESS_FULL_ON;
+	GRAPHICS_tsPurple.red = COLOUR_BRIGHTNESS_FULL_ON;
+	GRAPHICS_tsPurple.green = COLOUR_BRIGHTNESS_OFF;
+	GRAPHICS_tsPurple.blue = COLOUR_BRIGHTNESS_FULL_ON;
+	GRAPHICS_tsWhite.red = COLOUR_BRIGHTNESS_FULL_ON;
+	GRAPHICS_tsWhite.green = COLOUR_BRIGHTNESS_FULL_ON;
+	GRAPHICS_tsWhite.blue = COLOUR_BRIGHTNESS_FULL_ON;
+	GRAPHICS_tsPink.red = COLOUR_BRIGHTNESS_FULL_ON;
+	GRAPHICS_tsPink.green = COLOUR_BRIGHTNESS_OFF;
+	GRAPHICS_tsPink.blue = COLOUR_BRIGHTNESS_50_Percent;
+
 }
 
 void GRAPHICS_vUpdate(void) {
@@ -56,7 +89,7 @@ void GRAPHICS_vUpdate(void) {
 	}
 }
 
-uint8_t GRAPHICS_vDraw(uint8_t* sprite, /* Where each element is 3 bits: RGB */
+uint8_t GRAPHICS_vDraw(GRAPHICS_tsColour* sprite, /* Where each element is 3 bits: RGB */
 		               int8_t x,
 			           int8_t y,
 			           uint8_t width,
@@ -64,19 +97,21 @@ uint8_t GRAPHICS_vDraw(uint8_t* sprite, /* Where each element is 3 bits: RGB */
 	return u8AddToBuffer(sprite, x, y, width, height);
 }
 
-uint8_t GRAPHICS_vDrawBox(uint8_t colour,
+uint8_t GRAPHICS_vDrawBox(GRAPHICS_tsColour colour,
 		                  int8_t x,
 						  int8_t y,
 						  uint8_t width,
 						  uint8_t height) {
-
-	uint8_t sprite[width * height];
-	memset(sprite, colour, sizeof sprite);
+	uint16_t u16Loop;
+	GRAPHICS_tsColour sprite[width * height];
+	for (u16Loop = 0; u16Loop < width * height; u16Loop++) {
+		sprite[u16Loop] = colour;
+	}
 	return u8AddToBuffer(sprite, x, y, width, height);
 }
 
 
-static uint8_t u8AddToBuffer(uint8_t* sprite,
+static uint8_t u8AddToBuffer(GRAPHICS_tsColour* sprite,
 		                     int8_t x,
 							 int8_t y,
 							 uint8_t width,
@@ -96,8 +131,7 @@ static uint8_t u8AddToBuffer(uint8_t* sprite,
 				pu8InactiveBuffer[u8Depth] = m_buffer2[u8Depth];
 			}
 		}
-		else
-		{
+		else {
 			uint8_t u8Depth = 0;
 			for (u8Depth = 0; u8Depth < COLOUR_DEPTH; u8Depth++) {
 				pu8InactiveBuffer[u8Depth] = m_buffer1[u8Depth];
@@ -129,14 +163,18 @@ static uint8_t u8AddToBuffer(uint8_t* sprite,
 							/* Read the buffer with top half pixels masked out, OR in the new data, and write back */
 							pu8InactiveBuffer[u8Depth][i16TargetPixel] =
 								(pu8InactiveBuffer[u8Depth][i16TargetPixel] & 0x38) |
-									((*(sprite + u16Index)) & 0x07);
+									(((sprite[u16Index].red > u8Depth ? RED_1 : 0) |
+									(  sprite[u16Index].green > u8Depth ? GREEN_1 : 0) |
+									(  sprite[u16Index].blue > u8Depth ? BLUE_1 : 0)) & 0x07);
 						}
 					} else {
 						for (u8Depth = 0; u8Depth < COLOUR_DEPTH; u8Depth++) {
 							/* Read the buffer with bottom half pixels masked out, OR in the new data, and write back */
 							pu8InactiveBuffer[u8Depth][i16TargetPixel - DISPLAY_INDICES] =
 								(pu8InactiveBuffer[u8Depth][i16TargetPixel - DISPLAY_INDICES] & 0x07) |
-									(((*(sprite + u16Index)) << RGB2_SHIFT) & 0x38);
+									(((sprite[u16Index].red > u8Depth ? RED_2 : 0) |
+									(  sprite[u16Index].green > u8Depth ? GREEN_2 : 0) |
+									(  sprite[u16Index].blue > u8Depth ? BLUE_2 : 0)) & 0x38);
 						}
 					}
 				}

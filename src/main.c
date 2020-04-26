@@ -50,6 +50,7 @@
   */ 
 
 /* Private typedef -----------------------------------------------------------*/
+#define INTERRUPT_PERIOD_300us (3 - 1) /* With a colour depth of 4, any slower than this and flicker becomes visible */
 #define INTERRUPT_PERIOD_500us (5 - 1)
 #define INTERRUPT_PERIOD_10ms (100 - 1)
 #define INTERRUPT_PERIOD_500ms (5000 - 1)
@@ -129,7 +130,7 @@ int main(void) {
        + ClockDivision = 0
        + Counter direction = Up
   */
-  TimHandle.Init.Period = INTERRUPT_PERIOD_500us;
+  TimHandle.Init.Period = INTERRUPT_PERIOD_300us;
   TimHandle.Init.Prescaler = uwPrescalerValue;
   TimHandle.Init.ClockDivision = 0;
   TimHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
@@ -155,19 +156,18 @@ int main(void) {
 
   /* Infinite loop */
   while (1) {
-	  if (LEDMATRIX_u32Counter_ms == 25) {
+	  if (LEDMATRIX_u32Counter_ms == 50) {
 		  x++;
-		  GRAPHICS_vDrawBox(0x01, 0, 0, 16, 16);
-		  GRAPHICS_vDrawBox(0x01, 64 - (int16_t)((x +  0) % 128), 32 - (int16_t)((x +  0) % 64), 20, 20);
-		  GRAPHICS_vDrawBox(0x02, 64 - (int16_t)((x +  8) % 128), (int16_t)((x +  8) % 64) - 32, 15, 30);
-		  GRAPHICS_vDrawBox(0x04, (int16_t)((34 - x) % 128) - 64, 32 - (int16_t)((x +  3) % 64), 12, 20);
-		  GRAPHICS_vDrawBox(0x05, (int16_t)((54 - x) % 128) - 64, (int16_t)((x + 20) % 64) - 32, 32, 16);
-		  GRAPHICS_vDrawBox(0x06, 64 - (int16_t)((x + 68) % 128), 32 - (int16_t)((x + 40) % 64), 20, 20);
-		  GRAPHICS_vDrawBox(0x07, 64 - (int16_t)((x + 40) % 128), (int16_t)((x + 50) % 64) - 32, 24, 24);
-		  GRAPHICS_vDrawBox(0x01, (int16_t)((x +110) % 128) - 64, 32 - (int16_t)((x + 55) % 64), 32, 32);
-		  GRAPHICS_vDrawBox(0x02, (int16_t)((x +120) % 128) - 64, (int16_t)((x + 60) % 64) - 32, 24, 24);
-		  GRAPHICS_vDrawBox(0x04, 64 - (int16_t)((x + 34) % 128), 32 - (int16_t)((x +  3) % 64), 12, 12);
-		  GRAPHICS_vDrawBox(0x05, 64 - (int16_t)((x + 54) % 128), (int16_t)((x + 20) % 64) - 32, 16, 16);
+		  GRAPHICS_vDrawBox(GRAPHICS_tsRed   , 64 - (int16_t)((x +  0) % 128), 32 - (int16_t)((x +  0) % 64), 20, 20);
+		  GRAPHICS_vDrawBox(GRAPHICS_tsGreen , 64 - (int16_t)((x +  8) % 128), (int16_t)((x +  8) % 64) - 32, 15, 30);
+		  GRAPHICS_vDrawBox(GRAPHICS_tsBlue  , (int16_t)((34 - x) % 128) - 64, 32 - (int16_t)((x +  3) % 64), 12, 20);
+		  GRAPHICS_vDrawBox(GRAPHICS_tsPurple, (int16_t)((54 - x) % 128) - 64, (int16_t)((x + 20) % 64) - 32, 32, 16);
+		  GRAPHICS_vDrawBox(GRAPHICS_tsPink, 64 - (int16_t)((x + 68) % 128), 32 - (int16_t)((x + 40) % 64), 20, 20);
+		  GRAPHICS_vDrawBox(GRAPHICS_tsWhite , 64 - (int16_t)((x + 40) % 128), (int16_t)((x + 50) % 64) - 32, 24, 24);
+		  GRAPHICS_vDrawBox(GRAPHICS_tsRed   , (int16_t)((x +110) % 128) - 64, 32 - (int16_t)((x + 55) % 64), 32, 32);
+		  GRAPHICS_vDrawBox(GRAPHICS_tsGreen , (int16_t)((x +120) % 128) - 64, (int16_t)((x + 60) % 64) - 32, 24, 24);
+		  GRAPHICS_vDrawBox(GRAPHICS_tsBlue  , 64 - (int16_t)((x + 34) % 128), 32 - (int16_t)((x +  3) % 64), 12, 12);
+		  GRAPHICS_vDrawBox(GRAPHICS_tsPurple, 64 - (int16_t)((x + 54) % 128), (int16_t)((x + 20) % 64) - 32, 16, 16);
 		  GRAPHICS_vUpdate();
 		  LEDMATRIX_u32Counter_ms = 0;
 	  }
