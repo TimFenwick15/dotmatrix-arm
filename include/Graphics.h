@@ -32,17 +32,29 @@ GRAPHICS_tsColour GRAPHICS_tsBlue;
 GRAPHICS_tsColour GRAPHICS_tsPurple;
 GRAPHICS_tsColour GRAPHICS_tsWhite;
 GRAPHICS_tsColour GRAPHICS_tsPink;
+GRAPHICS_tsColour GRAPHICS_tsBlack;
+
+/*
+ * A set of short hands for drawing sprites
+ */
+#define RED (GRAPHICS_tsRed)
+#define GRN (GRAPHICS_tsGreen)
+#define BLU (GRAPHICS_tsBlue)
+#define PUR (GRAPHICS_tsPurple)
+#define WHT (GRAPHICS_tsWhite)
+#define PNK (GRAPHICS_tsPink)
+#define BLK (GRAPHICS_tsBlack)
 
 uint8_t* GRAPHICS_pau8Buffer[COLOUR_DEPTH]; /* The buffers in Graphics.c are 2D arrays */
 
 void GRAPHICS_vInit(void);
 void GRAPHICS_vUpdate(void);
 
-uint8_t GRAPHICS_vDraw(GRAPHICS_tsColour* sprite,
-		              int8_t x,
-			          int8_t y,
-			          uint8_t width,
-			          uint8_t height);
+uint8_t GRAPHICS_vDrawByColourArray(GRAPHICS_tsColour* sprite,
+		                            int8_t x,
+			                        int8_t y,
+			                        uint8_t width,
+			                        uint8_t height);
 
 uint8_t GRAPHICS_vDrawBox(GRAPHICS_tsColour colour,
 		                  int8_t x,

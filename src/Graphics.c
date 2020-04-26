@@ -20,11 +20,11 @@
 #define GREEN_2 (0x10)
 #define BLUE_2  (0x20)
 
-#define COLOUR_BRIGHTNESS_FULL_ON    (4)
-#define COLOUR_BRIGHTNESS_75_Percent (3)
-#define COLOUR_BRIGHTNESS_50_Percent (2)
-#define COLOUR_BRIGHTNESS_25_Percent (1)
-#define COLOUR_BRIGHTNESS_OFF        (0)
+#define COLOUR_BRIGHTNESS_100_PERCENT (4)
+#define COLOUR_BRIGHTNESS_75_PERCENT  (3)
+#define COLOUR_BRIGHTNESS_50_PERCENT  (2)
+#define COLOUR_BRIGHTNESS_25_PERCENT  (1)
+#define COLOUR_BRIGHTNESS_0_PERCENT   (0)
 
 static uint8_t u8AddToBuffer(GRAPHICS_tsColour* sprite,
 		                     int8_t x,
@@ -37,6 +37,10 @@ static uint8_t m_buffer2[COLOUR_DEPTH][DISPLAY_PIXELS / 2];
 static uint8_t m_u8CurrentBuffer = BUFFER_1;
 static uint8_t m_u8SpriteId;
 
+/*
+ * Call before accessing other members/data in the module.
+ * Prepare the draw buffers.
+ */
 void GRAPHICS_vInit(void) {
 	uint8_t u8Depth = 0;
 	for (u8Depth = 0; u8Depth < COLOUR_DEPTH; u8Depth++) {
@@ -45,27 +49,34 @@ void GRAPHICS_vInit(void) {
 		GRAPHICS_pau8Buffer[u8Depth] = m_buffer1[u8Depth];
 	}
 
-	GRAPHICS_tsRed.red = COLOUR_BRIGHTNESS_FULL_ON;
-	GRAPHICS_tsRed.green = COLOUR_BRIGHTNESS_OFF;
-	GRAPHICS_tsRed.blue = COLOUR_BRIGHTNESS_OFF;
-	GRAPHICS_tsGreen.red = COLOUR_BRIGHTNESS_OFF;
-	GRAPHICS_tsGreen.green = COLOUR_BRIGHTNESS_FULL_ON;
-	GRAPHICS_tsGreen.blue = COLOUR_BRIGHTNESS_OFF;
-	GRAPHICS_tsBlue.red = COLOUR_BRIGHTNESS_OFF;
-	GRAPHICS_tsBlue.green = COLOUR_BRIGHTNESS_OFF;
-	GRAPHICS_tsBlue.blue = COLOUR_BRIGHTNESS_FULL_ON;
-	GRAPHICS_tsPurple.red = COLOUR_BRIGHTNESS_FULL_ON;
-	GRAPHICS_tsPurple.green = COLOUR_BRIGHTNESS_OFF;
-	GRAPHICS_tsPurple.blue = COLOUR_BRIGHTNESS_FULL_ON;
-	GRAPHICS_tsWhite.red = COLOUR_BRIGHTNESS_FULL_ON;
-	GRAPHICS_tsWhite.green = COLOUR_BRIGHTNESS_FULL_ON;
-	GRAPHICS_tsWhite.blue = COLOUR_BRIGHTNESS_FULL_ON;
-	GRAPHICS_tsPink.red = COLOUR_BRIGHTNESS_FULL_ON;
-	GRAPHICS_tsPink.green = COLOUR_BRIGHTNESS_OFF;
-	GRAPHICS_tsPink.blue = COLOUR_BRIGHTNESS_50_Percent;
+	GRAPHICS_tsRed.red = COLOUR_BRIGHTNESS_100_PERCENT;
+	GRAPHICS_tsRed.green = COLOUR_BRIGHTNESS_0_PERCENT;
+	GRAPHICS_tsRed.blue = COLOUR_BRIGHTNESS_0_PERCENT;
+	GRAPHICS_tsGreen.red = COLOUR_BRIGHTNESS_0_PERCENT;
+	GRAPHICS_tsGreen.green = COLOUR_BRIGHTNESS_100_PERCENT;
+	GRAPHICS_tsGreen.blue = COLOUR_BRIGHTNESS_0_PERCENT;
+	GRAPHICS_tsBlue.red = COLOUR_BRIGHTNESS_0_PERCENT;
+	GRAPHICS_tsBlue.green = COLOUR_BRIGHTNESS_0_PERCENT;
+	GRAPHICS_tsBlue.blue = COLOUR_BRIGHTNESS_100_PERCENT;
+	GRAPHICS_tsPurple.red = COLOUR_BRIGHTNESS_100_PERCENT;
+	GRAPHICS_tsPurple.green = COLOUR_BRIGHTNESS_0_PERCENT;
+	GRAPHICS_tsPurple.blue = COLOUR_BRIGHTNESS_100_PERCENT;
+	GRAPHICS_tsWhite.red = COLOUR_BRIGHTNESS_100_PERCENT;
+	GRAPHICS_tsWhite.green = COLOUR_BRIGHTNESS_100_PERCENT;
+	GRAPHICS_tsWhite.blue = COLOUR_BRIGHTNESS_100_PERCENT;
+	GRAPHICS_tsPink.red = COLOUR_BRIGHTNESS_100_PERCENT;
+	GRAPHICS_tsPink.green = COLOUR_BRIGHTNESS_0_PERCENT;
+	GRAPHICS_tsBlack.blue = COLOUR_BRIGHTNESS_50_PERCENT;
+	GRAPHICS_tsBlack.red = COLOUR_BRIGHTNESS_0_PERCENT;
+	GRAPHICS_tsBlack.green = COLOUR_BRIGHTNESS_0_PERCENT;
+	GRAPHICS_tsBlack.blue = COLOUR_BRIGHTNESS_0_PERCENT;
 
 }
 
+/*
+ * Swap the front and back buffers, so the previous back buffer becomes the active drawing buffer,
+ * and the current front buffer is cleared and used to store incoming draw requests.
+ */
 void GRAPHICS_vUpdate(void) {
 	uint8_t u8Depth;
 	if (BUFFER_1 == m_u8CurrentBuffer) { /* This will lead to tearing */
@@ -89,7 +100,10 @@ void GRAPHICS_vUpdate(void) {
 	}
 }
 
-uint8_t GRAPHICS_vDraw(GRAPHICS_tsColour* sprite, /* Where each element is 3 bits: RGB */
+/*
+ * Draw a rectangular sprite with a variety of colours
+ */
+uint8_t GRAPHICS_vDrawByColourArray(GRAPHICS_tsColour* sprite, /* Where each element is 3 bits: RGB */
 		               int8_t x,
 			           int8_t y,
 			           uint8_t width,
@@ -97,6 +111,9 @@ uint8_t GRAPHICS_vDraw(GRAPHICS_tsColour* sprite, /* Where each element is 3 bit
 	return u8AddToBuffer(sprite, x, y, width, height);
 }
 
+/*
+ * Draw a rectangular sprite of uniform colour
+ */
 uint8_t GRAPHICS_vDrawBox(GRAPHICS_tsColour colour,
 		                  int8_t x,
 						  int8_t y,
@@ -110,7 +127,10 @@ uint8_t GRAPHICS_vDrawBox(GRAPHICS_tsColour colour,
 	return u8AddToBuffer(sprite, x, y, width, height);
 }
 
-
+/*
+ * Add a generic sprite to the back buffer.
+ * This sprite will not appear on screen until GRAPHICS_vUpdate is called.
+ */
 static uint8_t u8AddToBuffer(GRAPHICS_tsColour* sprite,
 		                     int8_t x,
 							 int8_t y,

@@ -148,10 +148,27 @@ int main(void) {
     Error_Handler();
   }
 
-  /*uint8_t sprite[2];
-  sprite[0] = 0x1;
-  sprite[1] = 0x1;
-  GRAPHICS_vDraw(sprite, 0, 0, 9, 1);*/
+/* IDE hint: click on a colour, the syntax highlighting will make the sprite somewhat visible */
+#define RED_SIZE (16)
+  GRAPHICS_tsColour sRed[RED_SIZE * RED_SIZE] = {
+		  WHT, WHT, WHT, WHT, WHT, BLK, BLK, BLK, BLK, BLK, BLK, WHT, WHT, WHT, WHT, WHT,
+		  WHT, WHT, WHT, WHT, BLK, RED, RED, RED, RED, RED, RED, BLK, WHT, WHT, WHT, WHT,
+		  WHT, WHT, WHT, BLK, RED, RED, RED, RED, RED, RED, RED, RED, BLK, WHT, WHT, WHT,
+		  WHT, WHT, WHT, BLK, RED, RED, RED, RED, RED, RED, RED, RED, BLK, WHT, WHT, WHT,
+		  WHT, WHT, BLK, BLK, BLK, RED, WHT, WHT, WHT, WHT, RED, BLK, BLK, BLK, WHT, WHT,
+		  WHT, WHT, BLK, BLK, WHT, BLK, BLK, BLK, BLK, BLK, BLK, WHT, BLK, BLK, WHT, WHT,
+		  WHT, BLK, WHT, BLK, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, BLK, WHT, BLK, WHT,
+		  WHT, BLK, WHT, WHT, WHT, WHT, BLK, WHT, WHT, BLK, WHT, WHT, WHT, WHT, BLK, WHT,
+		  WHT, WHT, BLK, BLK, WHT, WHT, BLK, WHT, WHT, BLK, WHT, WHT, BLK, BLK, WHT, WHT,
+		  WHT, WHT, BLK, BLK, BLK, WHT, WHT, RED, RED, WHT, WHT, BLK, BLK, BLK, WHT, WHT,
+		  WHT, BLK, WHT, WHT, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, WHT, WHT, BLK, WHT,
+		  WHT, BLK, WHT, WHT, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, WHT, WHT, BLK, WHT,
+		  WHT, WHT, BLK, BLK, BLK, RED, RED, BLK, BLK, RED, RED, BLK, BLK, BLK, WHT, WHT,
+		  WHT, WHT, WHT, BLK, RED, BLK, BLK, RED, RED, BLK, BLK, RED, BLK, WHT, WHT, WHT,
+		  WHT, WHT, WHT, BLK, RED, RED, RED, BLK, BLK, RED, RED, RED, BLK, WHT, WHT, WHT,
+		  WHT, WHT, WHT, WHT, BLK, BLK, BLK, WHT, WHT, BLK, BLK, BLK, WHT, WHT, WHT, WHT
+  };
+
   uint16_t x = 0;
 
   /* Infinite loop */
@@ -168,6 +185,9 @@ int main(void) {
 		  GRAPHICS_vDrawBox(GRAPHICS_tsGreen , (int16_t)((x +120) % 128) - 64, (int16_t)((x + 60) % 64) - 32, 24, 24);
 		  GRAPHICS_vDrawBox(GRAPHICS_tsBlue  , 64 - (int16_t)((x + 34) % 128), 32 - (int16_t)((x +  3) % 64), 12, 12);
 		  GRAPHICS_vDrawBox(GRAPHICS_tsPurple, 64 - (int16_t)((x + 54) % 128), (int16_t)((x + 20) % 64) - 32, 16, 16);
+
+		  GRAPHICS_vDrawByColourArray(sRed, 0, 0, RED_SIZE, RED_SIZE);
+
 		  GRAPHICS_vUpdate();
 		  LEDMATRIX_u32Counter_ms = 0;
 	  }
