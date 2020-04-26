@@ -151,23 +151,23 @@ int main(void) {
   sprite[0] = 0x1;
   sprite[1] = 0x1;
   GRAPHICS_vDraw(sprite, 0, 0, 9, 1);*/
-  uint8_t x = 0;
+  uint16_t x = 0;
 
   /* Infinite loop */
   while (1) {
 	  if (LEDMATRIX_u32Counter_ms == 25) {
 		  x++;
-		  GRAPHICS_vDrawBox(0x07, 0, 0, 1, 16);
-		  GRAPHICS_vDrawBox(0x01, (int16_t)((x +  0) % 128) - 64, (int16_t)((x +  0) % 64) - 32, 20, 20);
-		  GRAPHICS_vDrawBox(0x02, (int16_t)((x +  8) % 128) - 64, (int16_t)((x +  8) % 64) - 32, 15, 30);
-		  GRAPHICS_vDrawBox(0x04, (int16_t)((34 - x) % 128) - 64, (int16_t)((x +  3) % 64) - 32, 12, 20);
+		  GRAPHICS_vDrawBox(0x01, 0, 0, 16, 16);
+		  GRAPHICS_vDrawBox(0x01, 64 - (int16_t)((x +  0) % 128), 32 - (int16_t)((x +  0) % 64), 20, 20);
+		  GRAPHICS_vDrawBox(0x02, 64 - (int16_t)((x +  8) % 128), (int16_t)((x +  8) % 64) - 32, 15, 30);
+		  GRAPHICS_vDrawBox(0x04, (int16_t)((34 - x) % 128) - 64, 32 - (int16_t)((x +  3) % 64), 12, 20);
 		  GRAPHICS_vDrawBox(0x05, (int16_t)((54 - x) % 128) - 64, (int16_t)((x + 20) % 64) - 32, 32, 16);
-		  GRAPHICS_vDrawBox(0x06, (int16_t)((x + 68) % 128) - 64, (int16_t)((40 - x) % 64) - 32, 20, 20);
-		  GRAPHICS_vDrawBox(0x07, (int16_t)((x + 40) % 128) - 64, (int16_t)((50 - x) % 64) - 32, 24, 24);
-		  GRAPHICS_vDrawBox(0x01, (int16_t)((110 - x) % 128) - 64, (int16_t)((55 - x) % 64) - 32, 32, 32);
-		  GRAPHICS_vDrawBox(0x02, (int16_t)((120 - x) % 128) - 64, (int16_t)((60 - x) % 64) - 32, 24, 24);
-		  GRAPHICS_vDrawBox(0x04, (int16_t)((x + 34) % 128) - 64, (int16_t)((x +  3) % 64) - 32, 12, 12);
-		  GRAPHICS_vDrawBox(0x05, (int16_t)((x + 54) % 128) - 64, (int16_t)((x + 20) % 64) - 32, 16, 16);
+		  GRAPHICS_vDrawBox(0x06, 64 - (int16_t)((x + 68) % 128), 32 - (int16_t)((x + 40) % 64), 20, 20);
+		  GRAPHICS_vDrawBox(0x07, 64 - (int16_t)((x + 40) % 128), (int16_t)((x + 50) % 64) - 32, 24, 24);
+		  GRAPHICS_vDrawBox(0x01, (int16_t)((x +110) % 128) - 64, 32 - (int16_t)((x + 55) % 64), 32, 32);
+		  GRAPHICS_vDrawBox(0x02, (int16_t)((x +120) % 128) - 64, (int16_t)((x + 60) % 64) - 32, 24, 24);
+		  GRAPHICS_vDrawBox(0x04, 64 - (int16_t)((x + 34) % 128), 32 - (int16_t)((x +  3) % 64), 12, 12);
+		  GRAPHICS_vDrawBox(0x05, 64 - (int16_t)((x + 54) % 128), (int16_t)((x + 20) % 64) - 32, 16, 16);
 		  GRAPHICS_vUpdate();
 		  LEDMATRIX_u32Counter_ms = 0;
 	  }

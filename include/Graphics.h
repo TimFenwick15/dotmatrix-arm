@@ -1,6 +1,8 @@
 #ifndef GRAPHICS_H_
 #define GRAPHICS_H_
 
+#define COLOUR_DEPTH (4)
+
 /* graphics shouldn't know about the display size, but it will for now... */
 #define DISPLAY_COLUMNS (64)
 #define DISPLAY_ROWS (32)
@@ -9,7 +11,7 @@
 
 #define BUFFER_DEPTH (2)
 
-uint8_t* GRAPHICS_pu8Buffer;
+uint8_t* GRAPHICS_pau8Buffer[COLOUR_DEPTH]; /* The buffers in Graphics.c are 2D arrays */
 
 void GRAPHICS_vInit(void);
 void GRAPHICS_vUpdate(void);

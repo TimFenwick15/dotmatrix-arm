@@ -19,28 +19,40 @@ static uint8_t u8AddToBuffer(uint8_t* sprite,
 							 uint8_t width,
 							 uint8_t height);
 
-static uint8_t m_buffer1[DISPLAY_PIXELS / 2];
-static uint8_t m_buffer2[DISPLAY_PIXELS / 2];
+static uint8_t m_buffer1[COLOUR_DEPTH][DISPLAY_PIXELS / 2];
+static uint8_t m_buffer2[COLOUR_DEPTH][DISPLAY_PIXELS / 2];
 static uint8_t m_u8CurrentBuffer = BUFFER_1;
 static uint8_t m_u8SpriteId;
 
 void GRAPHICS_vInit(void) {
-	memset(m_buffer1, 0, sizeof m_buffer1);
-	memset(m_buffer2, 0, sizeof m_buffer2);
-	GRAPHICS_pu8Buffer = m_buffer1;
+	uint8_t u8Depth = 0;
+	for (u8Depth = 0; u8Depth < COLOUR_DEPTH; u8Depth++) {
+		memset(m_buffer1[u8Depth], 0, sizeof m_buffer1[u8Depth]);
+		memset(m_buffer2[u8Depth], 0, sizeof m_buffer2[u8Depth]);
+		GRAPHICS_pau8Buffer[u8Depth] = m_buffer1[u8Depth];
+	}
 }
 
 void GRAPHICS_vUpdate(void) {
+	uint8_t u8Depth;
 	if (BUFFER_1 == m_u8CurrentBuffer) { /* This will lead to tearing */
-		GRAPHICS_pu8Buffer = m_buffer2;
+		for (u8Depth = 0; u8Depth < COLOUR_DEPTH; u8Depth++) {
+			GRAPHICS_pau8Buffer[u8Depth] = m_buffer2[u8Depth];
+		}
 		m_u8CurrentBuffer = BUFFER_2;
-		memset(m_buffer1, 0, sizeof m_buffer1);
+		for (u8Depth = 0; u8Depth < COLOUR_DEPTH; u8Depth++) {
+			memset(m_buffer1[u8Depth], 0, sizeof m_buffer1[u8Depth]);
+		}
 	}
 	else
 	{
-		GRAPHICS_pu8Buffer = m_buffer1;
+		for (u8Depth = 0; u8Depth < COLOUR_DEPTH; u8Depth++) {
+			GRAPHICS_pau8Buffer[u8Depth] = m_buffer1[u8Depth];
+		}
 		m_u8CurrentBuffer = BUFFER_1;
-		memset(m_buffer2, 0, sizeof m_buffer2);
+		for (u8Depth = 0; u8Depth < COLOUR_DEPTH; u8Depth++) {
+			memset(m_buffer2[u8Depth], 0, sizeof m_buffer2[u8Depth]);
+		}
 	}
 }
 
@@ -71,18 +83,25 @@ static uint8_t u8AddToBuffer(uint8_t* sprite,
 							 uint8_t height) {
 	/* Block impossible shapes */
 	if ((0 != width) && (0 != height)) {
-		uint8_t* pu8InactiveBuffer;
+		uint8_t* pu8InactiveBuffer[COLOUR_DEPTH]; /* A pointer to a 2D array */
 		uint16_t u16Index,
 				 u16SpriteY;
 		int16_t  i16TargetPixel,
 		         i16ActualYCoordinate,
 		         i16TargetYCoordinate;
+		uint8_t  u8Depth;
 		if (BUFFER_1 == m_u8CurrentBuffer) {
-			pu8InactiveBuffer = m_buffer2;
+			uint8_t u8Depth = 0;
+			for (u8Depth = 0; u8Depth < COLOUR_DEPTH; u8Depth++) {
+				pu8InactiveBuffer[u8Depth] = m_buffer2[u8Depth];
+			}
 		}
 		else
 		{
-			pu8InactiveBuffer = m_buffer1;
+			uint8_t u8Depth = 0;
+			for (u8Depth = 0; u8Depth < COLOUR_DEPTH; u8Depth++) {
+				pu8InactiveBuffer[u8Depth] = m_buffer1[u8Depth];
+			}
 		}
 
 		for (u16Index = 0; u16Index < (uint16_t)width * (uint16_t)height; u16Index++) {
@@ -106,15 +125,19 @@ static uint8_t u8AddToBuffer(uint8_t* sprite,
 
 					/* Draw to either the top half of the display, or bottom half */
 					if (i16TargetPixel < DISPLAY_INDICES) {
-						/* Read the buffer with top half pixels masked out, OR in the new data, and write back */
-						pu8InactiveBuffer[i16TargetPixel] =
-							(pu8InactiveBuffer[i16TargetPixel] & 0x38) |
-								((*(sprite + u16Index)) & 0x07);
+						for (u8Depth = 0; u8Depth < COLOUR_DEPTH; u8Depth++) {
+							/* Read the buffer with top half pixels masked out, OR in the new data, and write back */
+							pu8InactiveBuffer[u8Depth][i16TargetPixel] =
+								(pu8InactiveBuffer[u8Depth][i16TargetPixel] & 0x38) |
+									((*(sprite + u16Index)) & 0x07);
+						}
 					} else {
-						/* Read the buffer with bottom half pixels masked out, OR in the new data, and write back */
-						pu8InactiveBuffer[i16TargetPixel - DISPLAY_INDICES] =
-							(pu8InactiveBuffer[i16TargetPixel - DISPLAY_INDICES] & 0x07) |
-								(((*(sprite + u16Index)) << RGB2_SHIFT) & 0x38);
+						for (u8Depth = 0; u8Depth < COLOUR_DEPTH; u8Depth++) {
+							/* Read the buffer with bottom half pixels masked out, OR in the new data, and write back */
+							pu8InactiveBuffer[u8Depth][i16TargetPixel - DISPLAY_INDICES] =
+								(pu8InactiveBuffer[u8Depth][i16TargetPixel - DISPLAY_INDICES] & 0x07) |
+									(((*(sprite + u16Index)) << RGB2_SHIFT) & 0x38);
+						}
 					}
 				}
 			} else {

@@ -44,6 +44,7 @@
 #define ADRESS_PORT_SHIFT (PIN_NUMBER_A)
 #define ADDRESS_MAX (DISPLAY_ROWS >> 1) /* Each address covers two rows. Address 0 is row 0 and row 16, address 1 is row 1 and row 17 etc */
 static uint16_t m_u16Address = 0;
+static uint8_t m_u8ColourDepth = 0;
 
 void LEDMATRIX_vInit(void) {
 	GPIO_vInit(GPIO_PORT_NUMBER, PIN_NUMBER_R1, GPIO_OUTPUT);
@@ -80,6 +81,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	if (m_u16Address & 1) {
 		LEDMATRIX_u32Counter_ms++;
 	}
+	m_u8ColourDepth++;
+	if (m_u8ColourDepth >= COLOUR_DEPTH) {
+		m_u8ColourDepth = 0;
+	}
 
     uint16_t x = 0;
     const uint16_t indexOffset = m_u16Address * DISPLAY_COLUMNS;
@@ -92,7 +97,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
      */
 #define pew \
     	GPIO_off(PIN_R1 | PIN_G1 | PIN_B1 | PIN_R2 | PIN_G2 | PIN_B2);\
-		GPIO_on(GRAPHICS_pu8Buffer[x++ + indexOffset] & 0x3F);\
+		GPIO_on(GRAPHICS_pau8Buffer[m_u8ColourDepth][x++ + indexOffset] & 0x3F);\
 		GPIO_on(PIN_CLK);\
 		GPIO_off(PIN_CLK);
 
@@ -107,7 +112,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
     /*for (x = 0; x < 64; x++) {
     	GPIO_off(PIN_R1 | PIN_G1 | PIN_B1 | PIN_R2 | PIN_G2 | PIN_B2);
-		GPIO_on(GRAPHICS_pu8Buffer[x + indexOffset] & 0x3F);
+		GPIO_on(GRAPHICS_pau8Buffer[x + indexOffset] & 0x3F);
 		GPIO_on(PIN_CLK);
 		GPIO_off(PIN_CLK);
     }*/
