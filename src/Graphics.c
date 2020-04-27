@@ -41,7 +41,7 @@ void GRAPHICS_vInit(void) {
 	for (u8Depth = 0; u8Depth < COLOUR_DEPTH; u8Depth++) {
 		memset(m_buffer1[u8Depth], 0, sizeof m_buffer1[u8Depth]);
 		memset(m_buffer2[u8Depth], 0, sizeof m_buffer2[u8Depth]);
-		GRAPHICS_pau8Buffer[u8Depth] = m_buffer1[u8Depth];
+		MAIN_pau8Buffer[u8Depth] = m_buffer1[u8Depth];
 	}
 
 	LEDMATRIX_vInit();
@@ -55,7 +55,7 @@ void GRAPHICS_vUpdate(void) {
 	uint8_t u8Depth;
 	if (BUFFER_1 == m_u8CurrentBuffer) { /* This will lead to tearing */
 		for (u8Depth = 0; u8Depth < COLOUR_DEPTH; u8Depth++) {
-			GRAPHICS_pau8Buffer[u8Depth] = m_buffer2[u8Depth];
+			MAIN_pau8Buffer[u8Depth] = m_buffer2[u8Depth];
 		}
 		m_u8CurrentBuffer = BUFFER_2;
 		for (u8Depth = 0; u8Depth < COLOUR_DEPTH; u8Depth++) {
@@ -65,7 +65,7 @@ void GRAPHICS_vUpdate(void) {
 	else
 	{
 		for (u8Depth = 0; u8Depth < COLOUR_DEPTH; u8Depth++) {
-			GRAPHICS_pau8Buffer[u8Depth] = m_buffer1[u8Depth];
+			MAIN_pau8Buffer[u8Depth] = m_buffer1[u8Depth];
 		}
 		m_u8CurrentBuffer = BUFFER_1;
 		for (u8Depth = 0; u8Depth < COLOUR_DEPTH; u8Depth++) {

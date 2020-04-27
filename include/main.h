@@ -39,6 +39,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
+#include <stdbool.h>
 //#include "stm32f411e_discovery.h"
 
 /* Exported types ------------------------------------------------------------*/
@@ -75,7 +76,7 @@ typedef struct {
 /* Exported functions ------------------------------------------------------- */
 
 uint32_t MAIN_u32MainCounter;
-uint8_t* GRAPHICS_pau8Buffer[COLOUR_DEPTH]; /* The buffers in Graphics.c are 2D arrays */
+uint8_t* MAIN_pau8Buffer[COLOUR_DEPTH]; /* The buffers in Graphics.c are 2D arrays */
 
 #endif /* __MAIN_H */
 

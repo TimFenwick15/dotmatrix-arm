@@ -36,11 +36,11 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-//#include "BlinkLed.h"
 #include "diag/Trace.h"
-//#include "LedMatrix.h"
+
 #include "Graphics.h"
 #include "Sprite.h"
+#include "Animation.h"
 
 /** @addtogroup STM32F4xx_HAL_Examples
   * @{
@@ -99,6 +99,8 @@ int main(void) {
 
   SPRITE_vInit();
 
+  ANIMATION_vInit();
+
  /*##-1- Configure the TIM peripheral #######################################*/ 
   /* -----------------------------------------------------------------------
     In this example TIM3 input clock (TIM3CLK) is set to 2 * APB1 clock (PCLK1), 
@@ -150,14 +152,30 @@ int main(void) {
     Error_Handler();
   }
 
-  uint16_t x = 0;
   MAIN_u32MainCounter = 0;
+
+  uint8_t u8RedId;
+  if (!ANIMATION_bRegisterAnimation(&u8RedId)) {
+	  Error_Handler();
+  }
+  if (!ANIMATION_bAddFrame(u8RedId, SPRITE_sRed_0, 900)) { /* Because units, ~300ms */
+	  Error_Handler();
+  }
+  if (!ANIMATION_bAddFrame(u8RedId, SPRITE_sRed_1, 900)) {
+	  Error_Handler();
+  }
+  if (!ANIMATION_bAddFrame(u8RedId, SPRITE_sRed_0, 900)) {
+	  Error_Handler();
+  }
+  if (!ANIMATION_bAddFrame(u8RedId, SPRITE_sRed_2, 900)) {
+	  Error_Handler();
+  }
 
   /* Infinite loop */
   while (1) {
-	  if (75 == MAIN_u32MainCounter) { /* 75 * 300us = 22.5ms */
-		  x++;
-		  GRAPHICS_vDrawBox(GRAPHICS_tsRed   , 64 - (int16_t)((x +  0) % 128), 32 - (int16_t)((x +  0) % 64), 20, 20);
+	  if (MAIN_u32MainCounter % 75 == 0) { /* 75 * 300us = 22.5ms */
+		//  x++;
+		  /*GRAPHICS_vDrawBox(GRAPHICS_tsRed   , 64 - (int16_t)((x +  0) % 128), 32 - (int16_t)((x +  0) % 64), 20, 20);
 		  GRAPHICS_vDrawBox(GRAPHICS_tsGreen , 64 - (int16_t)((x +  8) % 128), (int16_t)((x +  8) % 64) - 32, 15, 30);
 		  GRAPHICS_vDrawBox(GRAPHICS_tsBlue  , (int16_t)((34 - x) % 128) - 64, 32 - (int16_t)((x +  3) % 64), 12, 20);
 		  GRAPHICS_vDrawBox(GRAPHICS_tsPurple, (int16_t)((54 - x) % 128) - 64, (int16_t)((x + 20) % 64) - 32, 32, 16);
@@ -172,17 +190,17 @@ int main(void) {
 			  GRAPHICS_vDrawByColourArray(SPRITE_sRed_2, 24, 8, RED_SIZE, RED_SIZE);
 		  }
 		  else if (x % 16 > 15) {
-			  GRAPHICS_vDrawByColourArray(SPRITE_sRed_0, 24, 8, RED_SIZE, RED_SIZE);
+			  GRAPHICS_vDrawByColourArray(ANIMATION_psGetFrame(u8RedId), 24, 8, RED_SIZE, RED_SIZE);
 		  }
 		  else if (x % 16 > 8) {
 			  GRAPHICS_vDrawByColourArray(SPRITE_sRed_1, 24, 8, RED_SIZE, RED_SIZE);
 		  }
 		  else {
-			  GRAPHICS_vDrawByColourArray(SPRITE_sRed_0, 24, 8, RED_SIZE, RED_SIZE);
-		  }
+			  GRAPHICS_vDrawByColourArray(ANIMATION_psGetFrame(u8RedId), 24, 8, RED_SIZE, RED_SIZE);
+		  }*/
 
+		  GRAPHICS_vDrawByColourArray(ANIMATION_psGetFrame(u8RedId), 24, 8, RED_SIZE, RED_SIZE);
 		  GRAPHICS_vUpdate();
-		  MAIN_u32MainCounter = 0;
 	  }
   }
 }

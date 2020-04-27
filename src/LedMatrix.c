@@ -93,7 +93,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
      */
 #define pew \
     	GPIO_off(PIN_R1 | PIN_G1 | PIN_B1 | PIN_R2 | PIN_G2 | PIN_B2);\
-		GPIO_on(GRAPHICS_pau8Buffer[m_u8ColourDepth][x++ + indexOffset] & 0x3F);\
+		GPIO_on(MAIN_pau8Buffer[m_u8ColourDepth][x++ + indexOffset] & 0x3F);\
 		GPIO_on(PIN_CLK);\
 		GPIO_off(PIN_CLK);
 
