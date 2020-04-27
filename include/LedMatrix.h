@@ -1,8 +1,11 @@
 #ifndef LEDMATRIX_H_
 #define LEDMATRIX_H_
 
-void LEDMATRIX_vInit(void);
+#define DISPLAY_COLUMNS (64)
+#define DISPLAY_ROWS (32)
+#define DISPLAY_PIXELS (DISPLAY_COLUMNS * DISPLAY_ROWS)
+#define DISPLAY_INDICES (DISPLAY_PIXELS / 2)
 
-uint32_t LEDMATRIX_u32Counter_ms;
+void LEDMATRIX_vInit(void);
 
 #endif

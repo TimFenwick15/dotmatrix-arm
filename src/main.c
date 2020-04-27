@@ -36,10 +36,11 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "BlinkLed.h"
+//#include "BlinkLed.h"
 #include "diag/Trace.h"
-#include "LedMatrix.h"
+//#include "LedMatrix.h"
 #include "Graphics.h"
+#include "Sprite.h"
 
 /** @addtogroup STM32F4xx_HAL_Examples
   * @{
@@ -54,6 +55,7 @@
 #define INTERRUPT_PERIOD_500us (5 - 1)
 #define INTERRUPT_PERIOD_10ms (100 - 1)
 #define INTERRUPT_PERIOD_500ms (5000 - 1)
+#define INTERRUPT_PERIOD (INTERRUPT_PERIOD_300us)
 
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -95,7 +97,7 @@ int main(void) {
 
   GRAPHICS_vInit();
 
-  LEDMATRIX_vInit();
+  SPRITE_vInit();
 
  /*##-1- Configure the TIM peripheral #######################################*/ 
   /* -----------------------------------------------------------------------
@@ -130,7 +132,7 @@ int main(void) {
        + ClockDivision = 0
        + Counter direction = Up
   */
-  TimHandle.Init.Period = INTERRUPT_PERIOD_300us;
+  TimHandle.Init.Period = INTERRUPT_PERIOD;
   TimHandle.Init.Prescaler = uwPrescalerValue;
   TimHandle.Init.ClockDivision = 0;
   TimHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
@@ -148,68 +150,12 @@ int main(void) {
     Error_Handler();
   }
 
-/* IDE hint: click on a colour, the syntax highlighting will make the sprite somewhat visible */
-#define RED_SIZE (16)
-  GRAPHICS_tsColour sRed_0[RED_SIZE * RED_SIZE] = {
-		  WHT, WHT, WHT, WHT, WHT, BLK, BLK, BLK, BLK, BLK, BLK, WHT, WHT, WHT, WHT, WHT,
-		  WHT, WHT, WHT, WHT, BLK, RED, RED, RED, RED, RED, RED, BLK, WHT, WHT, WHT, WHT,
-		  WHT, WHT, WHT, BLK, RED, RED, RED, RED, RED, RED, RED, RED, BLK, WHT, WHT, WHT,
-		  WHT, WHT, WHT, BLK, RED, RED, RED, RED, RED, RED, RED, RED, BLK, WHT, WHT, WHT,
-		  WHT, WHT, BLK, BLK, BLK, RED, WHT, WHT, WHT, WHT, RED, BLK, BLK, BLK, WHT, WHT,
-		  WHT, WHT, BLK, BLK, WHT, BLK, BLK, BLK, BLK, BLK, BLK, WHT, BLK, BLK, WHT, WHT,
-		  WHT, BLK, WHT, BLK, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, BLK, WHT, BLK, WHT,
-		  WHT, BLK, WHT, WHT, WHT, WHT, BLK, WHT, WHT, BLK, WHT, WHT, WHT, WHT, BLK, WHT,
-		  WHT, WHT, BLK, BLK, WHT, WHT, BLK, WHT, WHT, BLK, WHT, WHT, BLK, BLK, WHT, WHT,
-		  WHT, WHT, BLK, BLK, BLK, WHT, WHT, RED, RED, WHT, WHT, BLK, BLK, BLK, WHT, WHT,
-		  WHT, BLK, WHT, WHT, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, WHT, WHT, BLK, WHT,
-		  WHT, BLK, WHT, WHT, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, WHT, WHT, BLK, WHT,
-		  WHT, WHT, BLK, BLK, BLK, RED, RED, BLK, BLK, RED, RED, BLK, BLK, BLK, WHT, WHT,
-		  WHT, WHT, WHT, BLK, RED, BLK, BLK, RED, RED, BLK, BLK, RED, BLK, WHT, WHT, WHT,
-		  WHT, WHT, WHT, BLK, RED, RED, RED, BLK, BLK, RED, RED, RED, BLK, WHT, WHT, WHT,
-		  WHT, WHT, WHT, WHT, BLK, BLK, BLK, WHT, WHT, BLK, BLK, BLK, WHT, WHT, WHT, WHT
-  };
-  GRAPHICS_tsColour sRed_1[RED_SIZE * RED_SIZE] = {
-		  WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT,
-		  WHT, WHT, WHT, WHT, WHT, BLK, BLK, BLK, BLK, BLK, BLK, WHT, WHT, WHT, WHT, WHT,
-		  WHT, WHT, WHT, WHT, BLK, RED, RED, RED, RED, RED, RED, BLK, WHT, WHT, WHT, WHT,
-		  WHT, WHT, WHT, BLK, RED, RED, RED, RED, RED, RED, RED, RED, BLK, WHT, WHT, WHT,
-		  WHT, WHT, WHT, BLK, RED, RED, RED, RED, RED, RED, RED, RED, BLK, WHT, WHT, WHT,
-		  WHT, WHT, BLK, BLK, BLK, RED, WHT, WHT, WHT, WHT, RED, BLK, BLK, BLK, WHT, WHT,
-		  WHT, WHT, BLK, BLK, WHT, BLK, BLK, BLK, BLK, BLK, BLK, WHT, BLK, BLK, WHT, WHT,
-		  WHT, BLK, WHT, BLK, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, BLK, WHT, BLK, WHT,
-		  WHT, BLK, WHT, WHT, WHT, WHT, BLK, WHT, WHT, BLK, WHT, WHT, WHT, WHT, BLK, WHT,
-		  WHT, BLK, BLK, BLK, WHT, WHT, BLK, WHT, WHT, BLK, WHT, WHT, BLK, BLK, RED, WHT,
-		  WHT, WHT, BLK, BLK, BLK, WHT, WHT, RED, RED, WHT, WHT, BLK, BLK, BLK, WHT, WHT,
-		  WHT, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, WHT,
-		  WHT, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, WHT, WHT, BLK, BLK, WHT,
-          WHT, WHT, BLK, BLK, BLK, RED, BLK, BLK, BLK, BLK, BLK, WHT, WHT, BLK, WHT, WHT,
-		  WHT, WHT, WHT, BLK, RED, BLK, BLK, RED, RED, BLK, BLK, BLK, BLK, WHT, WHT, WHT,
-		  WHT, WHT, WHT, BLK, RED, RED, RED, BLK, BLK, BLK, BLK, BLK, BLK, WHT, WHT, WHT
-  };
-  GRAPHICS_tsColour sRed_2[RED_SIZE * RED_SIZE] = {
-		  WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT,
-		  WHT, WHT, WHT, WHT, WHT, BLK, BLK, BLK, BLK, BLK, BLK, WHT, WHT, WHT, WHT, WHT,
-		  WHT, WHT, WHT, WHT, BLK, RED, RED, RED, RED, RED, RED, BLK, WHT, WHT, WHT, WHT,
-		  WHT, WHT, WHT, BLK, RED, RED, RED, RED, RED, RED, RED, RED, BLK, WHT, WHT, WHT,
-		  WHT, WHT, WHT, BLK, RED, RED, RED, RED, RED, RED, RED, RED, BLK, WHT, WHT, WHT,
-		  WHT, WHT, BLK, BLK, BLK, RED, WHT, WHT, WHT, WHT, RED, BLK, BLK, BLK, WHT, WHT,
-		  WHT, WHT, BLK, BLK, WHT, BLK, BLK, BLK, BLK, BLK, BLK, WHT, BLK, BLK, WHT, WHT,
-		  WHT, BLK, WHT, BLK, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, BLK, WHT, BLK, WHT,
-		  WHT, BLK, WHT, WHT, WHT, WHT, BLK, WHT, WHT, BLK, WHT, WHT, WHT, WHT, BLK, WHT,
-		  WHT, RED, BLK, BLK, WHT, WHT, BLK, WHT, WHT, BLK, WHT, WHT, BLK, BLK, BLK, WHT,
-		  WHT, WHT, BLK, BLK, BLK, WHT, WHT, RED, RED, WHT, WHT, BLK, BLK, BLK, WHT, WHT,
-		  WHT, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, WHT,
-		  WHT, BLK, BLK, WHT, WHT, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, BLK, WHT,
-          WHT, WHT, BLK, WHT, WHT, BLK, BLK, BLK, BLK, BLK, RED, BLK, BLK, BLK, WHT, WHT,
-		  WHT, WHT, WHT, BLK, BLK, BLK, BLK, RED, RED, BLK, BLK, RED, BLK, WHT, WHT, WHT,
-		  WHT, WHT, WHT, BLK, BLK, BLK, BLK, BLK, BLK, RED, RED, RED, BLK, WHT, WHT, WHT
-  };
-
   uint16_t x = 0;
+  MAIN_u32MainCounter = 0;
 
   /* Infinite loop */
   while (1) {
-	  if (LEDMATRIX_u32Counter_ms == 50) {
+	  if (75 == MAIN_u32MainCounter) { /* 75 * 300us = 22.5ms */
 		  x++;
 		  GRAPHICS_vDrawBox(GRAPHICS_tsRed   , 64 - (int16_t)((x +  0) % 128), 32 - (int16_t)((x +  0) % 64), 20, 20);
 		  GRAPHICS_vDrawBox(GRAPHICS_tsGreen , 64 - (int16_t)((x +  8) % 128), (int16_t)((x +  8) % 64) - 32, 15, 30);
@@ -223,20 +169,20 @@ int main(void) {
 		  GRAPHICS_vDrawBox(GRAPHICS_tsPurple, 64 - (int16_t)((x + 54) % 128), (int16_t)((x + 20) % 64) - 32, 16, 16);
 
 		  if (x % 32 > 23) {
-			  GRAPHICS_vDrawByColourArray(sRed_2, 24, 8, RED_SIZE, RED_SIZE);
+			  GRAPHICS_vDrawByColourArray(SPRITE_sRed_2, 24, 8, RED_SIZE, RED_SIZE);
 		  }
 		  else if (x % 16 > 15) {
-			  GRAPHICS_vDrawByColourArray(sRed_0, 24, 8, RED_SIZE, RED_SIZE);
+			  GRAPHICS_vDrawByColourArray(SPRITE_sRed_0, 24, 8, RED_SIZE, RED_SIZE);
 		  }
 		  else if (x % 16 > 8) {
-			  GRAPHICS_vDrawByColourArray(sRed_1, 24, 8, RED_SIZE, RED_SIZE);
+			  GRAPHICS_vDrawByColourArray(SPRITE_sRed_1, 24, 8, RED_SIZE, RED_SIZE);
 		  }
 		  else {
-			  GRAPHICS_vDrawByColourArray(sRed_0, 24, 8, RED_SIZE, RED_SIZE);
+			  GRAPHICS_vDrawByColourArray(SPRITE_sRed_0, 24, 8, RED_SIZE, RED_SIZE);
 		  }
 
 		  GRAPHICS_vUpdate();
-		  LEDMATRIX_u32Counter_ms = 0;
+		  MAIN_u32MainCounter = 0;
 	  }
   }
 }

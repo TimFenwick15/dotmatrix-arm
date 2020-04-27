@@ -4,7 +4,8 @@
  *  Created on: 19 Apr 2020
  *      Author: Tim
  */
-#include "stm32f4xx_hal.h"
+#include "main.h"
+#include "LedMatrix.h"
 #include "Graphics.h"
 #include <string.h> /* memset */
 
@@ -20,13 +21,7 @@
 #define GREEN_2 (0x10)
 #define BLUE_2  (0x20)
 
-#define COLOUR_BRIGHTNESS_100_PERCENT (4)
-#define COLOUR_BRIGHTNESS_75_PERCENT  (3)
-#define COLOUR_BRIGHTNESS_50_PERCENT  (2)
-#define COLOUR_BRIGHTNESS_25_PERCENT  (1)
-#define COLOUR_BRIGHTNESS_0_PERCENT   (0)
-
-static uint8_t u8AddToBuffer(GRAPHICS_tsColour* sprite,
+static uint8_t u8AddToBuffer(MAIN_tsColour* sprite,
 		                     int8_t x,
 							 int8_t y,
 							 uint8_t width,
@@ -49,28 +44,7 @@ void GRAPHICS_vInit(void) {
 		GRAPHICS_pau8Buffer[u8Depth] = m_buffer1[u8Depth];
 	}
 
-	GRAPHICS_tsRed.red = COLOUR_BRIGHTNESS_100_PERCENT;
-	GRAPHICS_tsRed.green = COLOUR_BRIGHTNESS_0_PERCENT;
-	GRAPHICS_tsRed.blue = COLOUR_BRIGHTNESS_0_PERCENT;
-	GRAPHICS_tsGreen.red = COLOUR_BRIGHTNESS_0_PERCENT;
-	GRAPHICS_tsGreen.green = COLOUR_BRIGHTNESS_100_PERCENT;
-	GRAPHICS_tsGreen.blue = COLOUR_BRIGHTNESS_0_PERCENT;
-	GRAPHICS_tsBlue.red = COLOUR_BRIGHTNESS_0_PERCENT;
-	GRAPHICS_tsBlue.green = COLOUR_BRIGHTNESS_0_PERCENT;
-	GRAPHICS_tsBlue.blue = COLOUR_BRIGHTNESS_100_PERCENT;
-	GRAPHICS_tsPurple.red = COLOUR_BRIGHTNESS_100_PERCENT;
-	GRAPHICS_tsPurple.green = COLOUR_BRIGHTNESS_0_PERCENT;
-	GRAPHICS_tsPurple.blue = COLOUR_BRIGHTNESS_100_PERCENT;
-	GRAPHICS_tsWhite.red = COLOUR_BRIGHTNESS_100_PERCENT;
-	GRAPHICS_tsWhite.green = COLOUR_BRIGHTNESS_100_PERCENT;
-	GRAPHICS_tsWhite.blue = COLOUR_BRIGHTNESS_100_PERCENT;
-	GRAPHICS_tsPink.red = COLOUR_BRIGHTNESS_100_PERCENT;
-	GRAPHICS_tsPink.green = COLOUR_BRIGHTNESS_0_PERCENT;
-	GRAPHICS_tsBlack.blue = COLOUR_BRIGHTNESS_50_PERCENT;
-	GRAPHICS_tsBlack.red = COLOUR_BRIGHTNESS_0_PERCENT;
-	GRAPHICS_tsBlack.green = COLOUR_BRIGHTNESS_0_PERCENT;
-	GRAPHICS_tsBlack.blue = COLOUR_BRIGHTNESS_0_PERCENT;
-
+	LEDMATRIX_vInit();
 }
 
 /*
@@ -103,7 +77,7 @@ void GRAPHICS_vUpdate(void) {
 /*
  * Draw a rectangular sprite with a variety of colours
  */
-uint8_t GRAPHICS_vDrawByColourArray(GRAPHICS_tsColour* sprite, /* Where each element is 3 bits: RGB */
+uint8_t GRAPHICS_vDrawByColourArray(MAIN_tsColour* sprite, /* Where each element is 3 bits: RGB */
 		               int8_t x,
 			           int8_t y,
 			           uint8_t width,
@@ -114,13 +88,13 @@ uint8_t GRAPHICS_vDrawByColourArray(GRAPHICS_tsColour* sprite, /* Where each ele
 /*
  * Draw a rectangular sprite of uniform colour
  */
-uint8_t GRAPHICS_vDrawBox(GRAPHICS_tsColour colour,
+uint8_t GRAPHICS_vDrawBox(MAIN_tsColour colour,
 		                  int8_t x,
 						  int8_t y,
 						  uint8_t width,
 						  uint8_t height) {
 	uint16_t u16Loop;
-	GRAPHICS_tsColour sprite[width * height];
+	MAIN_tsColour sprite[width * height];
 	for (u16Loop = 0; u16Loop < width * height; u16Loop++) {
 		sprite[u16Loop] = colour;
 	}
@@ -131,7 +105,7 @@ uint8_t GRAPHICS_vDrawBox(GRAPHICS_tsColour colour,
  * Add a generic sprite to the back buffer.
  * This sprite will not appear on screen until GRAPHICS_vUpdate is called.
  */
-static uint8_t u8AddToBuffer(GRAPHICS_tsColour* sprite,
+static uint8_t u8AddToBuffer(MAIN_tsColour* sprite,
 		                     int8_t x,
 							 int8_t y,
 							 uint8_t width,

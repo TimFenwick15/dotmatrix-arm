@@ -42,6 +42,14 @@
 //#include "stm32f411e_discovery.h"
 
 /* Exported types ------------------------------------------------------------*/
+typedef struct {
+	uint16_t red:3;
+	uint16_t green:3;
+	uint16_t unused_1:2; /* This unused lines the data up at the 8-bit boundaries. This probably isn't necessary, it may at least be more portable */
+	uint16_t blue:3;
+	uint16_t unused_2:5;
+} MAIN_tsColour;
+
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* User can use this section to tailor TIMx instance used and associated 
@@ -54,7 +62,20 @@
 #define TIMx_IRQn                      TIM3_IRQn
 #define TIMx_IRQHandler                TIM3_IRQHandler
 
+#define BUFFER_DEPTH (2)
+#define COLOUR_DEPTH (4) /* To get colours somewhere between on and off, we need to be able to turn the colour on and off to dim it.
+                          * The maximum "colour depth" we support is 4, so 5 unique levels: 0%, 25%, 50%, 75%, and 100%.
+                          * Note increasing the colour depth means another buffer; 1024 bytes per buffer, with a front and back buffer.
+                          * So at COLOUR_DEPTH 4, we're at 1024 bytes * 2 * 4 ~= 8KB.
+                          *
+                          * We could also pack the colours into a buffer, and convert to an 0b**BGRBGR value when we clock the data out to the display.
+                          * Our 8K of buffers contains the data pre-calculated to be in this format. The current method is code speed > code space.
+                          */
+
 /* Exported functions ------------------------------------------------------- */
+
+uint32_t MAIN_u32MainCounter;
+uint8_t* GRAPHICS_pau8Buffer[COLOUR_DEPTH]; /* The buffers in Graphics.c are 2D arrays */
 
 #endif /* __MAIN_H */
 
