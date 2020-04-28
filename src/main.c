@@ -57,6 +57,8 @@
 #define INTERRUPT_PERIOD_500ms (5000 - 1)
 #define INTERRUPT_PERIOD (INTERRUPT_PERIOD_300us)
 
+#define CALL(x) if(!x)Error_Handler();
+
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -154,26 +156,22 @@ int main(void) {
 
   MAIN_u32MainCounter = 0;
 
+
   uint8_t u8RedId;
-  if (!ANIMATION_bRegisterAnimation(&u8RedId)) {
-	  Error_Handler();
-  }
-  if (!ANIMATION_bAddFrame(u8RedId, SPRITE_sRed_0, 900)) { /* Because units, ~300ms */
-	  Error_Handler();
-  }
-  if (!ANIMATION_bAddFrame(u8RedId, SPRITE_sRed_1, 900)) {
-	  Error_Handler();
-  }
-  if (!ANIMATION_bAddFrame(u8RedId, SPRITE_sRed_0, 900)) {
-	  Error_Handler();
-  }
-  if (!ANIMATION_bAddFrame(u8RedId, SPRITE_sRed_2, 900)) {
-	  Error_Handler();
-  }
+  CALL(ANIMATION_bRegisterAnimation(&u8RedId));
+  CALL(ANIMATION_bAddFrame(u8RedId, SPRITE_sRed_0, 900)); /* Because units, ~300ms */
+  CALL(ANIMATION_bAddFrame(u8RedId, SPRITE_sRed_1, 900));
+  CALL(ANIMATION_bAddFrame(u8RedId, SPRITE_sRed_0, 900));
+  CALL(ANIMATION_bAddFrame(u8RedId, SPRITE_sRed_2, 900));
+  CALL(ANIMATION_bAddMotion(u8RedId, 24, -16, 24, 32, 10000, true, ANIMATION_eMotionLinear));
+
+  uint8_t u8BoxId;
+  CALL(ANIMATION_bRegisterAnimation(&u8BoxId));
+  CALL(ANIMATION_bAddMotion(u8BoxId, 32, 32, -16, -16, 10000, true, ANIMATION_eMotionLinear));
 
   /* Infinite loop */
   while (1) {
-	  if (MAIN_u32MainCounter % 75 == 0) { /* 75 * 300us = 22.5ms */
+	  if (MAIN_u32MainCounter % 100 == 0) { /* 100 * 300us ~ 30ms. Screen redraws in about 5ms */
 		//  x++;
 		  /*GRAPHICS_vDrawBox(GRAPHICS_tsRed   , 64 - (int16_t)((x +  0) % 128), 32 - (int16_t)((x +  0) % 64), 20, 20);
 		  GRAPHICS_vDrawBox(GRAPHICS_tsGreen , 64 - (int16_t)((x +  8) % 128), (int16_t)((x +  8) % 64) - 32, 15, 30);
@@ -199,7 +197,10 @@ int main(void) {
 			  GRAPHICS_vDrawByColourArray(ANIMATION_psGetFrame(u8RedId), 24, 8, RED_SIZE, RED_SIZE);
 		  }*/
 
-		  GRAPHICS_vDrawByColourArray(ANIMATION_psGetFrame(u8RedId), 24, 8, RED_SIZE, RED_SIZE);
+		  ANIMATION_tsPostion sBoxPosition = ANIMATION_sGetPosition(u8BoxId);
+		  ANIMATION_tsPostion sRedPosition = ANIMATION_sGetPosition(u8RedId);
+		  GRAPHICS_vDrawBox(GRAPHICS_tsPurple, sBoxPosition.x, sBoxPosition.y, 16, 16);
+		  GRAPHICS_vDrawByColourArray(ANIMATION_psGetFrame(u8RedId), sRedPosition.x, sRedPosition.y, RED_SIZE, RED_SIZE);
 		  GRAPHICS_vUpdate();
 	  }
   }
@@ -212,6 +213,7 @@ int main(void) {
   */
 static void Error_Handler(void)
 {
+  trace_printf("Error handler called");
   while(1)
   {
   }
