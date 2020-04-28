@@ -35,4 +35,11 @@ bool ANIMATION_bAddMotion(uint8_t id,
 
 ANIMATION_tsPostion ANIMATION_sGetPosition(uint8_t id);
 
+bool ANIMATION_bAddColourTransition(uint8_t id,
+		                            MAIN_tsColour initialColour,
+		                            MAIN_tsColour finalColour,
+		                            uint16_t time_ms);
+
+MAIN_tsColour ANIMATION_sGetColour(uint8_t id);
+
 #endif

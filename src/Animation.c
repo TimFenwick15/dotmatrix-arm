@@ -26,6 +26,15 @@ static ANIMATION_tsPostion m_sInitialPosition[ANIMATION_MAX];
 static ANIMATION_tsPostion m_sFinalPosition[ANIMATION_MAX];
 static uint16_t m_u16FinalPositionTime[ANIMATION_MAX];
 
+
+/*
+ * Colour animation data
+ */
+static MAIN_tsColour m_sInitialColour[ANIMATION_MAX];
+static MAIN_tsColour m_sFinalColour[ANIMATION_MAX];
+static uint16_t m_u16FinalColourTime[ANIMATION_MAX];
+
+
 void ANIMATION_vInit(void) {
 	memset(m_u8FrameCount, 0, sizeof m_u8FrameCount);
 }
@@ -93,5 +102,29 @@ ANIMATION_tsPostion ANIMATION_sGetPosition(uint8_t id) {
 	uint32_t u32PercentageComplete = (u32TimeIntoInterval * FRACTION_TO_PERCENTAGE) / m_u16FinalPositionTime[id];
 	sResult.x = m_sInitialPosition[id].x + (int8_t)(((int32_t)m_sFinalPosition[id].x - (int32_t)m_sInitialPosition[id].x) * (int32_t)(u32PercentageComplete) / FRACTION_TO_PERCENTAGE);
 	sResult.y = m_sInitialPosition[id].y + (int8_t)(((int32_t)m_sFinalPosition[id].y - (int32_t)m_sInitialPosition[id].y) * (int32_t)(u32PercentageComplete) / FRACTION_TO_PERCENTAGE);
+	return (sResult);
+}
+
+bool ANIMATION_bAddColourTransition(uint8_t id,
+		                            MAIN_tsColour initialColour,
+		                            MAIN_tsColour finalColour,
+		                            uint16_t time_ms) {
+	bool bResult = false;
+	if (id < m_u8AnimationID) {
+		m_sInitialColour[id] = initialColour;
+		m_sFinalColour[id] = finalColour;
+		m_u16FinalColourTime[id] = time_ms;
+		bResult = true;
+	}
+	return (bResult);
+}
+
+MAIN_tsColour ANIMATION_sGetColour(uint8_t id) {
+	MAIN_tsColour sResult;
+	uint32_t u32TimeIntoInterval = MAIN_u32MainCounter % ((uint32_t)m_u16FinalColourTime[id]);
+	uint32_t u32PercentageComplete = (u32TimeIntoInterval * FRACTION_TO_PERCENTAGE) / m_u16FinalColourTime[id];
+	sResult.red = m_sInitialColour[id].red + ((int32_t)m_sFinalColour[id].red - (int32_t)m_sInitialColour[id].red) * (int32_t)(u32PercentageComplete) / FRACTION_TO_PERCENTAGE;
+	sResult.green = m_sInitialColour[id].green + ((int32_t)m_sFinalColour[id].green - (int32_t)m_sInitialColour[id].green) * (int32_t)(u32PercentageComplete) / FRACTION_TO_PERCENTAGE;
+	sResult.blue = m_sInitialColour[id].blue + ((int32_t)m_sFinalColour[id].blue - (int32_t)m_sInitialColour[id].blue) * (int32_t)(u32PercentageComplete) / FRACTION_TO_PERCENTAGE;
 	return (sResult);
 }

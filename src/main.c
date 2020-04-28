@@ -173,6 +173,10 @@ int main(void) {
   CALL(ANIMATION_bRegisterAnimation(&u8BoxId2));
   CALL(ANIMATION_bAddMotion(u8BoxId2, 64, -16, -16, 32, 10000, true, ANIMATION_eMotionLinear));
 
+  uint8_t u8BoxId3;
+  CALL(ANIMATION_bRegisterAnimation(&u8BoxId3));
+  CALL(ANIMATION_bAddColourTransition(u8BoxId3, GRAPHICS_tsBlue, GRAPHICS_tsRed, 10000));
+
   /* Infinite loop */
   while (1) {
 	  if (MAIN_u32MainCounter % 100 == 0) { /* 100 * 300us ~ 30ms. Screen redraws in about 5ms */
@@ -180,8 +184,11 @@ int main(void) {
 		  ANIMATION_tsPostion sBoxPosition1 = ANIMATION_sGetPosition(u8BoxId1);
 		  ANIMATION_tsPostion sBoxPosition2 = ANIMATION_sGetPosition(u8BoxId2);
 		  ANIMATION_tsPostion sRedPosition = ANIMATION_sGetPosition(u8RedId);
+		  MAIN_tsColour sBoxColour3 = ANIMATION_sGetColour(u8BoxId3);
+
 		  GRAPHICS_vDrawBox(GRAPHICS_tsBlue, sBoxPosition1.x, sBoxPosition1.y, 16, 16);
 		  GRAPHICS_vDrawBox(GRAPHICS_tsGreen, sBoxPosition2.x, sBoxPosition2.y, 16, 16);
+		  GRAPHICS_vDrawBox(sBoxColour3, 0, 8, 16, 16);
 		  GRAPHICS_vDrawByColourArray(ANIMATION_psGetFrame(u8RedId), sRedPosition.x, sRedPosition.y, RED_SIZE, RED_SIZE);
 
 		  GRAPHICS_vUpdate();
