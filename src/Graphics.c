@@ -21,7 +21,7 @@
 #define GREEN_2 (0x10)
 #define BLUE_2  (0x20)
 
-static uint8_t u8AddToBuffer(MAIN_tsColour* sprite,
+static void vAddToBuffer(MAIN_tsColour* sprite,
 		                     int8_t x,
 							 int8_t y,
 							 uint8_t width,
@@ -30,7 +30,6 @@ static uint8_t u8AddToBuffer(MAIN_tsColour* sprite,
 static uint8_t m_buffer1[COLOUR_DEPTH][DISPLAY_PIXELS / 2];
 static uint8_t m_buffer2[COLOUR_DEPTH][DISPLAY_PIXELS / 2];
 static uint8_t m_u8CurrentBuffer = BUFFER_1;
-static uint8_t m_u8SpriteId;
 
 /*
  * Call before accessing other members/data in the module.
@@ -77,18 +76,18 @@ void GRAPHICS_vUpdate(void) {
 /*
  * Draw a rectangular sprite with a variety of colours
  */
-uint8_t GRAPHICS_vDrawByColourArray(MAIN_tsColour* sprite, /* Where each element is 3 bits: RGB */
+void GRAPHICS_vDrawByColourArray(MAIN_tsColour* sprite, /* Where each element is 3 bits: RGB */
 		               int8_t x,
 			           int8_t y,
 			           uint8_t width,
 			           uint8_t height) {
-	return u8AddToBuffer(sprite, x, y, width, height);
+	vAddToBuffer(sprite, x, y, width, height);
 }
 
 /*
  * Draw a rectangular sprite of uniform colour
  */
-uint8_t GRAPHICS_vDrawBox(MAIN_tsColour colour,
+void GRAPHICS_vDrawBox(MAIN_tsColour colour,
 		                  int8_t x,
 						  int8_t y,
 						  uint8_t width,
@@ -98,18 +97,49 @@ uint8_t GRAPHICS_vDrawBox(MAIN_tsColour colour,
 	for (u16Loop = 0; u16Loop < width * height; u16Loop++) {
 		sprite[u16Loop] = colour;
 	}
-	return u8AddToBuffer(sprite, x, y, width, height);
+	vAddToBuffer(sprite, x, y, width, height);
+}
+
+void GRAPHICS_vDrawCircle(MAIN_tsColour colour,
+		                  int16_t x,
+						  int16_t y,
+						  uint16_t radius) {
+	uint16_t u16Loop;
+	uint16_t u16SideLength = radius + radius;
+	uint16_t u16RadiusSquared = radius * radius;
+	uint16_t u16SpriteIndices = 4 * u16RadiusSquared;
+	MAIN_tsColour sprite[u16SpriteIndices];
+	int16_t i16OriginX = x + radius;
+	int16_t i16OriginY = y + radius;
+	uint16_t u16DistanceToOriginSquared;
+	int16_t i16CurrentX, i16CurrentY;
+
+
+	for (u16Loop = 0; u16Loop < u16SpriteIndices; u16Loop++) {
+		i16CurrentX = x + u16Loop % u16SideLength;
+		i16CurrentY = y + u16Loop / u16SideLength;
+		u16DistanceToOriginSquared = i16OriginX * (i16OriginX - 2 * i16CurrentX) + i16CurrentX * i16CurrentX +
+				i16OriginY * (i16OriginY - 2 * i16CurrentY) + i16CurrentY * i16CurrentY;
+		if (u16DistanceToOriginSquared <= u16RadiusSquared) {
+			sprite[u16Loop] = colour;
+		} else {
+			sprite[u16Loop].red = 0;
+			sprite[u16Loop].green = 0;
+			sprite[u16Loop].blue = 0;
+		}
+	}
+	vAddToBuffer(sprite, x, y, u16SideLength, u16SideLength);
 }
 
 /*
  * Add a generic sprite to the back buffer.
  * This sprite will not appear on screen until GRAPHICS_vUpdate is called.
  */
-static uint8_t u8AddToBuffer(MAIN_tsColour* sprite,
-		                     int8_t x,
-							 int8_t y,
-							 uint8_t width,
-							 uint8_t height) {
+static void vAddToBuffer(MAIN_tsColour* sprite,
+		                 int8_t x,
+					     int8_t y,
+						 uint8_t width,
+						 uint8_t height) {
 	/* Block impossible shapes */
 	if ((0 != width) && (0 != height)) {
 		uint8_t* pu8InactiveBuffer[COLOUR_DEPTH]; /* A pointer to a 2D array */
@@ -178,5 +208,4 @@ static uint8_t u8AddToBuffer(MAIN_tsColour* sprite,
 		}
 
 	}
-	return m_u8SpriteId++;
 }

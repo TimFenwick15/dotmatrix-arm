@@ -165,42 +165,25 @@ int main(void) {
   CALL(ANIMATION_bAddFrame(u8RedId, SPRITE_sRed_2, 900));
   CALL(ANIMATION_bAddMotion(u8RedId, 24, -16, 24, 32, 10000, true, ANIMATION_eMotionLinear));
 
-  uint8_t u8BoxId;
-  CALL(ANIMATION_bRegisterAnimation(&u8BoxId));
-  CALL(ANIMATION_bAddMotion(u8BoxId, 32, 32, -16, -16, 10000, true, ANIMATION_eMotionLinear));
+  uint8_t u8BoxId1;
+  CALL(ANIMATION_bRegisterAnimation(&u8BoxId1));
+  CALL(ANIMATION_bAddMotion(u8BoxId1, 64, 32, -16, -16, 10000, true, ANIMATION_eMotionLinear));
+
+  uint8_t u8BoxId2;
+  CALL(ANIMATION_bRegisterAnimation(&u8BoxId2));
+  CALL(ANIMATION_bAddMotion(u8BoxId2, 64, -16, -16, 32, 10000, true, ANIMATION_eMotionLinear));
 
   /* Infinite loop */
   while (1) {
 	  if (MAIN_u32MainCounter % 100 == 0) { /* 100 * 300us ~ 30ms. Screen redraws in about 5ms */
-		//  x++;
-		  /*GRAPHICS_vDrawBox(GRAPHICS_tsRed   , 64 - (int16_t)((x +  0) % 128), 32 - (int16_t)((x +  0) % 64), 20, 20);
-		  GRAPHICS_vDrawBox(GRAPHICS_tsGreen , 64 - (int16_t)((x +  8) % 128), (int16_t)((x +  8) % 64) - 32, 15, 30);
-		  GRAPHICS_vDrawBox(GRAPHICS_tsBlue  , (int16_t)((34 - x) % 128) - 64, 32 - (int16_t)((x +  3) % 64), 12, 20);
-		  GRAPHICS_vDrawBox(GRAPHICS_tsPurple, (int16_t)((54 - x) % 128) - 64, (int16_t)((x + 20) % 64) - 32, 32, 16);
-		  GRAPHICS_vDrawBox(GRAPHICS_tsPink, 64 - (int16_t)((x + 68) % 128), 32 - (int16_t)((x + 40) % 64), 20, 20);
-		  GRAPHICS_vDrawBox(GRAPHICS_tsWhite , 64 - (int16_t)((x + 40) % 128), (int16_t)((x + 50) % 64) - 32, 24, 24);
-		  GRAPHICS_vDrawBox(GRAPHICS_tsRed   , (int16_t)((x +110) % 128) - 64, 32 - (int16_t)((x + 55) % 64), 32, 32);
-		  GRAPHICS_vDrawBox(GRAPHICS_tsGreen , (int16_t)((x +120) % 128) - 64, (int16_t)((x + 60) % 64) - 32, 24, 24);
-		  GRAPHICS_vDrawBox(GRAPHICS_tsBlue  , 64 - (int16_t)((x + 34) % 128), 32 - (int16_t)((x +  3) % 64), 12, 12);
-		  GRAPHICS_vDrawBox(GRAPHICS_tsPurple, 64 - (int16_t)((x + 54) % 128), (int16_t)((x + 20) % 64) - 32, 16, 16);
-
-		  if (x % 32 > 23) {
-			  GRAPHICS_vDrawByColourArray(SPRITE_sRed_2, 24, 8, RED_SIZE, RED_SIZE);
-		  }
-		  else if (x % 16 > 15) {
-			  GRAPHICS_vDrawByColourArray(ANIMATION_psGetFrame(u8RedId), 24, 8, RED_SIZE, RED_SIZE);
-		  }
-		  else if (x % 16 > 8) {
-			  GRAPHICS_vDrawByColourArray(SPRITE_sRed_1, 24, 8, RED_SIZE, RED_SIZE);
-		  }
-		  else {
-			  GRAPHICS_vDrawByColourArray(ANIMATION_psGetFrame(u8RedId), 24, 8, RED_SIZE, RED_SIZE);
-		  }*/
-
-		  ANIMATION_tsPostion sBoxPosition = ANIMATION_sGetPosition(u8BoxId);
+		  GRAPHICS_vDrawCircle(GRAPHICS_tsPurple, 16, 0, 16);
+		  ANIMATION_tsPostion sBoxPosition1 = ANIMATION_sGetPosition(u8BoxId1);
+		  ANIMATION_tsPostion sBoxPosition2 = ANIMATION_sGetPosition(u8BoxId2);
 		  ANIMATION_tsPostion sRedPosition = ANIMATION_sGetPosition(u8RedId);
-		  GRAPHICS_vDrawBox(GRAPHICS_tsPurple, sBoxPosition.x, sBoxPosition.y, 16, 16);
+		  GRAPHICS_vDrawBox(GRAPHICS_tsBlue, sBoxPosition1.x, sBoxPosition1.y, 16, 16);
+		  GRAPHICS_vDrawBox(GRAPHICS_tsGreen, sBoxPosition2.x, sBoxPosition2.y, 16, 16);
 		  GRAPHICS_vDrawByColourArray(ANIMATION_psGetFrame(u8RedId), sRedPosition.x, sRedPosition.y, RED_SIZE, RED_SIZE);
+
 		  GRAPHICS_vUpdate();
 	  }
   }
