@@ -22,10 +22,9 @@
 #define BLUE_2  (0x20)
 
 static void vAddToBuffer(MAIN_tsColour* sprite,
-		                     int8_t x,
-							 int8_t y,
-							 uint8_t width,
-							 uint8_t height);
+                         MAIN_tsPostion position,
+						 uint8_t width,
+						 uint8_t height);
 
 static uint8_t m_buffer1[COLOUR_DEPTH][DISPLAY_PIXELS / 2];
 static uint8_t m_buffer2[COLOUR_DEPTH][DISPLAY_PIXELS / 2];
@@ -77,19 +76,17 @@ void GRAPHICS_vUpdate(void) {
  * Draw a rectangular sprite with a variety of colours
  */
 void GRAPHICS_vDrawByColourArray(MAIN_tsColour* sprite, /* Where each element is 3 bits: RGB */
-		               int8_t x,
-			           int8_t y,
+                       MAIN_tsPostion position,
 			           uint8_t width,
 			           uint8_t height) {
-	vAddToBuffer(sprite, x, y, width, height);
+	vAddToBuffer(sprite, position, width, height);
 }
 
 /*
  * Draw a rectangular sprite of uniform colour
  */
 void GRAPHICS_vDrawBox(MAIN_tsColour colour,
-		                  int8_t x,
-						  int8_t y,
+                          MAIN_tsPostion position,
 						  uint8_t width,
 						  uint8_t height) {
 	uint16_t u16Loop;
@@ -97,38 +94,39 @@ void GRAPHICS_vDrawBox(MAIN_tsColour colour,
 	for (u16Loop = 0; u16Loop < width * height; u16Loop++) {
 		sprite[u16Loop] = colour;
 	}
-	vAddToBuffer(sprite, x, y, width, height);
+	vAddToBuffer(sprite, position, width, height);
 }
 
 void GRAPHICS_vDrawCircle(MAIN_tsColour colour,
-		                  int16_t x,
-						  int16_t y,
+                          MAIN_tsPostion position,
 						  uint16_t radius) {
 	uint16_t u16Loop;
 	uint16_t u16SideLength = radius + radius;
 	uint16_t u16RadiusSquared = radius * radius;
 	uint16_t u16SpriteIndices = 4 * u16RadiusSquared;
 	MAIN_tsColour sprite[u16SpriteIndices];
-	int16_t i16OriginX = x + radius;
-	int16_t i16OriginY = y + radius;
+	int16_t i16OriginX = position.x + radius;
+	int16_t i16OriginY = position.y + radius;
 	uint16_t u16DistanceToOriginSquared;
-	int16_t i16CurrentX, i16CurrentY;
+	int16_t i16DeltaX, i16DeltaY;
 
+	/* We will draw any pixel within the circle radius.
+	 * distanceFromCircleCentre = sqrt( (x0 - x1)^2 + (y0 - y1)^2 )
+	 * If we use distanceFromCircleCentre^2 and radius squared, we avoid the expensive square root
+	 */
 
 	for (u16Loop = 0; u16Loop < u16SpriteIndices; u16Loop++) {
-		i16CurrentX = x + u16Loop % u16SideLength;
-		i16CurrentY = y + u16Loop / u16SideLength;
-		u16DistanceToOriginSquared = i16OriginX * (i16OriginX - 2 * i16CurrentX) + i16CurrentX * i16CurrentX +
-				i16OriginY * (i16OriginY - 2 * i16CurrentY) + i16CurrentY * i16CurrentY;
+		i16DeltaX = i16OriginX - position.x - u16Loop % u16SideLength;
+		i16DeltaY = i16OriginY - position.y - u16Loop / u16SideLength;
+		u16DistanceToOriginSquared = i16DeltaX * i16DeltaX + i16DeltaY * i16DeltaY;
+
 		if (u16DistanceToOriginSquared <= u16RadiusSquared) {
 			sprite[u16Loop] = colour;
 		} else {
-			sprite[u16Loop].red = 0;
-			sprite[u16Loop].green = 0;
-			sprite[u16Loop].blue = 0;
+			sprite[u16Loop] = SPRITE_sTransparent;
 		}
 	}
-	vAddToBuffer(sprite, x, y, u16SideLength, u16SideLength);
+	vAddToBuffer(sprite, position, u16SideLength, u16SideLength);
 }
 
 /*
@@ -136,8 +134,7 @@ void GRAPHICS_vDrawCircle(MAIN_tsColour colour,
  * This sprite will not appear on screen until GRAPHICS_vUpdate is called.
  */
 static void vAddToBuffer(MAIN_tsColour* sprite,
-		                 int8_t x,
-					     int8_t y,
+                         MAIN_tsPostion position,
 						 uint8_t width,
 						 uint8_t height) {
 	/* Block impossible shapes */
@@ -164,22 +161,24 @@ static void vAddToBuffer(MAIN_tsColour* sprite,
 
 		for (u16Index = 0; u16Index < (uint16_t)width * (uint16_t)height; u16Index++) {
 			u16SpriteY = u16Index / (uint16_t)width;
-			i16TargetPixel = (int16_t)y * DISPLAY_COLUMNS +
-			        (int16_t)x + u16Index +
+			i16TargetPixel = position.y * DISPLAY_COLUMNS +
+			        position.x + u16Index +
 			        (DISPLAY_COLUMNS - (int16_t)width) * (int16_t)u16SpriteY;
 
 			/* If we are attempting to draw to an x coordinate beyond the right hand edge of the display, ignore.
 			 * To detect this, calculate the target y coordinate from the sprite array,
 			 * and the y coordinate on the display. If we have wrapped around to a new row, these will be different.
 			 */
-			i16TargetYCoordinate = y + (int16_t)u16SpriteY;
+			i16TargetYCoordinate = position.y + (int16_t)u16SpriteY;
 			i16ActualYCoordinate = i16TargetPixel / DISPLAY_COLUMNS;
 
 			/* Check we have not gone off the bottom of the display */
 			if (i16TargetPixel < DISPLAY_PIXELS) {
 
-				/* Check we have not gone off the left, right, or top of the display */
-				if ((i16TargetYCoordinate == i16ActualYCoordinate) && (i16TargetPixel >= 0)) {
+				/* Check we have not gone off the left, right, or top of the display, and that this isn't transparent */
+				if ((i16TargetYCoordinate == i16ActualYCoordinate) &&
+						(i16TargetPixel >= 0) &&
+						(1 == sprite[u16Index].visible)) {
 
 					/* Draw to either the top half of the display, or bottom half */
 					if (i16TargetPixel < DISPLAY_INDICES) {

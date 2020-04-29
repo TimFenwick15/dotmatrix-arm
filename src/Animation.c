@@ -15,6 +15,10 @@
 #define FRACTION_TO_PERCENTAGE (100)
 
 static uint8_t m_u8AnimationID = 0;
+
+/*
+ * Frame animation data
+ */
 static uint8_t m_u8FrameCount[ANIMATION_MAX];
 static MAIN_tsColour* m_psFrameData[ANIMATION_MAX][FRAME_MAX];
 static uint16_t m_u16FrameTime[ANIMATION_MAX][FRAME_MAX];
@@ -22,8 +26,8 @@ static uint16_t m_u16FrameTime[ANIMATION_MAX][FRAME_MAX];
 /*
  * Move animation data
  */
-static ANIMATION_tsPostion m_sInitialPosition[ANIMATION_MAX];
-static ANIMATION_tsPostion m_sFinalPosition[ANIMATION_MAX];
+static MAIN_tsPostion m_sInitialPosition[ANIMATION_MAX];
+static MAIN_tsPostion m_sFinalPosition[ANIMATION_MAX];
 static uint16_t m_u16FinalPositionTime[ANIMATION_MAX];
 
 
@@ -77,27 +81,21 @@ MAIN_tsColour* ANIMATION_psGetFrame(uint8_t id) {
 }
 
 bool ANIMATION_bAddMotion(uint8_t id,
-		                  int8_t x1,
-						  int8_t y1,
-						  int8_t x2,
-						  int8_t y2,
-						  uint16_t time_ms,
-						  bool repeat,
-						  ANIMATION_teMotion motionType) {
+		                  MAIN_tsPostion initialPosition,
+                          MAIN_tsPostion finalPosition,
+						  uint16_t time_ms) {
 	bool bResult = false;
-	if (id < m_u8AnimationID) {
-		m_sInitialPosition[id].x = x1;
-		m_sInitialPosition[id].y = y1;
-		m_sFinalPosition[id].x = x2;
-		m_sFinalPosition[id].y = y2;
+	if ((id < m_u8AnimationID) && (time_ms > 0)) {
+		m_sInitialPosition[id] = initialPosition;
+		m_sFinalPosition[id] = finalPosition;
 		m_u16FinalPositionTime[id] = time_ms;
 		bResult = true;
 	}
 	return (bResult);
 }
 
-ANIMATION_tsPostion ANIMATION_sGetPosition(uint8_t id) {
-	ANIMATION_tsPostion sResult;
+MAIN_tsPostion ANIMATION_sGetPosition(uint8_t id) {
+	MAIN_tsPostion sResult;
 	uint32_t u32TimeIntoInterval = MAIN_u32MainCounter % ((uint32_t)m_u16FinalPositionTime[id]);
 	uint32_t u32PercentageComplete = (u32TimeIntoInterval * FRACTION_TO_PERCENTAGE) / m_u16FinalPositionTime[id];
 	sResult.x = m_sInitialPosition[id].x + (int8_t)(((int32_t)m_sFinalPosition[id].x - (int32_t)m_sInitialPosition[id].x) * (int32_t)(u32PercentageComplete) / FRACTION_TO_PERCENTAGE);
@@ -126,5 +124,6 @@ MAIN_tsColour ANIMATION_sGetColour(uint8_t id) {
 	sResult.red = m_sInitialColour[id].red + ((int32_t)m_sFinalColour[id].red - (int32_t)m_sInitialColour[id].red) * (int32_t)(u32PercentageComplete) / FRACTION_TO_PERCENTAGE;
 	sResult.green = m_sInitialColour[id].green + ((int32_t)m_sFinalColour[id].green - (int32_t)m_sInitialColour[id].green) * (int32_t)(u32PercentageComplete) / FRACTION_TO_PERCENTAGE;
 	sResult.blue = m_sInitialColour[id].blue + ((int32_t)m_sFinalColour[id].blue - (int32_t)m_sInitialColour[id].blue) * (int32_t)(u32PercentageComplete) / FRACTION_TO_PERCENTAGE;
+	sResult.visible = 1;
 	return (sResult);
 }

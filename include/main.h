@@ -46,10 +46,16 @@
 typedef struct {
 	uint16_t red:3;
 	uint16_t green:3;
-	uint16_t unused_1:2; /* This unused lines the data up at the 8-bit boundaries. This probably isn't necessary, it may at least be more portable */
+	//uint16_t unused_1:2; /* This unused lines the data up at the 8-bit boundaries. This probably isn't necessary, it may at least be more portable */
 	uint16_t blue:3;
-	uint16_t unused_2:5;
+	uint16_t visible:1;
+	//uint16_t unused_2:5;
 } MAIN_tsColour;
+
+typedef struct {
+	int16_t x;
+	int16_t y;
+} MAIN_tsPostion;
 
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
@@ -74,6 +80,15 @@ typedef struct {
                           */
 
 /* Exported functions ------------------------------------------------------- */
+
+MAIN_tsColour SPRITE_sRed;
+MAIN_tsColour SPRITE_sGreen;
+MAIN_tsColour SPRITE_sBlue;
+MAIN_tsColour SPRITE_sPurple;
+MAIN_tsColour SPRITE_sWhite;
+MAIN_tsColour SPRITE_sPink;
+MAIN_tsColour SPRITE_sBlack;
+MAIN_tsColour SPRITE_sTransparent;
 
 uint32_t MAIN_u32MainCounter;
 uint8_t* MAIN_pau8Buffer[COLOUR_DEPTH]; /* The buffers in Graphics.c are 2D arrays */
