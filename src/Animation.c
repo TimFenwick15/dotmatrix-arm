@@ -9,7 +9,7 @@
 #include "Animation.h"
 #include <string.h> /* memset */
 
-#define ANIMATION_MAX (8) /* These are pretty arbitrary */
+#define ANIMATION_MAX (8) /* These are pretty arbitrary - this allows us to avoid heap allocation */
 #define FRAME_MAX (4)
 
 #define FRACTION_TO_PERCENTAGE (100)
@@ -29,7 +29,6 @@ static uint16_t m_u16FrameTime[ANIMATION_MAX][FRAME_MAX];
 static MAIN_tsPosition m_sInitialPosition[ANIMATION_MAX];
 static MAIN_tsPosition m_sFinalPosition[ANIMATION_MAX];
 static uint16_t m_u16FinalPositionTime[ANIMATION_MAX];
-
 
 /*
  * Colour animation data

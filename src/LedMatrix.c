@@ -4,9 +4,9 @@
  *  Created on: 19 Apr 2020
  *      Author: Tim
  */
+#include "GPIO.h"
 #include "main.h"
 #include "LedMatrix.h"
-#include "BlinkLed.h"
 
 #define PIN_NUMBER_R1  (0)
 #define PIN_NUMBER_G1  (1)
@@ -20,7 +20,7 @@
 #define PIN_NUMBER_D   (9)
 #define PIN_NUMBER_CLK (10)
 #define PIN_NUMBER_LAT (15)
-#define PIN_NUMBER_OE  (11) /* 12 is an LED on the discovery board */
+#define PIN_NUMBER_OE  (11) /* 12 and above are LEDs on the discovery board */
 
 #define PIN_R1  (1 << PIN_NUMBER_R1)  /* These being consecutive allows us to write them all in one action, directly from the buffer */
 #define PIN_G1  (1 << PIN_NUMBER_G1)

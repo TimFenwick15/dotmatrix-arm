@@ -26,7 +26,7 @@
  */
 
 #include "main.h"
-#include "BlinkLed.h"
+#include "GPIO.h"
 
 void GPIO_vInit(uint8_t u8Port, uint8_t u8Pin, uint8_t u8UseOpenDrain) {
 	// Enable GPIO Peripheral clock

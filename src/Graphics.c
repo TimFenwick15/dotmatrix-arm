@@ -100,36 +100,53 @@ void GRAPHICS_vDrawBox(MAIN_tsColour colour,
 void GRAPHICS_vDrawCircle(MAIN_tsColour colour,
                           MAIN_tsPosition position,
 						  uint16_t radius) {
-	uint16_t u16Loop;
+	/* Prevent an impossible shape */
+	if (radius == 0) {
+		radius = 1;
+	}
+
+	uint16_t u16Loop, u16DistanceToOriginSquared;
 	uint16_t u16SideLength = radius + radius;
 	uint16_t u16RadiusSquared = radius * radius;
 	uint16_t u16SpriteIndices = 4 * u16RadiusSquared;
+	MAIN_tsPosition i16ApproximateOrigin = {position.x + radius, position.y + radius};
+	MAIN_tsPosition sCurrentCoordinates, sOriginCoordinates, sDeltaCoordinates;
 	MAIN_tsColour sprite[u16SpriteIndices];
-	int16_t i16OriginX;// = position.x + radius;
-	int16_t i16OriginY;// = position.y + radius;
-	uint16_t u16DistanceToOriginSquared;
-	int16_t i16DeltaX, i16DeltaY;
-	int16_t i16CurrentX, i16CurrentY;
 
 	/* We will draw any pixel within the circle radius.
-	 * distanceFromCircleCentre = sqrt( (x0 - x1)^2 + (y0 - y1)^2 )
 	 * If we use distanceFromCircleCentre^2 and radius squared, we avoid the expensive square root
 	 */
 
 	for (u16Loop = 0; u16Loop < u16SpriteIndices; u16Loop++) {
-		i16CurrentX = u16Loop % u16SideLength;
-		i16CurrentY = u16Loop / u16SideLength;
-		i16OriginX = (i16CurrentX < (position.x + radius)) ? (position.x + radius - 1) : (position.x + radius);
-		i16OriginY = (i16CurrentY < (position.y + radius)) ? (position.y + radius - 1) : (position.y + radius);
+		sCurrentCoordinates = (MAIN_tsPosition) {
+			(u16Loop % u16SideLength),
+			(u16Loop / u16SideLength)
+		};
 
-		i16DeltaX = i16OriginX - position.x - u16Loop % u16SideLength;
-		i16DeltaY = i16OriginY - position.y - u16Loop / u16SideLength;
-		u16DistanceToOriginSquared = i16DeltaX * i16DeltaX + i16DeltaY * i16DeltaY;
+		/* Because we double the radius, we always have an even diameter circle.
+		 * This means there is not a well defined centre, so the circle appears uneven.
+		 * So solve this, move the origin into the same quadrant as the current pixel.
+		 */
+		sOriginCoordinates = (MAIN_tsPosition) {
+			((sCurrentCoordinates.x < i16ApproximateOrigin.x) ?
+				(i16ApproximateOrigin.x - 1) : i16ApproximateOrigin.x),
+			((sCurrentCoordinates.y < i16ApproximateOrigin.y) ?
+				(i16ApproximateOrigin.y - 1) : i16ApproximateOrigin.y)
+		};
 
+		/* Now calculate the distance (squared) of this pixel to the circle centre */
+		sDeltaCoordinates = (MAIN_tsPosition) {
+			(sOriginCoordinates.x - position.x - sCurrentCoordinates.x),
+			(sOriginCoordinates.y - position.y - sCurrentCoordinates.y)
+		};
+		u16DistanceToOriginSquared = sDeltaCoordinates.x * sDeltaCoordinates.x +
+			sDeltaCoordinates.y * sDeltaCoordinates.y;
+
+		/* If the pixel is in the circle, draw it */
 		if (u16DistanceToOriginSquared <= u16RadiusSquared) {
 			sprite[u16Loop] = colour;
 		} else {
-			sprite[u16Loop] = SPRITE_sTransparent;
+			sprite[u16Loop] = MAIN_sTransparent;
 		}
 	}
 	vAddToBuffer(sprite, position, u16SideLength, u16SideLength);
@@ -184,7 +201,7 @@ static void vAddToBuffer(MAIN_tsColour* sprite,
 				/* Check we have not gone off the left, right, or top of the display, and that this isn't transparent */
 				if ((i16TargetYCoordinate == i16ActualYCoordinate) &&
 						(i16TargetPixel >= 0) &&
-						(1 == sprite[u16Index].visible)) {
+						(COLOUR_VISIBLE == sprite[u16Index].visible)) {
 
 					/* Draw to either the top half of the display, or bottom half */
 					if (i16TargetPixel < DISPLAY_INDICES) {

@@ -40,16 +40,13 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
 #include <stdbool.h>
-//#include "stm32f411e_discovery.h"
 
 /* Exported types ------------------------------------------------------------*/
 typedef struct {
 	uint16_t red:3;
 	uint16_t green:3;
-	//uint16_t unused_1:2; /* This unused lines the data up at the 8-bit boundaries. This probably isn't necessary, it may at least be more portable */
 	uint16_t blue:3;
 	uint16_t visible:1;
-	//uint16_t unused_2:5;
 } MAIN_tsColour;
 
 typedef struct {
@@ -79,17 +76,25 @@ typedef struct {
                           * Our 8K of buffers contains the data pre-calculated to be in this format. The current method is code speed > code space.
                           */
 
+#define COLOUR_BRIGHTNESS_100_PERCENT (4) /* This magically knows about the colour depth */
+#define COLOUR_BRIGHTNESS_75_PERCENT  (3)
+#define COLOUR_BRIGHTNESS_50_PERCENT  (2)
+#define COLOUR_BRIGHTNESS_25_PERCENT  (1)
+#define COLOUR_BRIGHTNESS_0_PERCENT   (0)
+#define COLOUR_VISIBLE (1)
+#define COLOUR_INVISIBLE (0)
+
 /* Exported functions ------------------------------------------------------- */
 
-MAIN_tsColour SPRITE_sRed;
-MAIN_tsColour SPRITE_sGreen;
-MAIN_tsColour SPRITE_sBlue;
-MAIN_tsColour SPRITE_sPurple;
-MAIN_tsColour SPRITE_sYellow;
-MAIN_tsColour SPRITE_sWhite;
-MAIN_tsColour SPRITE_sPink;
-MAIN_tsColour SPRITE_sBlack;
-MAIN_tsColour SPRITE_sTransparent;
+MAIN_tsColour MAIN_sRed;
+MAIN_tsColour MAIN_sGreen;
+MAIN_tsColour MAIN_sBlue;
+MAIN_tsColour MAIN_sPurple;
+MAIN_tsColour MAIN_sYellow;
+MAIN_tsColour MAIN_sWhite;
+MAIN_tsColour MAIN_sPink;
+MAIN_tsColour MAIN_sBlack;
+MAIN_tsColour MAIN_sTransparent;
 
 uint32_t MAIN_u32MainCounter;
 uint8_t* MAIN_pau8Buffer[COLOUR_DEPTH]; /* The buffers in Graphics.c are 2D arrays */
