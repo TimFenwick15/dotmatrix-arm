@@ -156,45 +156,52 @@ int main(void) {
 
   MAIN_u32MainCounter = 0;
 
-
   uint8_t u8RedId;
-  MAIN_tsPostion sRedInitialPosition = {24, -16};
-  MAIN_tsPostion sRedFinalPosition = {24, 32};
+  MAIN_tsPosition sRedInitialPosition = {24, -16};
+  MAIN_tsPosition sRedFinalPosition = {24, 32};
   CALL(ANIMATION_bRegisterAnimation(&u8RedId));
   CALL(ANIMATION_bAddFrame(u8RedId, SPRITE_sRed_0, 900)); /* Because units, ~300ms */
   CALL(ANIMATION_bAddFrame(u8RedId, SPRITE_sRed_1, 900));
   CALL(ANIMATION_bAddFrame(u8RedId, SPRITE_sRed_0, 900));
   CALL(ANIMATION_bAddFrame(u8RedId, SPRITE_sRed_2, 900));
-  CALL(ANIMATION_bAddMotion(u8RedId, sRedInitialPosition, sRedFinalPosition, 10000));
+  CALL(ANIMATION_bAddMotion(u8RedId, sRedInitialPosition, sRedFinalPosition, 20000));
 
-  uint8_t u8BoxId1;
-  MAIN_tsPostion sBox1InitialPosition = {64, 32};
-  MAIN_tsPostion sBox1FinalPosition = {-16, -16};
-  CALL(ANIMATION_bRegisterAnimation(&u8BoxId1));
-  CALL(ANIMATION_bAddMotion(u8BoxId1, sBox1InitialPosition, sBox1FinalPosition, 10000));
+  uint8_t u8CircleId1;
+  MAIN_tsPosition sCircle1InitialPosition = {0, 32};
+  MAIN_tsPosition sCircle1FinalPosition = {0, -16};
+  CALL(ANIMATION_bRegisterAnimation(&u8CircleId1));
+  CALL(ANIMATION_bAddMotion(u8CircleId1, sCircle1InitialPosition, sCircle1FinalPosition, 10000));
+  CALL(ANIMATION_bAddColourTransition(u8CircleId1, SPRITE_sBlue, SPRITE_sRed, 30000));
 
-  uint8_t u8BoxId2;
-  MAIN_tsPostion sBox2InitialPosition = {64, -16};
-  MAIN_tsPostion sBox2FinalPosition = {-16, 32};
-  CALL(ANIMATION_bRegisterAnimation(&u8BoxId2));
-  CALL(ANIMATION_bAddMotion(u8BoxId2, sBox2InitialPosition, sBox2FinalPosition, 10000));
+  uint8_t u8CircleId2;
+  MAIN_tsPosition sCircle2InitialPosition = {16, 32};
+  MAIN_tsPosition sCircle2FinalPosition = {16, -16};
+  CALL(ANIMATION_bRegisterAnimation(&u8CircleId2));
+  CALL(ANIMATION_bAddMotion(u8CircleId2, sCircle2InitialPosition, sCircle2FinalPosition, 5000));
+  CALL(ANIMATION_bAddColourTransition(u8CircleId2, SPRITE_sPurple, SPRITE_sGreen, 60000));
 
-  uint8_t u8BoxId3;
-  MAIN_tsPostion sBox3InitialPosition = {0, 8};
-  CALL(ANIMATION_bRegisterAnimation(&u8BoxId3));
-  CALL(ANIMATION_bAddColourTransition(u8BoxId3, SPRITE_sBlue, SPRITE_sRed, 10000));
+  uint8_t u8CircleId3;
+  MAIN_tsPosition sCircle3InitialPosition = {32, 32};
+  MAIN_tsPosition sCircle3FinalPosition = {32, -16};
+  CALL(ANIMATION_bRegisterAnimation(&u8CircleId3));
+  CALL(ANIMATION_bAddMotion(u8CircleId3, sCircle3InitialPosition, sCircle3FinalPosition, 20000));
+  CALL(ANIMATION_bAddColourTransition(u8CircleId3, SPRITE_sGreen, SPRITE_sRed, 20000));
 
-  MAIN_tsPostion sCirclePosition = {48, 0};
+  uint8_t u8CircleId4;
+  MAIN_tsPosition sCircle4InitialPosition = {48, 32};
+  MAIN_tsPosition sCircle4FinalPosition = {48, -16};
+  CALL(ANIMATION_bRegisterAnimation(&u8CircleId4));
+  CALL(ANIMATION_bAddMotion(u8CircleId4, sCircle4InitialPosition, sCircle4FinalPosition, 7500));
+  CALL(ANIMATION_bAddColourTransition(u8CircleId4, SPRITE_sBlue, SPRITE_sYellow, 7500));
 
   /* Infinite loop */
   while (1) {
 	  if (MAIN_u32MainCounter % 100 == 0) { /* 100 * 300us ~ 30ms. Screen redraws in about 5ms */
-		  GRAPHICS_vDrawBox(SPRITE_sBlue, ANIMATION_sGetPosition(u8BoxId1), 16, 16);
-		  GRAPHICS_vDrawBox(SPRITE_sGreen, ANIMATION_sGetPosition(u8BoxId2), 16, 16);
-		  GRAPHICS_vDrawBox(ANIMATION_sGetColour(u8BoxId3), sBox3InitialPosition, 16, 16);
+		  GRAPHICS_vDrawCircle(ANIMATION_sGetColour(u8CircleId1), ANIMATION_sGetPosition(u8CircleId1), 8);
+		  GRAPHICS_vDrawCircle(ANIMATION_sGetColour(u8CircleId2), ANIMATION_sGetPosition(u8CircleId2), 8);
+		  GRAPHICS_vDrawCircle(ANIMATION_sGetColour(u8CircleId3), ANIMATION_sGetPosition(u8CircleId3), 8);
+		  GRAPHICS_vDrawCircle(ANIMATION_sGetColour(u8CircleId4), ANIMATION_sGetPosition(u8CircleId4), 8);
 		  GRAPHICS_vDrawByColourArray(ANIMATION_psGetFrame(u8RedId), ANIMATION_sGetPosition(u8RedId), RED_SIZE, RED_SIZE);
-		  GRAPHICS_vDrawCircle(SPRITE_sPurple, sCirclePosition, 16);
-
 		  GRAPHICS_vUpdate();
 	  }
   }

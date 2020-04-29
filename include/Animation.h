@@ -12,11 +12,11 @@ bool ANIMATION_bAddFrame(uint8_t id,
 MAIN_tsColour* ANIMATION_psGetFrame(uint8_t id);
 
 bool ANIMATION_bAddMotion(uint8_t id,
-		                  MAIN_tsPostion initialPosition,
-						  MAIN_tsPostion finalPosition,
+		                  MAIN_tsPosition initialPosition,
+						  MAIN_tsPosition finalPosition,
 						  uint16_t time_ms);
 
-MAIN_tsPostion ANIMATION_sGetPosition(uint8_t id);
+MAIN_tsPosition ANIMATION_sGetPosition(uint8_t id);
 
 bool ANIMATION_bAddColourTransition(uint8_t id,
 		                            MAIN_tsColour initialColour,

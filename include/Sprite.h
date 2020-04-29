@@ -8,6 +8,7 @@
 #define GRN (SPRITE_sGreen)
 #define BLU (SPRITE_sBlue)
 #define PUR (SPRITE_sPurple)
+#define YEL (SPRITE_sYellow)
 #define WHT (SPRITE_sWhite)
 #define PNK (SPRITE_sPink)
 #define BLK (SPRITE_sBlack)

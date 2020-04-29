@@ -55,7 +55,7 @@ typedef struct {
 typedef struct {
 	int16_t x;
 	int16_t y;
-} MAIN_tsPostion;
+} MAIN_tsPosition;
 
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
@@ -85,6 +85,7 @@ MAIN_tsColour SPRITE_sRed;
 MAIN_tsColour SPRITE_sGreen;
 MAIN_tsColour SPRITE_sBlue;
 MAIN_tsColour SPRITE_sPurple;
+MAIN_tsColour SPRITE_sYellow;
 MAIN_tsColour SPRITE_sWhite;
 MAIN_tsColour SPRITE_sPink;
 MAIN_tsColour SPRITE_sBlack;

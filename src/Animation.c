@@ -26,8 +26,8 @@ static uint16_t m_u16FrameTime[ANIMATION_MAX][FRAME_MAX];
 /*
  * Move animation data
  */
-static MAIN_tsPostion m_sInitialPosition[ANIMATION_MAX];
-static MAIN_tsPostion m_sFinalPosition[ANIMATION_MAX];
+static MAIN_tsPosition m_sInitialPosition[ANIMATION_MAX];
+static MAIN_tsPosition m_sFinalPosition[ANIMATION_MAX];
 static uint16_t m_u16FinalPositionTime[ANIMATION_MAX];
 
 
@@ -81,8 +81,8 @@ MAIN_tsColour* ANIMATION_psGetFrame(uint8_t id) {
 }
 
 bool ANIMATION_bAddMotion(uint8_t id,
-		                  MAIN_tsPostion initialPosition,
-                          MAIN_tsPostion finalPosition,
+		                  MAIN_tsPosition initialPosition,
+                          MAIN_tsPosition finalPosition,
 						  uint16_t time_ms) {
 	bool bResult = false;
 	if ((id < m_u8AnimationID) && (time_ms > 0)) {
@@ -94,8 +94,8 @@ bool ANIMATION_bAddMotion(uint8_t id,
 	return (bResult);
 }
 
-MAIN_tsPostion ANIMATION_sGetPosition(uint8_t id) {
-	MAIN_tsPostion sResult;
+MAIN_tsPosition ANIMATION_sGetPosition(uint8_t id) {
+	MAIN_tsPosition sResult;
 	uint32_t u32TimeIntoInterval = MAIN_u32MainCounter % ((uint32_t)m_u16FinalPositionTime[id]);
 	uint32_t u32PercentageComplete = (u32TimeIntoInterval * FRACTION_TO_PERCENTAGE) / m_u16FinalPositionTime[id];
 	sResult.x = m_sInitialPosition[id].x + (int8_t)(((int32_t)m_sFinalPosition[id].x - (int32_t)m_sInitialPosition[id].x) * (int32_t)(u32PercentageComplete) / FRACTION_TO_PERCENTAGE);

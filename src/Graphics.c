@@ -22,7 +22,7 @@
 #define BLUE_2  (0x20)
 
 static void vAddToBuffer(MAIN_tsColour* sprite,
-                         MAIN_tsPostion position,
+                         MAIN_tsPosition position,
 						 uint8_t width,
 						 uint8_t height);
 
@@ -76,7 +76,7 @@ void GRAPHICS_vUpdate(void) {
  * Draw a rectangular sprite with a variety of colours
  */
 void GRAPHICS_vDrawByColourArray(MAIN_tsColour* sprite, /* Where each element is 3 bits: RGB */
-                       MAIN_tsPostion position,
+                       MAIN_tsPosition position,
 			           uint8_t width,
 			           uint8_t height) {
 	vAddToBuffer(sprite, position, width, height);
@@ -86,7 +86,7 @@ void GRAPHICS_vDrawByColourArray(MAIN_tsColour* sprite, /* Where each element is
  * Draw a rectangular sprite of uniform colour
  */
 void GRAPHICS_vDrawBox(MAIN_tsColour colour,
-                          MAIN_tsPostion position,
+                          MAIN_tsPosition position,
 						  uint8_t width,
 						  uint8_t height) {
 	uint16_t u16Loop;
@@ -98,17 +98,18 @@ void GRAPHICS_vDrawBox(MAIN_tsColour colour,
 }
 
 void GRAPHICS_vDrawCircle(MAIN_tsColour colour,
-                          MAIN_tsPostion position,
+                          MAIN_tsPosition position,
 						  uint16_t radius) {
 	uint16_t u16Loop;
 	uint16_t u16SideLength = radius + radius;
 	uint16_t u16RadiusSquared = radius * radius;
 	uint16_t u16SpriteIndices = 4 * u16RadiusSquared;
 	MAIN_tsColour sprite[u16SpriteIndices];
-	int16_t i16OriginX = position.x + radius;
-	int16_t i16OriginY = position.y + radius;
+	int16_t i16OriginX;// = position.x + radius;
+	int16_t i16OriginY;// = position.y + radius;
 	uint16_t u16DistanceToOriginSquared;
 	int16_t i16DeltaX, i16DeltaY;
+	int16_t i16CurrentX, i16CurrentY;
 
 	/* We will draw any pixel within the circle radius.
 	 * distanceFromCircleCentre = sqrt( (x0 - x1)^2 + (y0 - y1)^2 )
@@ -116,6 +117,11 @@ void GRAPHICS_vDrawCircle(MAIN_tsColour colour,
 	 */
 
 	for (u16Loop = 0; u16Loop < u16SpriteIndices; u16Loop++) {
+		i16CurrentX = u16Loop % u16SideLength;
+		i16CurrentY = u16Loop / u16SideLength;
+		i16OriginX = (i16CurrentX < (position.x + radius)) ? (position.x + radius - 1) : (position.x + radius);
+		i16OriginY = (i16CurrentY < (position.y + radius)) ? (position.y + radius - 1) : (position.y + radius);
+
 		i16DeltaX = i16OriginX - position.x - u16Loop % u16SideLength;
 		i16DeltaY = i16OriginY - position.y - u16Loop / u16SideLength;
 		u16DistanceToOriginSquared = i16DeltaX * i16DeltaX + i16DeltaY * i16DeltaY;
@@ -134,7 +140,7 @@ void GRAPHICS_vDrawCircle(MAIN_tsColour colour,
  * This sprite will not appear on screen until GRAPHICS_vUpdate is called.
  */
 static void vAddToBuffer(MAIN_tsColour* sprite,
-                         MAIN_tsPostion position,
+                         MAIN_tsPosition position,
 						 uint8_t width,
 						 uint8_t height) {
 	/* Block impossible shapes */
@@ -205,6 +211,5 @@ static void vAddToBuffer(MAIN_tsColour* sprite,
 				break;
 			}
 		}
-
 	}
 }
