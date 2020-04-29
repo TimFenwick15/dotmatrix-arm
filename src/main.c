@@ -158,13 +158,23 @@ int main(void) {
 
   uint8_t u8RedId;
   MAIN_tsPosition sRedInitialPosition = {24, -16};
-  MAIN_tsPosition sRedFinalPosition = {24, 32};
+  MAIN_tsPosition sRedFinalPosition = {24, 48};
   CALL(ANIMATION_bRegisterAnimation(&u8RedId));
   CALL(ANIMATION_bAddFrame(u8RedId, SPRITE_sRed_0, 900)); /* Because units, ~300ms */
   CALL(ANIMATION_bAddFrame(u8RedId, SPRITE_sRed_1, 900));
   CALL(ANIMATION_bAddFrame(u8RedId, SPRITE_sRed_0, 900));
   CALL(ANIMATION_bAddFrame(u8RedId, SPRITE_sRed_2, 900));
   CALL(ANIMATION_bAddMotion(u8RedId, sRedInitialPosition, sRedFinalPosition, 20000));
+
+  uint8_t u8PikachuId;
+  MAIN_tsPosition sPikachuInitialPosition = {24, -32};
+  MAIN_tsPosition sPikachuFinalPosition = {24, 32};
+  CALL(ANIMATION_bRegisterAnimation(&u8PikachuId));
+  CALL(ANIMATION_bAddFrame(u8PikachuId, SPRITE_sPikachu_0, 900)); /* Because units, ~300ms */
+  CALL(ANIMATION_bAddFrame(u8PikachuId, SPRITE_sPikachu_1, 900));
+  CALL(ANIMATION_bAddFrame(u8PikachuId, SPRITE_sPikachu_0, 900));
+  CALL(ANIMATION_bAddFrame(u8PikachuId, SPRITE_sPikachu_2, 900));
+  CALL(ANIMATION_bAddMotion(u8PikachuId, sPikachuInitialPosition, sPikachuFinalPosition, 20000));
 
   uint8_t u8CircleId1;
   MAIN_tsPosition sCircle1InitialPosition = {0, 32};
@@ -202,6 +212,7 @@ int main(void) {
 		  GRAPHICS_vDrawCircle(ANIMATION_sGetColour(u8CircleId3), ANIMATION_sGetPosition(u8CircleId3), 8);
 		  GRAPHICS_vDrawCircle(ANIMATION_sGetColour(u8CircleId4), ANIMATION_sGetPosition(u8CircleId4), 8);
 		  GRAPHICS_vDrawByColourArray(ANIMATION_psGetFrame(u8RedId), ANIMATION_sGetPosition(u8RedId), RED_SIZE, RED_SIZE);
+		  GRAPHICS_vDrawByColourArray(ANIMATION_psGetFrame(u8PikachuId), ANIMATION_sGetPosition(u8PikachuId), PIKACHU_SIZE, PIKACHU_SIZE);
 		  GRAPHICS_vUpdate();
 	  }
   }
