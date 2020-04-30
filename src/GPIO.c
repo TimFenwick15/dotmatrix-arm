@@ -28,8 +28,15 @@
 #include "main.h"
 #include "GPIO.h"
 
+/**
+ * Prepare a pin for use - should be called on each pin required
+ * @param u8Port - 0=A, 1=B etc, each port holds 16 pins (0 - 15)
+ * @param u8Pin - the pin number from this port, 0 - 15
+ * @param u8UseOpenDrain - one pin for my application wants to be open drain,
+ *                         the rest want to be "push pull" mode
+ */
 void GPIO_vInit(uint8_t u8Port, uint8_t u8Pin, uint8_t u8UseOpenDrain) {
-	// Enable GPIO Peripheral clock
+	/* Enable GPIO Peripheral clock */
 	RCC->AHB1ENR |= BLINK_RCC_MASKx(u8Port);
 	GPIO_InitTypeDef GPIO_InitStructure;
 	GPIO_InitStructure.Pin = BLINK_PIN_MASK(u8Pin);

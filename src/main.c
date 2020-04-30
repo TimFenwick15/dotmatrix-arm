@@ -51,11 +51,16 @@
   */ 
 
 /* Private typedef -----------------------------------------------------------*/
+#define TIMx_IRQHandler                TIM3_IRQHandler
+
 #define INTERRUPT_PERIOD_300us (3 - 1) /* With a colour depth of 4, any slower than this and flicker becomes visible */
 #define INTERRUPT_PERIOD_500us (5 - 1)
 #define INTERRUPT_PERIOD_10ms (100 - 1)
 #define INTERRUPT_PERIOD_500ms (5000 - 1)
 #define INTERRUPT_PERIOD (INTERRUPT_PERIOD_300us)
+#define CLOCK_FREQUENCY (10000) /* 10KHz, or 100us */
+#define SECONDS_TO_MS (1000)
+#define SCREEN_UPDATE_TIME_MS (30)
 
 #define CALL(x) if(!x)Error_Handler();
 
@@ -125,17 +130,10 @@ int main(void) {
   ----------------------------------------------------------------------- */  
   
   /* Compute the prescaler value to have TIM3 counter clock equal to 10 KHz */ // 100us
-  uwPrescalerValue = (uint32_t) ((SystemCoreClock / 10000) - 1);
+  uwPrescalerValue = (uint32_t) ((SystemCoreClock / CLOCK_FREQUENCY) - 1);
   
   /* Set TIMx instance */
   TimHandle.Instance = TIMx;
-   
-  /* Initialize TIM3 peripheral as follow:
-       + Period = 10000 - 1
-       + Prescaler = ((SystemCoreClock/2)/10000) - 1
-       + ClockDivision = 0
-       + Counter direction = Up
-  */
   TimHandle.Init.Period = INTERRUPT_PERIOD;
   TimHandle.Init.Prescaler = uwPrescalerValue;
   TimHandle.Init.ClockDivision = 0;
@@ -155,46 +153,50 @@ int main(void) {
   }
 
   MAIN_u32MainCounter = 0;
+  MAIN_u32MainCounter_ms = 0;
 
+  /*
+   * Draw things
+   */
   uint8_t u8RedId;
   MAIN_tsPosition sRedInitialPosition = {24, -16};
   MAIN_tsPosition sRedFinalPosition = {24, 48};
   CALL(ANIMATION_bRegisterAnimation(&u8RedId));
-  CALL(ANIMATION_bAddFrame(u8RedId, SPRITE_sRed_0, 900)); /* Because units, ~300ms */
-  CALL(ANIMATION_bAddFrame(u8RedId, SPRITE_sRed_1, 900));
-  CALL(ANIMATION_bAddFrame(u8RedId, SPRITE_sRed_0, 900));
-  CALL(ANIMATION_bAddFrame(u8RedId, SPRITE_sRed_2, 900));
+  CALL(ANIMATION_bAddFrame(u8RedId, SPRITE_sRed_0, 180)); /* Because units, ~300ms */
+  CALL(ANIMATION_bAddFrame(u8RedId, SPRITE_sRed_1, 180));
+  CALL(ANIMATION_bAddFrame(u8RedId, SPRITE_sRed_0, 180));
+  CALL(ANIMATION_bAddFrame(u8RedId, SPRITE_sRed_2, 180));
   CALL(ANIMATION_bAddMotion(u8RedId, sRedInitialPosition,
-		  sRedFinalPosition, 20000));
+		  sRedFinalPosition, 4000));
 
   uint8_t u8PikachuId;
   MAIN_tsPosition sPikachuInitialPosition = {24, -32};
   MAIN_tsPosition sPikachuFinalPosition = {24, 32};
   CALL(ANIMATION_bRegisterAnimation(&u8PikachuId));
-  CALL(ANIMATION_bAddFrame(u8PikachuId, SPRITE_sPikachu_0, 900)); /* Because units, ~300ms */
-  CALL(ANIMATION_bAddFrame(u8PikachuId, SPRITE_sPikachu_1, 900));
-  CALL(ANIMATION_bAddFrame(u8PikachuId, SPRITE_sPikachu_0, 900));
-  CALL(ANIMATION_bAddFrame(u8PikachuId, SPRITE_sPikachu_2, 900));
+  CALL(ANIMATION_bAddFrame(u8PikachuId, SPRITE_sPikachu_0, 180)); /* Because units, ~300ms */
+  CALL(ANIMATION_bAddFrame(u8PikachuId, SPRITE_sPikachu_1, 180));
+  CALL(ANIMATION_bAddFrame(u8PikachuId, SPRITE_sPikachu_0, 180));
+  CALL(ANIMATION_bAddFrame(u8PikachuId, SPRITE_sPikachu_2, 180));
   CALL(ANIMATION_bAddMotion(u8PikachuId, sPikachuInitialPosition,
-		  sPikachuFinalPosition, 20000));
+		  sPikachuFinalPosition, 4000));
 
   uint8_t u8CircleId1;
   MAIN_tsPosition sCircle1InitialPosition = {0, 32};
   MAIN_tsPosition sCircle1FinalPosition = {0, -16};
   CALL(ANIMATION_bRegisterAnimation(&u8CircleId1));
   CALL(ANIMATION_bAddMotion(u8CircleId1, sCircle1InitialPosition,
-		  sCircle1FinalPosition, 10000));
+		  sCircle1FinalPosition, 2000));
   CALL(ANIMATION_bAddColourTransition(u8CircleId1, MAIN_sBlue,
-		  MAIN_sRed, 30000));
+		  MAIN_sRed, 6000));
 
   uint8_t u8CircleId2;
   MAIN_tsPosition sCircle2InitialPosition = {16, 32};
   MAIN_tsPosition sCircle2FinalPosition = {16, -16};
   CALL(ANIMATION_bRegisterAnimation(&u8CircleId2));
   CALL(ANIMATION_bAddMotion(u8CircleId2, sCircle2InitialPosition,
-		  sCircle2FinalPosition, 5000));
+		  sCircle2FinalPosition, 1000));
   CALL(ANIMATION_bAddColourTransition(u8CircleId2, MAIN_sPurple,
-		  MAIN_sGreen, 60000));
+		  MAIN_sGreen, 12000));
 
   uint8_t u8CircleId3;
   MAIN_tsPosition sCircle3InitialPosition = {32, 32};
@@ -202,21 +204,23 @@ int main(void) {
   CALL(ANIMATION_bRegisterAnimation(&u8CircleId3));
   CALL(ANIMATION_bAddMotion(u8CircleId3, sCircle3InitialPosition, sCircle3FinalPosition, 20000));
   CALL(ANIMATION_bAddColourTransition(u8CircleId3, MAIN_sGreen,
-		  MAIN_sRed, 20000));
+		  MAIN_sRed, 4000));
 
-  MAIN_tsPosition tmp = {0, 0};
   uint8_t u8CircleId4;
   MAIN_tsPosition sCircle4InitialPosition = {48, 32};
   MAIN_tsPosition sCircle4FinalPosition = {48, -16};
   CALL(ANIMATION_bRegisterAnimation(&u8CircleId4));
   CALL(ANIMATION_bAddMotion(u8CircleId4, sCircle4InitialPosition,
-		  sCircle4FinalPosition, 7500));
+		  sCircle4FinalPosition, 1500));
   CALL(ANIMATION_bAddColourTransition(u8CircleId4, MAIN_sBlue,
-		  MAIN_sYellow, 7500));
+		  MAIN_sYellow, 1500));
 
   /* Infinite loop */
   while (1) {
-	  if (MAIN_u32MainCounter % 100 == 0) { /* 100 * 300us ~ 30ms. Screen redraws in about 5ms */
+      MAIN_u32MainCounter_ms = MAIN_u32MainCounter * (INTERRUPT_PERIOD + 1) *
+              SECONDS_TO_MS / CLOCK_FREQUENCY;
+
+	  if ((MAIN_u32MainCounter_ms % SCREEN_UPDATE_TIME_MS) == 0) { /* 100 * 300us ~ 30ms. Screen redraws in about 5ms */
 		  GRAPHICS_vDrawCircle(ANIMATION_sGetColour(u8CircleId1),
 				  ANIMATION_sGetPosition(u8CircleId1), 8);
 		  GRAPHICS_vDrawCircle(ANIMATION_sGetColour(u8CircleId2),
@@ -229,7 +233,6 @@ int main(void) {
 				  ANIMATION_sGetPosition(u8RedId), RED_SIZE, RED_SIZE);
 		  GRAPHICS_vDrawByColourArray(ANIMATION_psGetFrame(u8PikachuId),
 				  ANIMATION_sGetPosition(u8PikachuId), PIKACHU_SIZE, PIKACHU_SIZE);
-		  //GRAPHICS_vDrawCircle(MAIN_sRed, tmp, 8);
 		  GRAPHICS_vUpdate();
 	  }
   }

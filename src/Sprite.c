@@ -22,6 +22,9 @@
 #define BLK (MAIN_sBlack)
 #define OFF (MAIN_sTransparent)
 
+/**
+ * Called before the sprite module can be used
+ */
 void SPRITE_vInit(void) {
 	MAIN_sRed.red = COLOUR_BRIGHTNESS_100_PERCENT;
 	MAIN_sRed.green = COLOUR_BRIGHTNESS_0_PERCENT;

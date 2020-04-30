@@ -44,6 +44,9 @@
 static uint16_t m_u16Address = 0;
 static uint8_t m_u8ColourDepth = 0;
 
+/**
+ * Called before the LedMatrix moduel can be used
+ */
 void LEDMATRIX_vInit(void) {
 	GPIO_vInit(GPIO_PORT_NUMBER, PIN_NUMBER_R1, GPIO_OUTPUT);
 	GPIO_vInit(GPIO_PORT_NUMBER, PIN_NUMBER_G1, GPIO_OUTPUT);
@@ -64,6 +67,9 @@ void LEDMATRIX_vInit(void) {
 			 PIN_CLK | PIN_OE  | PIN_LAT);
 }
 
+/**
+ * This adds a definition to the interrupt callback prepared in main
+ */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
 	GPIO_on(PIN_OE | PIN_LAT | ADDRESS_PORT_ON(m_u16Address));

@@ -97,6 +97,7 @@ MAIN_tsColour MAIN_sBlack;
 MAIN_tsColour MAIN_sTransparent;
 
 uint32_t MAIN_u32MainCounter;
+uint32_t MAIN_u32MainCounter_ms;
 uint8_t* MAIN_pau8Buffer[COLOUR_DEPTH]; /* The buffers in Graphics.c are 2D arrays */
 
 #endif /* __MAIN_H */
