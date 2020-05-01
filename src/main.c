@@ -185,7 +185,7 @@ int main(void) {
   MAIN_tsPosition sCircle1FinalPosition = {0, -16};
   CALL(ANIMATION_bRegisterAnimation(&u8CircleId1));
   CALL(ANIMATION_bAddMotion(u8CircleId1, sCircle1InitialPosition,
-		  sCircle1FinalPosition, 2000));
+		  sCircle1FinalPosition, 3000));
   CALL(ANIMATION_bAddColourTransition(u8CircleId1, MAIN_sBlue,
 		  MAIN_sRed, 6000));
 
@@ -194,7 +194,7 @@ int main(void) {
   MAIN_tsPosition sCircle2FinalPosition = {16, -16};
   CALL(ANIMATION_bRegisterAnimation(&u8CircleId2));
   CALL(ANIMATION_bAddMotion(u8CircleId2, sCircle2InitialPosition,
-		  sCircle2FinalPosition, 1000));
+		  sCircle2FinalPosition, 1500));
   CALL(ANIMATION_bAddColourTransition(u8CircleId2, MAIN_sPurple,
 		  MAIN_sGreen, 12000));
 
@@ -202,18 +202,18 @@ int main(void) {
   MAIN_tsPosition sCircle3InitialPosition = {32, 32};
   MAIN_tsPosition sCircle3FinalPosition = {32, -16};
   CALL(ANIMATION_bRegisterAnimation(&u8CircleId3));
-  CALL(ANIMATION_bAddMotion(u8CircleId3, sCircle3InitialPosition, sCircle3FinalPosition, 20000));
+  CALL(ANIMATION_bAddMotion(u8CircleId3, sCircle3InitialPosition, sCircle3FinalPosition, 10000));
   CALL(ANIMATION_bAddColourTransition(u8CircleId3, MAIN_sGreen,
-		  MAIN_sRed, 4000));
+		  MAIN_sRed, 5000));
 
   uint8_t u8CircleId4;
   MAIN_tsPosition sCircle4InitialPosition = {48, 32};
   MAIN_tsPosition sCircle4FinalPosition = {48, -16};
   CALL(ANIMATION_bRegisterAnimation(&u8CircleId4));
   CALL(ANIMATION_bAddMotion(u8CircleId4, sCircle4InitialPosition,
-		  sCircle4FinalPosition, 1500));
+		  sCircle4FinalPosition, 2000));
   CALL(ANIMATION_bAddColourTransition(u8CircleId4, MAIN_sBlue,
-		  MAIN_sYellow, 1500));
+		  MAIN_sYellow, 2000));
 
   /* Infinite loop */
   while (1) {
