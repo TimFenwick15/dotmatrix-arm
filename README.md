@@ -1,6 +1,21 @@
+[![Build Status](https://travis-ci.com/TimFenwick15/dotmatrix-arm.svg?branch=master)](https://travis-ci.com/TimFenwick15/dotmatrix-arm)
+
 Driving an LED dotmatrix with an STM32F411e-Discovery.
 
 ## Unit Testing
+
+### Running tests
+To run tests (just Windows for now...):
+
+Open a Command Prompt inside the project directory, then run:
+
+$ RunTests
+
+This requires you have gcc on your path. On Windows, you can get this by downloading MINGW.
+
+I couldn't get this to work as a build target in Eclipse, but this is presumably possible. For now, you can right-click RunTest.bat and click "Show in", then "Terminal". In the terminal, type "RunTests"
+
+### Unity
 Trying unit testing with Unity because it seems to be the easiest to set up.
 
 Their approach is:
@@ -42,6 +57,9 @@ I've chosen the second method because you don't need to maintain a make file, it
 
 ### Unit testing static functions
 Found several recomendations to #include the whole source file into the test script to get access to static data. IF you do this, you can't build the source file or you'll get redefined symbol errors. Any files that depend on this one will break too.
+
+### Unity quirks
+I think I ran into this issue: https://github.com/ThrowTheSwitch/Unity/issues/438. The solution was to not define a setUp/tearDown function. This is fine for now, but may cause problems later.
 
 ## GDB
 GDB was useful while debugging the test executable.
