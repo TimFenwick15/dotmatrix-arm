@@ -8,7 +8,8 @@
 #include "unity.h"
 
 extern void AnimationTestRunner(void);
-extern void GPIOTestRunner(void);
+extern void GraphicsTestRunner(void);
+extern void SpriteTestRunner(void);
 
 void setUp(void) {
     // set stuff up here
@@ -21,6 +22,7 @@ void tearDown(void) {
 int main(void) {
     UNITY_BEGIN();
     AnimationTestRunner();
-    GPIOTestRunner();
+    GraphicsTestRunner();
+    SpriteTestRunner();
     return UNITY_END();
 }

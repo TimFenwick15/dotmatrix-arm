@@ -1,5 +1,59 @@
 Driving an LED dotmatrix with an STM32F411e-Discovery.
 
+## Unit Testing
+Trying unit testing with Unity because it seems to be the easiest to set up.
+
+Their approach is:
+- Write a test source file that includes a main function
+- Compile this to run on the host PC
+- Run the executable to run the test script
+
+Or:
+- Write a test source file without a main function
+- Run an included Ruby script to generate a test runner for that file
+- Compile the test runner file - this will have a main function
+- Run the executable as before
+
+So to add a test, you would write a test file, update the build command (I'm using a batch script, make is a better option), run all executables to run the test suite.
+
+Requirements:
+- Ruby
+- GCC (MinGW on Windows) on your path
+
+You could do a similar thing without using the supplied Ruby script, by making each test script expose a run function, and writing a TestRunner source file that runs each of these.
+
+Then you can compile a single executable with a single build command, and run your whole test suite at once. For a small project like this, this seems easier to maintain. For a larger project, this could lead to longer build times.
+
+The process for adding a test becomes: write the test script, add the run function to the TestRunner, make sure the source file under test is included in the build command, then run the executable.
+
+A disadvantage of doing this is the results show tests as coming from the test runner file rather than the test script. The line numbers refer to the test scripts, and the function names tell you where to look.
+
+Requirements:
+- GCC (MinGW on Windows) on your path
+
+I've chosen the second method because you don't need to maintain a make file, it doesn't depend on external tools, the batch file to run this is simple, and building everything is fast in a project of this size so I don't need to worry about running tests on a portion of my code base.
+
+### Files that can be unit tested
+- Animation.c: yes - contains several functions that can be unit tested, has a static function that it would be useful to have tests for
+- GPIO.c: no - when built statically, you get SEGFAULTS when running the executable, I think because there's a macro to a memory locaiton that doens't make sense on a host PC
+- Graphics.c: yes
+- LedMatric.c: no - depends on GPIO.c, and contains funcitons that aren't easy to test - eg a definition of an ISR
+- Sprite.c: yes - although the tests are trivial
+
+### Unit testing static functions
+Found several recomendations to #include the whole source file into the test script to get access to static data. IF you do this, you can't build the source file or you'll get redefined symbol errors. Any files that depend on this one will break too.
+
+## GDB
+GDB was useful while debugging the test executable.
+
+Start GDB on the exe:
+$ gdb Unity\test.exe
+
+Run the exe:
+$ run
+
+If you compile wiht the -g3 flag, gdb can interogate line numbers when there is a fault.
+
 ## Board can't communicate
 The current commit leaves the board in a state where is cannot communicate with the PC. OpenOCD gives an "Error: libusb_open() failed with LIBUSB_ERROR_NOT_SUPPORTED" error.
 
