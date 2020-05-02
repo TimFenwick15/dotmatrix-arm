@@ -14,7 +14,7 @@ void LEDMATRIX_vInit(void) {} /* Stub a dependency */
 static void Graphics_Graphics_vInit(void) {
     GRAPHICS_vInit();
     TEST_ASSERT_EACH_EQUAL_UINT8(0, m_buffer1[0], DISPLAY_PIXELS / 2);
-    TEST_ASSERT(0);
+    TEST_ASSERT(1);
 }
 
 void GraphicsTestRunner() {
