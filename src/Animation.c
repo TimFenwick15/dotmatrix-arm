@@ -48,7 +48,7 @@ static uint16_t m_u16FinalColourTime[ANIMATION_MAX];
  * Prepare any data required before use of this module
  */
 void ANIMATION_vInit(void) {
-    *m_psPlaceholder = MAIN_sTransparent;
+    m_psPlaceholder = &MAIN_sTransparent;
     memset(m_u8FrameCount, 0, sizeof m_u8FrameCount);
 }
 

@@ -78,7 +78,7 @@ int main(void)
 {
   UnityBegin("Unity/AnimationTest.c");
   run_test(test_function_should_doBlahAndBlah, "test_function_should_doBlahAndBlah", 14);
-  run_test(test_function_should_doAlsoDoBlah, "test_function_should_doAlsoDoBlah", 33);
+  run_test(test_function_should_doAlsoDoBlah, "test_function_should_doAlsoDoBlah", 18);
 
   return UnityEnd();
 }

@@ -1,36 +1,36 @@
-/*
- * AnimationTest.c
- *
- *  Created on: 1 May 2020
- *      Author: Tim
- */
-
 #include "unity.h"
-#include "../include/main.h"
-//#include "../include/Animation.h"
-#include "../src/Animation.c" /* This seems bad, but allows us to test static functions */
+#include "main.h"
+#include "Animation.h"
 
-static void Animation_setup(void) {
-    MAIN_sTransparent = (MAIN_tsColour) { 0, 0, 0, 0 };
+/*
+void setUp(void) {
+    // set stuff up here
 }
 
-static void Animation_ANIMATION_vInit(void) {
-    //ANIMATION_vInit(); // Test hangs
-    //TEST_ASSERT_EQUAL_PTR(m_psPlaceholder, &MAIN_sTransparent);
-    TEST_ASSERT_EACH_EQUAL_INT8(0, m_u8FrameCount, ANIMATION_MAX);
+void tearDown(void) {
+    // clean stuff up here
+}*/
+
+void test_function_should_doBlahAndBlah(void) {
+    /*MAIN_sTransparent.red = 0;
+    MAIN_sTransparent.green = 0;
+    MAIN_sTransparent.blue = 0;
+    MAIN_sTransparent.visible = 0;*/
+    ANIMATION_vInit();
+    uint8_t a;
+    TEST_ASSERT_TRUE(ANIMATION_bRegisterAnimation(&a));
+    TEST_ASSERT_TRUE(ANIMATION_bRegisterAnimation(&a));
+    TEST_ASSERT_TRUE(ANIMATION_bRegisterAnimation(&a));
+    TEST_ASSERT_TRUE(ANIMATION_bRegisterAnimation(&a));
+    TEST_ASSERT_TRUE(ANIMATION_bRegisterAnimation(&a));
+    TEST_ASSERT_TRUE(ANIMATION_bRegisterAnimation(&a));
+    TEST_ASSERT_TRUE(ANIMATION_bRegisterAnimation(&a));
+    TEST_ASSERT_TRUE(ANIMATION_bRegisterAnimation(&a));
+    TEST_ASSERT_EQUAL_UINT8(7, a);
+    TEST_ASSERT_FALSE(ANIMATION_bRegisterAnimation(&a));
+    TEST_ASSERT_EQUAL_UINT8(7, a);
 }
 
-static void Animation_i32Blend(void) {
-    TEST_ASSERT_EQUAL_INT32(0, i32Blend(0, 0, 0));
-    TEST_ASSERT_EQUAL_INT32(0, i32Blend(0, 1, 0));
-    TEST_ASSERT_EQUAL_INT32(0, i32Blend(0, 1, 1));
-    TEST_ASSERT_EQUAL_INT32(1, i32Blend(0, 1, 100));
-    TEST_ASSERT_EQUAL_INT32(1, i32Blend(1, 1, 100));
-    TEST_ASSERT_EQUAL_INT32(50, i32Blend(0, 100, 50));
-}
-
-void AnimationTestRunner() {
-    Animation_setup();
-    RUN_TEST(Animation_ANIMATION_vInit);
-    RUN_TEST(Animation_i32Blend);
+void test_function_should_doAlsoDoBlah(void) {
+    //more test stuff
 }
