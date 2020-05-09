@@ -185,7 +185,7 @@ int main(void) {
   MAIN_tsPosition sPikachuInitialPosition = {24, -32};
   MAIN_tsPosition sPikachuFinalPosition = {24, 32};
   CALL(ANIMATION_bRegisterAnimation(&u8PikachuId));
-  CALL(ANIMATION_bAddFrame(u8PikachuId, SPRITE_sPikachu_0, 180)); /* Because units, ~300ms */
+  CALL(ANIMATION_bAddFrame(u8PikachuId, SPRITE_sPikachu_0, 180));
   CALL(ANIMATION_bAddFrame(u8PikachuId, SPRITE_sPikachu_1, 180));
   CALL(ANIMATION_bAddFrame(u8PikachuId, SPRITE_sPikachu_0, 180));
   CALL(ANIMATION_bAddFrame(u8PikachuId, SPRITE_sPikachu_2, 180));
@@ -227,6 +227,47 @@ int main(void) {
   CALL(ANIMATION_bAddColourTransition(u8CircleId4, MAIN_sBlue,
 		  MAIN_sYellow, 2000));
 
+  uint8_t u8AgumonId;
+  MAIN_tsPosition sAgumonPosition = {24, 8};
+  CALL(ANIMATION_bRegisterAnimation(&u8AgumonId));
+  CALL(ANIMATION_bAddFrame(u8AgumonId, SPRITE_sAgumon_0, 500));
+  CALL(ANIMATION_bAddFrame(u8AgumonId, SPRITE_sAgumon_1, 500));
+
+  uint8_t u8Digimon1Id;
+  MAIN_tsPosition sDigimon1Position = {0, 8};
+  CALL(ANIMATION_bRegisterAnimation(&u8Digimon1Id));
+  CALL(ANIMATION_bAddFrame(u8Digimon1Id, SPRITE_sDigimon1_0, 500));
+  CALL(ANIMATION_bAddFrame(u8Digimon1Id, SPRITE_sDigimon1_1, 500));
+
+
+  uint8_t u8EggId;
+  MAIN_tsPosition sEggInitialPosition = {48, 8};
+  MAIN_tsPosition sEggFinalPosition = {50, 8};
+  CALL(ANIMATION_bRegisterAnimation(&u8EggId));
+  CALL(ANIMATION_bAddMotion(u8EggId, sEggInitialPosition,
+          sEggFinalPosition, 1000));
+
+  uint8_t u8DigimonBackground1;
+  MAIN_tsPosition sDigimonBackground1InitialPosition = {15, 0};
+  MAIN_tsPosition sDigimonBackground1FinalPosition = {15, 64};
+  CALL(ANIMATION_bRegisterAnimation(&u8DigimonBackground1));
+  CALL(ANIMATION_bAddMotion(u8DigimonBackground1, sDigimonBackground1InitialPosition,
+          sDigimonBackground1FinalPosition, 2000));
+
+  uint8_t u8DigimonBackground2;
+  MAIN_tsPosition sDigimonBackground2InitialPosition = {35, -32};
+  MAIN_tsPosition sDigimonBackground2FinalPosition = {35, 32};
+  CALL(ANIMATION_bRegisterAnimation(&u8DigimonBackground2));
+  CALL(ANIMATION_bAddMotion(u8DigimonBackground2, sDigimonBackground2InitialPosition,
+          sDigimonBackground2FinalPosition, 2000));
+
+  uint8_t u8DigimonBackground3;
+  MAIN_tsPosition sDigimonBackground3InitialPosition = {50, -16};
+  MAIN_tsPosition sDigimonBackground3FinalPosition = {50, 48};
+  CALL(ANIMATION_bRegisterAnimation(&u8DigimonBackground3));
+  CALL(ANIMATION_bAddMotion(u8DigimonBackground3, sDigimonBackground3InitialPosition,
+          sDigimonBackground3FinalPosition, 2000));
+
   /* Infinite loop */
   while (1) {
       MAIN_u32MainCounter_ms = MAIN_u32MainCounter * (INTERRUPT_PERIOD + 1) *
@@ -259,7 +300,19 @@ int main(void) {
                       ANIMATION_sGetPosition(u8PikachuId), PIKACHU_SIZE, PIKACHU_SIZE);
               break;
           case m_eState1:
-                break;
+              GRAPHICS_vDrawCircle(MAIN_sBlue,
+                      ANIMATION_sGetPosition(u8DigimonBackground1), 1);
+              GRAPHICS_vDrawCircle(MAIN_sBlue,
+                      ANIMATION_sGetPosition(u8DigimonBackground2), 1);
+              GRAPHICS_vDrawCircle(MAIN_sBlue,
+                      ANIMATION_sGetPosition(u8DigimonBackground3), 1);
+              GRAPHICS_vDrawByColourArray(ANIMATION_psGetFrame(u8AgumonId),
+                      sAgumonPosition, AGUMON_SIZE, AGUMON_SIZE);
+              GRAPHICS_vDrawByColourArray(ANIMATION_psGetFrame(u8Digimon1Id),
+                      sDigimon1Position, DIGIMON_1_WIDTH, DIGIMON_1_HEIGHT);
+              GRAPHICS_vDrawByColourArray(SPRITE_sEgg,
+                      ANIMATION_sGetPosition(u8EggId), EGG_SIZE, EGG_SIZE);
+              break;
           default:
               break;
           }

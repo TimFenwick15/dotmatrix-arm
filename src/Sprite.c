@@ -182,10 +182,105 @@ void SPRITE_vInit(void) {
 		OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, WHT, WHT, OFF, OFF, OFF, OFF, OFF,
 		OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF
 	};
+
+	/*
+	 * Draw Agumon
+	 */
+    MAIN_tsColour sAgumon_0[AGUMON_SIZE * AGUMON_SIZE] = {
+        OFF, OFF, OFF, OFF, OFF, OFF, BLU, BLU, BLU, BLU, BLU, OFF, OFF, OFF, OFF, OFF,
+        OFF, OFF, OFF, OFF, OFF, BLU, WHT, WHT, WHT, WHT, WHT, BLU, OFF, OFF, OFF, OFF,
+        OFF, OFF, OFF, OFF, BLU, WHT, BLU, BLU, BLU, BLU, BLU, WHT, BLU, OFF, OFF, OFF,
+        OFF, OFF, BLU, BLU, WHT, WHT, BLU, WHT, WHT, BLU, BLU, BLU, WHT, BLU, OFF, OFF,
+        OFF, BLU, WHT, WHT, BLU, BLU, BLU, BLU, WHT, WHT, BLU, BLU, WHT, BLU, OFF, OFF,
+        BLU, WHT, BLU, BLU, BLU, BLU, BLU, WHT, WHT, WHT, BLU, BLU, BLU, WHT, BLU, OFF,
+        BLU, WHT, WHT, WHT, WHT, BLU, BLU, BLU, BLU, BLU, BLU, BLU, BLU, WHT, BLU, OFF,
+        OFF, BLU, WHT, BLU, BLU, BLU, BLU, BLU, BLU, BLU, BLU, BLU, BLU, WHT, BLU, OFF,
+        OFF, OFF, BLU, WHT, WHT, WHT, WHT, WHT, BLU, BLU, BLU, BLU, WHT, BLU, OFF, OFF,
+        OFF, OFF, OFF, BLU, WHT, WHT, BLU, BLU, BLU, BLU, WHT, BLU, WHT, BLU, OFF, OFF,
+        OFF, OFF, BLU, WHT, BLU, WHT, BLU, BLU, BLU, WHT, BLU, BLU, BLU, WHT, BLU, OFF,
+        OFF, OFF, BLU, WHT, WHT, WHT, BLU, BLU, BLU, WHT, WHT, WHT, BLU, WHT, BLU, OFF,
+        OFF, OFF, OFF, BLU, BLU, WHT, WHT, BLU, BLU, BLU, BLU, WHT, BLU, BLU, WHT, BLU,
+        OFF, OFF, BLU, WHT, WHT, BLU, BLU, WHT, WHT, WHT, WHT, BLU, BLU, BLU, WHT, BLU,
+        OFF, BLU, WHT, BLU, WHT, BLU, BLU, WHT, BLU, WHT, BLU, WHT, BLU, WHT, BLU, WHT,
+        OFF, BLU, WHT, WHT, WHT, WHT, WHT, WHT, BLU, WHT, WHT, WHT, WHT, WHT, WHT, WHT
+    };
+    MAIN_tsColour sAgumon_1[AGUMON_SIZE * AGUMON_SIZE] = {
+        OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF,
+        OFF, OFF, OFF, OFF, OFF, OFF, BLU, BLU, BLU, BLU, BLU, OFF, OFF, OFF, OFF, OFF,
+        OFF, OFF, OFF, OFF, OFF, BLU, WHT, WHT, WHT, WHT, WHT, BLU, OFF, OFF, OFF, OFF,
+        OFF, OFF, OFF, OFF, BLU, WHT, BLU, BLU, BLU, BLU, BLU, WHT, BLU, OFF, OFF, OFF,
+        OFF, OFF, BLU, BLU, WHT, WHT, BLU, WHT, WHT, BLU, BLU, BLU, WHT, BLU, OFF, OFF,
+        OFF, BLU, WHT, WHT, BLU, BLU, BLU, BLU, WHT, WHT, BLU, BLU, WHT, BLU, OFF, OFF,
+        BLU, WHT, BLU, BLU, BLU, BLU, BLU, WHT, WHT, WHT, BLU, BLU, BLU, WHT, BLU, OFF,
+        BLU, WHT, WHT, WHT, WHT, BLU, BLU, BLU, BLU, BLU, BLU, BLU, BLU, WHT, BLU, OFF,
+        OFF, BLU, WHT, BLU, BLU, BLU, BLU, BLU, BLU, BLU, BLU, BLU, BLU, WHT, BLU, OFF,
+        OFF, OFF, BLU, WHT, WHT, WHT, WHT, WHT, BLU, BLU, BLU, BLU, WHT, BLU, OFF, OFF,
+        OFF, OFF, OFF, BLU, WHT, WHT, BLU, BLU, BLU, BLU, WHT, BLU, WHT, BLU, OFF, OFF,
+        OFF, OFF, BLU, WHT, BLU, WHT, BLU, BLU, BLU, WHT, BLU, BLU, BLU, WHT, BLU, OFF,
+        OFF, OFF, BLU, WHT, BLU, WHT, BLU, BLU, BLU, WHT, BLU, WHT, BLU, WHT, BLU, OFF,
+        OFF, OFF, BLU, WHT, WHT, BLU, WHT, BLU, BLU, BLU, WHT, BLU, BLU, BLU, WHT, BLU,
+        OFF, BLU, WHT, BLU, WHT, BLU, BLU, WHT, WHT, WHT, BLU, WHT, BLU, WHT, BLU, WHT,
+        OFF, BLU, WHT, WHT, WHT, WHT, WHT, WHT, BLU, WHT, WHT, WHT, WHT, WHT, WHT, WHT
+    };
+
+    /*
+     * Draw Digimon 1
+     */
+    MAIN_tsColour sDigimon1_0[DIGIMON_1_WIDTH * DIGIMON_1_HEIGHT] = {
+        OFF, OFF, OFF, BLU, BLU, OFF, OFF, OFF, BLU, BLU, OFF, OFF, OFF,
+        OFF, OFF, BLU, WHT, WHT, BLU, BLU, BLU, WHT, WHT, BLU, OFF, OFF,
+        OFF, OFF, BLU, WHT, BLU, WHT, WHT, WHT, BLU, WHT, BLU, OFF, OFF,
+        OFF, BLU, WHT, BLU, BLU, BLU, BLU, BLU, BLU, BLU, WHT, BLU, OFF,
+        BLU, WHT, BLU, BLU, WHT, BLU, BLU, BLU, WHT, BLU, BLU, WHT, BLU,
+        BLU, WHT, BLU, BLU, WHT, BLU, BLU, BLU, WHT, BLU, BLU, WHT, BLU,
+        BLU, WHT, BLU, BLU, BLU, WHT, WHT, WHT, BLU, BLU, BLU, WHT, BLU,
+        BLU, WHT, BLU, BLU, BLU, BLU, BLU, BLU, BLU, BLU, BLU, WHT, BLU,
+        OFF, BLU, WHT, BLU, BLU, BLU, BLU, BLU, BLU, BLU, WHT, BLU, OFF,
+        OFF, OFF, BLU, WHT, WHT, WHT, WHT, WHT, WHT, WHT, BLU, OFF, OFF,
+
+    };
+    MAIN_tsColour sDigimon1_1[DIGIMON_1_WIDTH * DIGIMON_1_HEIGHT] = {
+        OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF,
+        OFF, OFF, OFF, BLU, BLU, OFF, OFF, OFF, BLU, BLU, OFF, OFF, OFF,
+        OFF, OFF, BLU, WHT, WHT, BLU, BLU, BLU, WHT, WHT, BLU, OFF, OFF,
+        OFF, OFF, BLU, WHT, BLU, WHT, WHT, WHT, BLU, WHT, BLU, OFF, OFF,
+        OFF, BLU, WHT, BLU, BLU, BLU, BLU, BLU, BLU, BLU, WHT, BLU, OFF,
+        BLU, WHT, BLU, BLU, WHT, BLU, BLU, BLU, WHT, BLU, BLU, WHT, BLU,
+        BLU, WHT, BLU, BLU, WHT, BLU, BLU, BLU, WHT, BLU, BLU, WHT, BLU,
+        BLU, WHT, BLU, BLU, BLU, BLU, WHT, BLU, BLU, BLU, BLU, WHT, BLU,
+        BLU, WHT, BLU, BLU, BLU, BLU, BLU, BLU, BLU, BLU, BLU, WHT, BLU,
+        OFF, BLU, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, WHT, BLU, OFF
+    };
+
+    /*
+     * Draw Egg
+     */
+    MAIN_tsColour sEgg[EGG_SIZE * EGG_SIZE] = {
+            OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF,
+            OFF, OFF, OFF, OFF, OFF, BLU, BLU, BLU, BLU, OFF, OFF, OFF, OFF, OFF,
+            OFF, OFF, OFF, OFF, BLU, WHT, WHT, WHT, WHT, BLU, OFF, OFF, OFF, OFF,
+            OFF, OFF, OFF, BLU, WHT, WHT, BLU, BLU, BLU, WHT, BLU, OFF, OFF, OFF,
+            OFF, OFF, BLU, WHT, WHT, WHT, BLU, BLU, WHT, WHT, WHT, BLU, OFF, OFF,
+            OFF, BLU, WHT, WHT, WHT, BLU, BLU, BLU, WHT, WHT, WHT, WHT, BLU, OFF,
+            OFF, BLU, WHT, BLU, BLU, BLU, BLU, BLU, WHT, WHT, WHT, WHT, BLU, OFF,
+            BLU, WHT, BLU, BLU, WHT, BLU, BLU, BLU, BLU, WHT, WHT, WHT, WHT, BLU,
+            BLU, WHT, BLU, BLU, WHT, WHT, BLU, BLU, BLU, BLU, WHT, WHT, WHT, BLU,
+            BLU, WHT, BLU, BLU, WHT, WHT, WHT, BLU, BLU, BLU, BLU, BLU, WHT, BLU,
+            BLU, WHT, BLU, BLU, BLU, WHT, WHT, BLU, BLU, WHT, WHT, BLU, WHT, BLU,
+            OFF, BLU, WHT, WHT, BLU, BLU, BLU, BLU, WHT, WHT, WHT, WHT, BLU, OFF,
+            OFF, OFF, BLU, WHT, WHT, BLU, BLU, BLU, WHT, WHT, WHT, BLU, OFF, OFF,
+            OFF, OFF, OFF, BLU, WHT, WHT, WHT, WHT, WHT, WHT, BLU, OFF, OFF, OFF
+    };
+
 	memcpy(SPRITE_sRed_0, sRed_0, sizeof sRed_0);
 	memcpy(SPRITE_sRed_1, sRed_1, sizeof sRed_1);
 	memcpy(SPRITE_sRed_2, sRed_2, sizeof sRed_2);
 	memcpy(SPRITE_sPikachu_0, sPikachu_0, sizeof sPikachu_0);
 	memcpy(SPRITE_sPikachu_1, sPikachu_1, sizeof sPikachu_1);
 	memcpy(SPRITE_sPikachu_2, sPikachu_2, sizeof sPikachu_2);
+    memcpy(SPRITE_sAgumon_0, sAgumon_0, sizeof sAgumon_0);
+    memcpy(SPRITE_sAgumon_1, sAgumon_1, sizeof sAgumon_1);
+    memcpy(SPRITE_sDigimon1_0, sDigimon1_0, sizeof sDigimon1_0);
+    memcpy(SPRITE_sDigimon1_1, sDigimon1_1, sizeof sDigimon1_1);
+    memcpy(SPRITE_sEgg, sEgg, sizeof sEgg);
 }

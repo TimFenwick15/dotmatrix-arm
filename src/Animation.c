@@ -9,7 +9,7 @@
 #include "Animation.h"
 #include <string.h> /* memset */
 
-#define ANIMATION_MAX (8) /* These are pretty arbitrary - this allows us to avoid heap allocation */
+#define ANIMATION_MAX (16) /* These are pretty arbitrary - this allows us to avoid heap allocation */
 #define FRAME_MAX (4)
 
 #define FRACTION_TO_PERCENTAGE (100)
