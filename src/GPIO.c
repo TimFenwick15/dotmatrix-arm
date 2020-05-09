@@ -35,18 +35,22 @@
  * @param u8UseOpenDrain - one pin for my application wants to be open drain,
  *                         the rest want to be "push pull" mode
  */
-void GPIO_vInit(uint8_t u8Port, uint8_t u8Pin, uint8_t u8UseOpenDrain) {
+void GPIO_vInit(uint8_t u8Port, uint8_t u8Pin, GPIO_teGpioType eGpioType) {
 	/* Enable GPIO Peripheral clock */
 	RCC->AHB1ENR |= BLINK_RCC_MASKx(u8Port);
 	GPIO_InitTypeDef GPIO_InitStructure;
 	GPIO_InitStructure.Pin = BLINK_PIN_MASK(u8Pin);
 	GPIO_InitStructure.Speed = GPIO_SPEED_FAST;
-	if (1 == u8UseOpenDrain) {
-		GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_OD;
+    GPIO_InitStructure.Mode = (uint32_t)eGpioType;
+	if (GPIO_eOutputOD == eGpioType) {
 		GPIO_InitStructure.Pull = GPIO_NOPULL;
 	} else {
-		GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
 		GPIO_InitStructure.Pull = GPIO_PULLDOWN;
 	}
 	HAL_GPIO_Init(BLINK_GPIOx(u8Port), &GPIO_InitStructure);
 }
+
+uint8_t GPIO_read(uint8_t port, uint8_t pin) {
+    return HAL_GPIO_ReadPin(BLINK_GPIOx(port), 1 << pin);// ? true : false;
+}
+

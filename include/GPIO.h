@@ -41,13 +41,17 @@
 
 #define GPIO_PORT_NUMBER (3)
 
-#define GPIO_OUTPUT (0)
-#define GPIO_OPEN_DRAIN (1)
+typedef enum {
+    GPIO_eInput = GPIO_MODE_INPUT,
+    GPIO_eOutputPP = GPIO_MODE_OUTPUT_PP,
+    GPIO_eOutputOD = GPIO_MODE_OUTPUT_OD
+} GPIO_teGpioType;
 
 inline void GPIO_on(uint16_t pinBitField);
 inline void GPIO_off(uint16_t pinBitField);
+uint8_t GPIO_read(uint8_t port, uint8_t pin);
 
-void GPIO_vInit(uint8_t u8Port, uint8_t u8Pin, uint8_t u8UseOpenDrain);
+void GPIO_vInit(uint8_t u8Port, uint8_t u8Pin, GPIO_teGpioType eGpioType);
 
 /* Providing two functions should prioritise code speed over code space */
 inline void __attribute__((always_inline)) GPIO_on(uint16_t pinBitField) {
@@ -56,9 +60,9 @@ inline void __attribute__((always_inline)) GPIO_on(uint16_t pinBitField) {
 	}
 }
 inline void __attribute__((always_inline)) GPIO_off(uint16_t pinBitField) {
-	if (0 != pinBitField) {
-		HAL_GPIO_WritePin(BLINK_GPIOx(GPIO_PORT_NUMBER), pinBitField, GPIO_PIN_RESET);
-	}
+    if (0 != pinBitField) {
+        HAL_GPIO_WritePin(BLINK_GPIOx(GPIO_PORT_NUMBER), pinBitField, GPIO_PIN_RESET);
+    }
 }
 
 // ----------------------------------------------------------------------------

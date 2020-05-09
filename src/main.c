@@ -41,6 +41,7 @@
 #include "Graphics.h"
 #include "Sprite.h"
 #include "Animation.h"
+#include "UserInput.h"
 
 /** @addtogroup STM32F4xx_HAL_Examples
   * @{
@@ -64,6 +65,12 @@
 
 #define CALL(x) if(!x)Error_Handler();
 
+typedef enum {
+    m_eState0,
+    m_eState1,
+    m_eStateMax
+} m_teState;
+
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -72,6 +79,9 @@ TIM_OC_InitTypeDef   sConfig;
 
 uint32_t uwPrescalerValue = 0;
 uint32_t uwCapturedValue = 0;
+
+static bool m_bButtonState = false;
+static m_teState m_eState = m_eState0;
 
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
@@ -107,6 +117,8 @@ int main(void) {
   SPRITE_vInit();
 
   ANIMATION_vInit();
+
+  USERINPUT_vInit();
 
  /*##-1- Configure the TIM peripheral #######################################*/ 
   /* -----------------------------------------------------------------------
@@ -219,20 +231,38 @@ int main(void) {
   while (1) {
       MAIN_u32MainCounter_ms = MAIN_u32MainCounter * (INTERRUPT_PERIOD + 1) *
               SECONDS_TO_MS / CLOCK_FREQUENCY;
+      bool bPreviousButtonState = m_bButtonState;
+      m_bButtonState = USERINPUT_bPollButton();
+
+      /* We only want to know when the button was first pressed */
+      if ((true == m_bButtonState) && (false == bPreviousButtonState)) {
+          m_eState++;
+          if (m_eState >= m_eStateMax) {
+              m_eState = m_eState0;
+          }
+      }
 
 	  if ((MAIN_u32MainCounter_ms % SCREEN_UPDATE_TIME_MS) == 0) { /* 100 * 300us ~ 30ms. Screen redraws in about 5ms */
-		  GRAPHICS_vDrawCircle(ANIMATION_sGetColour(u8CircleId1),
-				  ANIMATION_sGetPosition(u8CircleId1), 8);
-		  GRAPHICS_vDrawCircle(ANIMATION_sGetColour(u8CircleId2),
-				  ANIMATION_sGetPosition(u8CircleId2), 8);
-		  GRAPHICS_vDrawCircle(ANIMATION_sGetColour(u8CircleId3),
-				  ANIMATION_sGetPosition(u8CircleId3), 8);
-		  GRAPHICS_vDrawCircle(ANIMATION_sGetColour(u8CircleId4),
-				  ANIMATION_sGetPosition(u8CircleId4), 8);
-		  GRAPHICS_vDrawByColourArray(ANIMATION_psGetFrame(u8RedId),
-				  ANIMATION_sGetPosition(u8RedId), RED_SIZE, RED_SIZE);
-		  GRAPHICS_vDrawByColourArray(ANIMATION_psGetFrame(u8PikachuId),
-				  ANIMATION_sGetPosition(u8PikachuId), PIKACHU_SIZE, PIKACHU_SIZE);
+	      switch (m_eState) {
+          case m_eState0:
+              GRAPHICS_vDrawCircle(ANIMATION_sGetColour(u8CircleId1),
+                      ANIMATION_sGetPosition(u8CircleId1), 8);
+              GRAPHICS_vDrawCircle(ANIMATION_sGetColour(u8CircleId2),
+                      ANIMATION_sGetPosition(u8CircleId2), 8);
+              GRAPHICS_vDrawCircle(ANIMATION_sGetColour(u8CircleId3),
+                      ANIMATION_sGetPosition(u8CircleId3), 8);
+              GRAPHICS_vDrawCircle(ANIMATION_sGetColour(u8CircleId4),
+                      ANIMATION_sGetPosition(u8CircleId4), 8);
+              GRAPHICS_vDrawByColourArray(ANIMATION_psGetFrame(u8RedId),
+                      ANIMATION_sGetPosition(u8RedId), RED_SIZE, RED_SIZE);
+              GRAPHICS_vDrawByColourArray(ANIMATION_psGetFrame(u8PikachuId),
+                      ANIMATION_sGetPosition(u8PikachuId), PIKACHU_SIZE, PIKACHU_SIZE);
+              break;
+          case m_eState1:
+                break;
+          default:
+              break;
+          }
 		  GRAPHICS_vUpdate();
 	  }
   }
