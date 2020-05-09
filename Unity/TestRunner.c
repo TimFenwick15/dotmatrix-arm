@@ -10,6 +10,7 @@
 extern void AnimationTestRunner(void);
 extern void GraphicsTestRunner(void);
 extern void SpriteTestRunner(void);
+extern void UserInputTestRunner(void);
 
 void setUp(void) {
     // set stuff up here
@@ -24,5 +25,6 @@ int main(void) {
     AnimationTestRunner();
     GraphicsTestRunner();
     SpriteTestRunner();
+    UserInputTestRunner();
     return UNITY_END();
 }

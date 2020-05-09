@@ -13,11 +13,14 @@
 #define BUTTON_PIN (0)
 #define DEBOUNCE_TIME_MS (10)
 
-static bool m_bButtonPushed = false;
-static bool m_bDebounce = false;
-static uint32_t m_u32DebounceTime_ms = 0;
+static bool m_bButtonPushed;
+static bool m_bDebounce;
+static uint32_t m_u32DebounceTime_ms;
 
 void USERINPUT_vInit(void) {
+    m_bButtonPushed = false;
+    m_bDebounce = false;
+    m_u32DebounceTime_ms = 0;
     GPIO_vInit(BUTTON_PORT, BUTTON_PIN, GPIO_eInput);
 }
 

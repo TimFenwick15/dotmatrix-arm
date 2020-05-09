@@ -247,26 +247,33 @@ int main(void) {
   CALL(ANIMATION_bAddMotion(u8EggId, sEggInitialPosition,
           sEggFinalPosition, 1000));
 
-  uint8_t u8DigimonBackground1;
-  MAIN_tsPosition sDigimonBackground1InitialPosition = {15, 0};
-  MAIN_tsPosition sDigimonBackground1FinalPosition = {15, 64};
-  CALL(ANIMATION_bRegisterAnimation(&u8DigimonBackground1));
-  CALL(ANIMATION_bAddMotion(u8DigimonBackground1, sDigimonBackground1InitialPosition,
-          sDigimonBackground1FinalPosition, 2000));
+  uint8_t u8DigimonBackgroundGlyphs0;
+  MAIN_tsPosition sDigimonBackgroundGlyphs0InitialPosition = {0, -50};
+  MAIN_tsPosition sDigimonBackgroundGlyphs0FinalPosition = {0, 44};
+  CALL(ANIMATION_bRegisterAnimation(&u8DigimonBackgroundGlyphs0));
+  CALL(ANIMATION_bAddMotion(u8DigimonBackgroundGlyphs0, sDigimonBackgroundGlyphs0InitialPosition,
+          sDigimonBackgroundGlyphs0FinalPosition, 3000));
 
-  uint8_t u8DigimonBackground2;
-  MAIN_tsPosition sDigimonBackground2InitialPosition = {35, -32};
-  MAIN_tsPosition sDigimonBackground2FinalPosition = {35, 32};
-  CALL(ANIMATION_bRegisterAnimation(&u8DigimonBackground2));
-  CALL(ANIMATION_bAddMotion(u8DigimonBackground2, sDigimonBackground2InitialPosition,
-          sDigimonBackground2FinalPosition, 2000));
+  uint8_t u8DigimonBackgroundGlyphs1;
+  MAIN_tsPosition sDigimonBackgroundGlyphs1InitialPosition = {15, -30};
+  MAIN_tsPosition sDigimonBackgroundGlyphs1FinalPosition = {15, 64};
+  CALL(ANIMATION_bRegisterAnimation(&u8DigimonBackgroundGlyphs1));
+  CALL(ANIMATION_bAddMotion(u8DigimonBackgroundGlyphs1, sDigimonBackgroundGlyphs1InitialPosition,
+          sDigimonBackgroundGlyphs1FinalPosition, 3300));
 
-  uint8_t u8DigimonBackground3;
-  MAIN_tsPosition sDigimonBackground3InitialPosition = {50, -16};
-  MAIN_tsPosition sDigimonBackground3FinalPosition = {50, 48};
-  CALL(ANIMATION_bRegisterAnimation(&u8DigimonBackground3));
-  CALL(ANIMATION_bAddMotion(u8DigimonBackground3, sDigimonBackground3InitialPosition,
-          sDigimonBackground3FinalPosition, 2000));
+  uint8_t u8DigimonBackgroundGlyphs2;
+  MAIN_tsPosition sDigimonBackgroundGlyphs2InitialPosition = {35, -62};
+  MAIN_tsPosition sDigimonBackgroundGlyphs2FinalPosition = {35, 32};
+  CALL(ANIMATION_bRegisterAnimation(&u8DigimonBackgroundGlyphs2));
+  CALL(ANIMATION_bAddMotion(u8DigimonBackgroundGlyphs2, sDigimonBackgroundGlyphs2InitialPosition,
+          sDigimonBackgroundGlyphs2FinalPosition, 3100));
+
+  uint8_t u8DigimonBackgroundGlyphs3;
+  MAIN_tsPosition sDigimonBackgroundGlyphs3InitialPosition = {50, -45};
+  MAIN_tsPosition sDigimonBackgroundGlyphs3FinalPosition = {50, 49};
+  CALL(ANIMATION_bRegisterAnimation(&u8DigimonBackgroundGlyphs3));
+  CALL(ANIMATION_bAddMotion(u8DigimonBackgroundGlyphs3, sDigimonBackgroundGlyphs3InitialPosition,
+          sDigimonBackgroundGlyphs3FinalPosition, 2800));
 
   /* Infinite loop */
   while (1) {
@@ -300,12 +307,18 @@ int main(void) {
                       ANIMATION_sGetPosition(u8PikachuId), PIKACHU_SIZE, PIKACHU_SIZE);
               break;
           case m_eState1:
-              GRAPHICS_vDrawCircle(MAIN_sBlue,
-                      ANIMATION_sGetPosition(u8DigimonBackground1), 1);
-              GRAPHICS_vDrawCircle(MAIN_sBlue,
-                      ANIMATION_sGetPosition(u8DigimonBackground2), 1);
-              GRAPHICS_vDrawCircle(MAIN_sBlue,
-                      ANIMATION_sGetPosition(u8DigimonBackground3), 1);
+              GRAPHICS_vDrawByColourArray(SPRITE_sBackground,
+                      ANIMATION_sGetPosition(u8DigimonBackgroundGlyphs0),
+                      BACKGROUND_WIDTH, BACKGROUND_HEIGHT);
+              GRAPHICS_vDrawByColourArray(SPRITE_sBackground,
+                      ANIMATION_sGetPosition(u8DigimonBackgroundGlyphs1),
+                      BACKGROUND_WIDTH, BACKGROUND_HEIGHT);
+              GRAPHICS_vDrawByColourArray(SPRITE_sBackground,
+                      ANIMATION_sGetPosition(u8DigimonBackgroundGlyphs2),
+                      BACKGROUND_WIDTH, BACKGROUND_HEIGHT);
+              GRAPHICS_vDrawByColourArray(SPRITE_sBackground,
+                      ANIMATION_sGetPosition(u8DigimonBackgroundGlyphs3),
+                      BACKGROUND_WIDTH, BACKGROUND_HEIGHT);
               GRAPHICS_vDrawByColourArray(ANIMATION_psGetFrame(u8AgumonId),
                       sAgumonPosition, AGUMON_SIZE, AGUMON_SIZE);
               GRAPHICS_vDrawByColourArray(ANIMATION_psGetFrame(u8Digimon1Id),

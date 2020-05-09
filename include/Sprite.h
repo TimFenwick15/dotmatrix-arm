@@ -27,6 +27,10 @@ MAIN_tsColour SPRITE_sDigimon2_1[DIGIMON_2_SIZE * DIGIMON_2_SIZE];
 #define EGG_SIZE (14)
 MAIN_tsColour SPRITE_sEgg[EGG_SIZE * EGG_SIZE];
 
+#define BACKGROUND_WIDTH (5)
+#define BACKGROUND_HEIGHT (30)
+MAIN_tsColour SPRITE_sBackground[BACKGROUND_WIDTH * BACKGROUND_HEIGHT];
+
 void SPRITE_vInit(void);
 
 #endif

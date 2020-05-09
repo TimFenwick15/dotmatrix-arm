@@ -256,20 +256,57 @@ void SPRITE_vInit(void) {
      * Draw Egg
      */
     MAIN_tsColour sEgg[EGG_SIZE * EGG_SIZE] = {
-            OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF,
-            OFF, OFF, OFF, OFF, OFF, BLU, BLU, BLU, BLU, OFF, OFF, OFF, OFF, OFF,
-            OFF, OFF, OFF, OFF, BLU, WHT, WHT, WHT, WHT, BLU, OFF, OFF, OFF, OFF,
-            OFF, OFF, OFF, BLU, WHT, WHT, BLU, BLU, BLU, WHT, BLU, OFF, OFF, OFF,
-            OFF, OFF, BLU, WHT, WHT, WHT, BLU, BLU, WHT, WHT, WHT, BLU, OFF, OFF,
-            OFF, BLU, WHT, WHT, WHT, BLU, BLU, BLU, WHT, WHT, WHT, WHT, BLU, OFF,
-            OFF, BLU, WHT, BLU, BLU, BLU, BLU, BLU, WHT, WHT, WHT, WHT, BLU, OFF,
-            BLU, WHT, BLU, BLU, WHT, BLU, BLU, BLU, BLU, WHT, WHT, WHT, WHT, BLU,
-            BLU, WHT, BLU, BLU, WHT, WHT, BLU, BLU, BLU, BLU, WHT, WHT, WHT, BLU,
-            BLU, WHT, BLU, BLU, WHT, WHT, WHT, BLU, BLU, BLU, BLU, BLU, WHT, BLU,
-            BLU, WHT, BLU, BLU, BLU, WHT, WHT, BLU, BLU, WHT, WHT, BLU, WHT, BLU,
-            OFF, BLU, WHT, WHT, BLU, BLU, BLU, BLU, WHT, WHT, WHT, WHT, BLU, OFF,
-            OFF, OFF, BLU, WHT, WHT, BLU, BLU, BLU, WHT, WHT, WHT, BLU, OFF, OFF,
-            OFF, OFF, OFF, BLU, WHT, WHT, WHT, WHT, WHT, WHT, BLU, OFF, OFF, OFF
+        OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF, OFF,
+        OFF, OFF, OFF, OFF, OFF, BLU, BLU, BLU, BLU, OFF, OFF, OFF, OFF, OFF,
+        OFF, OFF, OFF, OFF, BLU, WHT, WHT, WHT, WHT, BLU, OFF, OFF, OFF, OFF,
+        OFF, OFF, OFF, BLU, WHT, WHT, BLU, BLU, BLU, WHT, BLU, OFF, OFF, OFF,
+        OFF, OFF, BLU, WHT, WHT, WHT, BLU, BLU, WHT, WHT, WHT, BLU, OFF, OFF,
+        OFF, BLU, WHT, WHT, WHT, BLU, BLU, BLU, WHT, WHT, WHT, WHT, BLU, OFF,
+        OFF, BLU, WHT, BLU, BLU, BLU, BLU, BLU, WHT, WHT, WHT, WHT, BLU, OFF,
+        BLU, WHT, BLU, BLU, WHT, BLU, BLU, BLU, BLU, WHT, WHT, WHT, WHT, BLU,
+        BLU, WHT, BLU, BLU, WHT, WHT, BLU, BLU, BLU, BLU, WHT, WHT, WHT, BLU,
+        BLU, WHT, BLU, BLU, WHT, WHT, WHT, BLU, BLU, BLU, BLU, BLU, WHT, BLU,
+        BLU, WHT, BLU, BLU, BLU, WHT, WHT, BLU, BLU, WHT, WHT, BLU, WHT, BLU,
+        OFF, BLU, WHT, WHT, BLU, BLU, BLU, BLU, WHT, WHT, WHT, WHT, BLU, OFF,
+        OFF, OFF, BLU, WHT, WHT, BLU, BLU, BLU, WHT, WHT, WHT, BLU, OFF, OFF,
+        OFF, OFF, OFF, BLU, WHT, WHT, WHT, WHT, WHT, WHT, BLU, OFF, OFF, OFF
+    };
+
+
+    /*
+     * Draw Background graphic
+     */
+    MAIN_tsColour sBackground[BACKGROUND_WIDTH * BACKGROUND_HEIGHT] = {
+        BLU, BLU, BLU, BLU, BLU,
+        BLU, OFF, OFF, OFF, BLU,
+        BLU, BLU, BLU, OFF, BLU,
+        OFF, OFF, OFF, OFF, BLU,
+        BLU, BLU, BLU, BLU, BLU,
+        BLU, OFF, OFF, OFF, OFF,
+        BLU, OFF, BLU, BLU, BLU,
+        BLU, OFF, OFF, OFF, BLU,
+        BLU, BLU, BLU, BLU, BLU,
+        OFF, OFF, OFF, OFF, OFF,
+        BLU, BLU, BLU, BLU, BLU,
+        BLU, OFF, BLU, OFF, BLU,
+        BLU, OFF, OFF, OFF, BLU,
+        BLU, BLU, BLU, BLU, BLU,
+        OFF, OFF, BLU, OFF, OFF,
+        BLU, OFF, BLU, OFF, BLU,
+        BLU, BLU, BLU, BLU, BLU,
+        OFF, OFF, OFF, OFF, OFF,
+        BLU, BLU, BLU, BLU, BLU,
+        OFF, BLU, OFF, OFF, BLU,
+        OFF, OFF, BLU, OFF, BLU,
+        OFF, OFF, OFF, BLU, BLU,
+        OFF, OFF, OFF, OFF, BLU,
+        OFF, OFF, OFF, OFF, OFF,
+        OFF, OFF, BLU, OFF, OFF,
+        BLU, BLU, BLU, BLU, OFF,
+        BLU, OFF, BLU, OFF, BLU,
+        BLU, BLU, BLU, BLU, BLU,
+        OFF, OFF, BLU, OFF, BLU,
+        OFF, OFF, OFF, OFF, OFF
     };
 
 	memcpy(SPRITE_sRed_0, sRed_0, sizeof sRed_0);
@@ -283,4 +320,5 @@ void SPRITE_vInit(void) {
     memcpy(SPRITE_sDigimon1_0, sDigimon1_0, sizeof sDigimon1_0);
     memcpy(SPRITE_sDigimon1_1, sDigimon1_1, sizeof sDigimon1_1);
     memcpy(SPRITE_sEgg, sEgg, sizeof sEgg);
+    memcpy(SPRITE_sBackground, sBackground, sizeof sBackground);
 }
