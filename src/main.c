@@ -232,6 +232,8 @@ int main(void) {
   CALL(ANIMATION_bRegisterAnimation(&u8AgumonId));
   CALL(ANIMATION_bAddFrame(u8AgumonId, SPRITE_sAgumon_0, 500));
   CALL(ANIMATION_bAddFrame(u8AgumonId, SPRITE_sAgumon_1, 500));
+  CALL(ANIMATION_bAddFrame(u8AgumonId, SPRITE_sAgumon_0, 500));
+  CALL(ANIMATION_bAddFrame(u8AgumonId, SPRITE_sAgumon_2, 500));
 
   uint8_t u8Digimon1Id;
   MAIN_tsPosition sDigimon1Position = {0, 8};
