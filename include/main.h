@@ -56,6 +56,7 @@ typedef struct {
 
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
+
 /* User can use this section to tailor TIMx instance used and associated 
    resources */
 /* Definition for TIMx clock resources */

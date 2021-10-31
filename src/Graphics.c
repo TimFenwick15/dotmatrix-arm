@@ -8,6 +8,7 @@
 #include "LedMatrix.h"
 #include "Graphics.h"
 #include <string.h> /* memset */
+#include <Math.h>   /* pow */
 
 #define BUFFER_1 (0)
 #define BUFFER_2 (1)
@@ -21,14 +22,35 @@
 #define GREEN_2 (0x10)
 #define BLUE_2  (0x20)
 
+#define DRAW_NUMBER_MAX (9999)
+#define DRAW_NUMBER_MAX_DIGITS (4)
+
 static void vAddToBuffer(MAIN_tsColour* sprite,
                          MAIN_tsPosition position,
 						 uint16_t width,
 						 uint16_t height);
 
+static void m_vDrawNumber(MAIN_tsColour* sprite,
+                          MAIN_tsColour colour,
+                          uint16_t number,
+                          GRAPHICS_teFontSize fontSize);
+
 static uint8_t m_buffer1[COLOUR_DEPTH][DISPLAY_PIXELS / 2];
 static uint8_t m_buffer2[COLOUR_DEPTH][DISPLAY_PIXELS / 2];
 static uint8_t m_u8CurrentBuffer = BUFFER_1;
+
+static uint64_t m_au64Numbers[10] = {
+        0b0000000000011100001000100010011000101010001100100010001000011100, /* 0 */
+        0b0000000000001000000110000000100000001000000010000000100000011100, /* 1 */
+        0b0000000000011100001000100000010000001000000100000010000000111110, /* 2 */
+        0b0000000000011100001000100000001000000100000000100010001000011100, /* 3 */
+        0b0000000000000100000011000001010000100100001111100000010000000100, /* 4 */
+        0b0000000000111110001000000010000000011100000000100000001000111100, /* 5 */
+        0b0000000000001100000100000010000000111100001000100010001000011100, /* 6 */
+        0b0000000000111110000000100000010000001000000010000000100000001000, /* 7 */
+        0b0000000000011000001001000010010000011000001001000010010000011000, /* 8 */
+        0b0000000000011000001001000010010000011100000001000010010000011000  /* 9 */
+};
 
 /**
  * Call before accessing other members/data in the module.
@@ -167,6 +189,121 @@ void GRAPHICS_vDrawCircle(MAIN_tsColour colour,
 		}
 	}
 	vAddToBuffer(sprite, position, u16SideLength, u16SideLength);
+}
+
+void GRAPHICS_vDrawNumber(MAIN_tsColour colour,
+                          MAIN_tsPosition position,
+                          uint16_t number,
+                          uint8_t minimumDigitCount,
+                          bool fillBlankDigitsWithZeros,
+                          bool wrapText,
+                          GRAPHICS_teFontSize fontSize)
+{
+    uint16_t sideLength = (uint16_t)fontSize;
+    MAIN_tsColour sprite[sideLength * sideLength];
+    uint8_t i;
+    uint8_t character;
+    uint16_t denominator;
+    uint8_t digitsToDraw = 0;
+    bool firstCharFound = false;
+    if ((number <= DRAW_NUMBER_MAX) && (minimumDigitCount <= DRAW_NUMBER_MAX_DIGITS))
+    {
+        if (number > 999)
+        {
+            digitsToDraw = 4;
+        }
+        else if (number > 99)
+        {
+            digitsToDraw = 3;
+        }
+        else if (number > 9)
+        {
+            digitsToDraw = 2;
+        }
+        else
+        {
+            digitsToDraw = 1;
+        }
+
+        if (minimumDigitCount > digitsToDraw)
+        {
+            for (i = 0; i < minimumDigitCount - digitsToDraw; i++)
+            {
+                if (fillBlankDigitsWithZeros)
+                {
+                    m_vDrawNumber(sprite, colour, 0, fontSize);
+                    vAddToBuffer(sprite, position, sideLength, sideLength);
+                    memset(sprite, 0, sizeof(sprite));
+                }
+                position.x += sideLength;
+            }
+        }
+        for (i = 0; i < DRAW_NUMBER_MAX_DIGITS; i++)
+        {
+            denominator = 1000 / pow(10, i);
+            character = (uint8_t)(number / denominator);
+            number -= (character * denominator); /* Once we've drawn a digit, remove it so we can check the next column in isolation */
+            if ((character > 0) || firstCharFound || (i == DRAW_NUMBER_MAX_DIGITS - 1))
+            {
+                firstCharFound = true;
+                m_vDrawNumber(sprite, colour, character, fontSize);
+                vAddToBuffer(sprite, position, sideLength, sideLength);
+                memset(sprite, 0, sizeof(sprite));
+                position.x += sideLength;
+            }
+        }
+    }
+}
+
+static void m_vDrawNumber(MAIN_tsColour* sprite,
+                          MAIN_tsColour colour,
+                          uint16_t number,
+                          GRAPHICS_teFontSize fontSize)
+{
+    uint8_t i;
+    uint8_t baseIndex;
+    MAIN_tsColour newColour;
+    for (i = 0; i < 64; i++)
+    {
+        newColour = ((m_au64Numbers[number] >> (63 - i)) & 1) ? colour : MAIN_sTransparent;
+        switch (fontSize)
+        {
+        case GRAPHICS_eFontSize8x8:
+            sprite[i] = newColour;
+            break;
+        case GRAPHICS_eFontSize16x16:
+            baseIndex = i * 2 + (i / 8) * 16;
+            sprite[baseIndex     ] = newColour;
+            sprite[baseIndex +  1] = newColour;
+            sprite[baseIndex + 16] = newColour;
+            sprite[baseIndex + 17] = newColour;
+            break;
+        case GRAPHICS_eFontSize32x32:
+            baseIndex = i * 4 + (i / 8) * 32;
+            sprite[baseIndex     ] = newColour;
+            sprite[baseIndex +  1] = newColour;
+            sprite[baseIndex +  2] = newColour;
+            sprite[baseIndex +  3] = newColour;
+
+            sprite[baseIndex + 32] = newColour;
+            sprite[baseIndex + 33] = newColour;
+            sprite[baseIndex + 34] = newColour;
+            sprite[baseIndex + 35] = newColour;
+
+            sprite[baseIndex + 64] = newColour;
+            sprite[baseIndex + 65] = newColour;
+            sprite[baseIndex + 66] = newColour;
+            sprite[baseIndex + 67] = newColour;
+
+            sprite[baseIndex + 96] = newColour;
+            sprite[baseIndex + 97] = newColour;
+            sprite[baseIndex + 98] = newColour;
+            sprite[baseIndex + 99] = newColour;
+            break;
+        default:
+            break;
+        }
+    }
 }
 
 /**

@@ -68,6 +68,7 @@
 typedef enum {
     m_eState0,
     m_eState1,
+    m_eState2,
     m_eStateMax
 } m_teState;
 
@@ -107,7 +108,6 @@ int main(void) {
     /* Start Conversation Error */
     Error_Handler(); 
   }
-  
 
   /* Configure the system clock to 100 MHz */
   SystemClock_Config();
@@ -277,6 +277,13 @@ int main(void) {
   CALL(ANIMATION_bAddMotion(u8DigimonBackgroundGlyphs3, sDigimonBackgroundGlyphs3InitialPosition,
           sDigimonBackgroundGlyphs3FinalPosition, 2800));
 
+  uint32_t lastIncrease = 0;
+  uint16_t displayNumber = 0;
+  uint8_t u8DisplayNumber;
+  CALL(ANIMATION_bRegisterAnimation(&u8DisplayNumber));
+  CALL(ANIMATION_bAddColourTransition(u8DisplayNumber, MAIN_sBlue,
+          MAIN_sRed, 10000));
+
   /* Infinite loop */
   while (1) {
       MAIN_u32MainCounter_ms = MAIN_u32MainCounter * (INTERRUPT_PERIOD + 1) *
@@ -295,6 +302,18 @@ int main(void) {
 	  if ((MAIN_u32MainCounter_ms % SCREEN_UPDATE_TIME_MS) == 0) { /* 100 * 300us ~ 30ms. Screen redraws in about 5ms */
 	      switch (m_eState) {
           case m_eState0:
+              if (MAIN_u32MainCounter_ms - lastIncrease >= 1000)
+              {
+                  lastIncrease = MAIN_u32MainCounter_ms;
+                  displayNumber++;
+                  if (displayNumber > 9999)
+                  {
+                      displayNumber = 0;
+                  }
+              }
+              GRAPHICS_vDrawNumber(ANIMATION_sGetColour(u8DisplayNumber), (MAIN_tsPosition){0,8}, displayNumber, 4, true, false, GRAPHICS_eFontSize16x16);
+              break;
+          case m_eState1:
               GRAPHICS_vDrawCircle(ANIMATION_sGetColour(u8CircleId1),
                       ANIMATION_sGetPosition(u8CircleId1), 8);
               GRAPHICS_vDrawCircle(ANIMATION_sGetColour(u8CircleId2),
@@ -308,7 +327,7 @@ int main(void) {
               GRAPHICS_vDrawByColourArray(ANIMATION_psGetFrame(u8PikachuId),
                       ANIMATION_sGetPosition(u8PikachuId), PIKACHU_SIZE, PIKACHU_SIZE);
               break;
-          case m_eState1:
+          case m_eState2:
               GRAPHICS_vDrawByColourArray(SPRITE_sBackground,
                       ANIMATION_sGetPosition(u8DigimonBackgroundGlyphs0),
                       BACKGROUND_WIDTH, BACKGROUND_HEIGHT);
