@@ -278,7 +278,7 @@ int main(void) {
           sDigimonBackgroundGlyphs3FinalPosition, 2800));
 
   uint32_t lastIncrease = 0;
-  uint16_t displayNumber = 0;
+  uint32_t displayNumber = 990;
   uint8_t u8DisplayNumber;
   CALL(ANIMATION_bRegisterAnimation(&u8DisplayNumber));
   CALL(ANIMATION_bAddColourTransition(u8DisplayNumber, MAIN_sBlue,
@@ -302,16 +302,16 @@ int main(void) {
 	  if ((MAIN_u32MainCounter_ms % SCREEN_UPDATE_TIME_MS) == 0) { /* 100 * 300us ~ 30ms. Screen redraws in about 5ms */
 	      switch (m_eState) {
           case m_eState0:
-              if (MAIN_u32MainCounter_ms - lastIncrease >= 1000)
+              //if (MAIN_u32MainCounter_ms - lastIncrease >= 1000)
+              if (MAIN_u32MainCounter_ms - lastIncrease >= 200)
               {
                   lastIncrease = MAIN_u32MainCounter_ms;
                   displayNumber++;
-                  if (displayNumber > 9999)
-                  {
-                      displayNumber = 0;
-                  }
               }
-              GRAPHICS_vDrawNumber(ANIMATION_sGetColour(u8DisplayNumber), (MAIN_tsPosition){0,8}, displayNumber, 4, true, false, GRAPHICS_eFontSize16x16);
+              GRAPHICS_vDrawNumber(ANIMATION_sGetColour(u8DisplayNumber), (MAIN_tsPosition){0,8}, displayNumber, 4, true, GRAPHICS_eFontSize16x16);
+              //GRAPHICS_vDrawNumber(ANIMATION_sGetColour(u8DisplayNumber), (MAIN_tsPosition){0,0}, displayNumber, 2, true, GRAPHICS_eFontSize32x32);
+              //GRAPHICS_vDrawNumber(ANIMATION_sGetColour(u8DisplayNumber), (MAIN_tsPosition){0,0}, displayNumber, 7, true, GRAPHICS_eFontSize8x8);
+              GRAPHICS_vDrawCharacter(ANIMATION_sGetColour(u8DisplayNumber), (MAIN_tsPosition){29,13}, ':', GRAPHICS_eFontSize8x8);
               break;
           case m_eState1:
               GRAPHICS_vDrawCircle(ANIMATION_sGetColour(u8CircleId1),

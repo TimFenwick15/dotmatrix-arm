@@ -25,12 +25,16 @@ void GRAPHICS_vDrawCircle(MAIN_tsColour colour,
                           MAIN_tsPosition position,
 						  uint16_t radius);
 
+void GRAPHICS_vDrawCharacter(MAIN_tsColour colour,
+                             MAIN_tsPosition position,
+                             unsigned char character,
+                             GRAPHICS_teFontSize fontSize);
+
 void GRAPHICS_vDrawNumber(MAIN_tsColour colour,
                           MAIN_tsPosition position,
-                          uint16_t number,
-                          uint8_t minimumDigitCount,
+                          uint32_t number,
+                          uint8_t maximumDisplayDigits,
                           bool fillBlankDigitsWithZeros,
-                          bool wrapText,
                           GRAPHICS_teFontSize fontSize);
 
 #endif
