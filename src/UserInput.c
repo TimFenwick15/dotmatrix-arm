@@ -13,36 +13,48 @@
 #define BUTTON_PIN (0)
 #define DEBOUNCE_TIME_MS (10)
 
-static bool m_bButtonPushed;
-static bool m_bDebounce;
-static uint32_t m_u32DebounceTime_ms;
+typedef struct
+{
+    bool bButtonPushed;
+    bool bDebounce;
+    uint32_t u32DebounceTime_ms;
+    uint8_t u8Port;
+    uint8_t u8Pin;
+} m_tsButtonData;
+
+static m_tsButtonData m_sButtonData[USERINPUT_eButtonCount] = {
+        (m_tsButtonData){false, false, 0, 0, 0},
+        (m_tsButtonData){false, false, 0, 0, 1},
+        (m_tsButtonData){false, false, 0, 0, 2},
+};
 
 void USERINPUT_vInit(void) {
-    m_bButtonPushed = false;
-    m_bDebounce = false;
-    m_u32DebounceTime_ms = 0;
-    GPIO_vInit(BUTTON_PORT, BUTTON_PIN, GPIO_eInput);
+    uint8_t i;
+    for (i = 0; i < USERINPUT_eButtonCount; i++)
+    {
+        GPIO_vInit(m_sButtonData[i].u8Port, m_sButtonData[i].u8Pin, GPIO_eInput);
+    }
 }
 
-bool USERINPUT_bPollButton(void) {
-    if ((true == m_bDebounce) &&
-            ((MAIN_u32MainCounter_ms - m_u32DebounceTime_ms) > DEBOUNCE_TIME_MS)) {
-        m_bDebounce = false;
+bool USERINPUT_bPollButton(USERINPUT_teButton eButton) {
+    if ((true == m_sButtonData[eButton].bDebounce) &&
+            ((MAIN_u32MainCounter_ms - m_sButtonData[eButton].u32DebounceTime_ms) > DEBOUNCE_TIME_MS)) {
+        m_sButtonData[eButton].bDebounce = false;
     }
 
-    if (false == m_bDebounce) {
-        bool bOriginalButtonState = m_bButtonPushed;
-        if (GPIO_read(BUTTON_PORT, BUTTON_PIN)) {
-            m_bButtonPushed = true;
+    if (false == m_sButtonData[eButton].bDebounce) {
+        bool bOriginalButtonState = m_sButtonData[eButton].bButtonPushed;
+        if (GPIO_read(m_sButtonData[eButton].u8Port, m_sButtonData[eButton].u8Pin)) {
+            m_sButtonData[eButton].bButtonPushed = true;
         }
         else
         {
-            m_bButtonPushed = false;
+            m_sButtonData[eButton].bButtonPushed = false;
         }
-        if (bOriginalButtonState != m_bButtonPushed) {
-            m_bDebounce = true;
-            m_u32DebounceTime_ms = MAIN_u32MainCounter_ms;
+        if (bOriginalButtonState != m_sButtonData[eButton].bButtonPushed) {
+            m_sButtonData[eButton].bDebounce = true;
+            m_sButtonData[eButton].u32DebounceTime_ms = MAIN_u32MainCounter_ms;
         }
     }
-    return (m_bButtonPushed);
+    return (m_sButtonData[eButton].bButtonPushed);
 }

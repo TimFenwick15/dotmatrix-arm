@@ -289,7 +289,7 @@ int main(void) {
       MAIN_u32MainCounter_ms = MAIN_u32MainCounter * (INTERRUPT_PERIOD + 1) *
               SECONDS_TO_MS / CLOCK_FREQUENCY;
       bool bPreviousButtonState = m_bButtonState;
-      m_bButtonState = USERINPUT_bPollButton();
+      m_bButtonState = USERINPUT_bPollButton(USERINPUT_eButton2);
 
       /* We only want to know when the button was first pressed */
       if ((true == m_bButtonState) && (false == bPreviousButtonState)) {
@@ -302,6 +302,10 @@ int main(void) {
 	  if ((MAIN_u32MainCounter_ms % SCREEN_UPDATE_TIME_MS) == 0) { /* 100 * 300us ~ 30ms. Screen redraws in about 5ms */
 	      switch (m_eState) {
           case m_eState0:
+              if (USERINPUT_bPollButton(USERINPUT_eButton3))
+              {
+                  displayNumber = 0;
+              }
               //if (MAIN_u32MainCounter_ms - lastIncrease >= 1000)
               if (MAIN_u32MainCounter_ms - lastIncrease >= 200)
               {
