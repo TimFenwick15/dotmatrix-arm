@@ -42,6 +42,7 @@
 #include "Sprite.h"
 #include "Animation.h"
 #include "UserInput.h"
+#include "i2c.h"
 
 /** @addtogroup STM32F4xx_HAL_Examples
   * @{
@@ -69,6 +70,7 @@ typedef enum {
     m_eState0,
     m_eState1,
     m_eState2,
+    m_eState3,
     m_eStateMax
 } m_teState;
 
@@ -120,6 +122,8 @@ int main(void) {
 
   USERINPUT_vInit();
 
+  CALL(I2C_vInit());
+
  /*##-1- Configure the TIM peripheral #######################################*/ 
   /* -----------------------------------------------------------------------
     In this example TIM3 input clock (TIM3CLK) is set to 2 * APB1 clock (PCLK1), 
@@ -140,7 +144,7 @@ int main(void) {
       2) by calling HAL API function HAL_RCC_GetSysClockFreq()
       3) each time HAL_RCC_ClockConfig() is called to configure the system clock frequency  
   ----------------------------------------------------------------------- */  
-  
+
   /* Compute the prescaler value to have TIM3 counter clock equal to 10 KHz */ // 100us
   uwPrescalerValue = (uint32_t) ((SystemCoreClock / CLOCK_FREQUENCY) - 1);
   
@@ -301,7 +305,10 @@ int main(void) {
 
 	  if ((MAIN_u32MainCounter_ms % SCREEN_UPDATE_TIME_MS) == 0) { /* 100 * 300us ~ 30ms. Screen redraws in about 5ms */
 	      switch (m_eState) {
-          case m_eState0:
+	      case m_eState0:
+	          I2C_bTask();
+	          break;
+          case m_eState1:
               if (USERINPUT_bPollButton(USERINPUT_eButton3))
               {
                   displayNumber = 0;
@@ -317,7 +324,7 @@ int main(void) {
               //GRAPHICS_vDrawNumber(ANIMATION_sGetColour(u8DisplayNumber), (MAIN_tsPosition){0,0}, displayNumber, 7, true, GRAPHICS_eFontSize8x8);
               GRAPHICS_vDrawCharacter(ANIMATION_sGetColour(u8DisplayNumber), (MAIN_tsPosition){29,13}, ':', GRAPHICS_eFontSize8x8);
               break;
-          case m_eState1:
+          case m_eState2:
               GRAPHICS_vDrawCircle(ANIMATION_sGetColour(u8CircleId1),
                       ANIMATION_sGetPosition(u8CircleId1), 8);
               GRAPHICS_vDrawCircle(ANIMATION_sGetColour(u8CircleId2),
@@ -331,7 +338,7 @@ int main(void) {
               GRAPHICS_vDrawByColourArray(ANIMATION_psGetFrame(u8PikachuId),
                       ANIMATION_sGetPosition(u8PikachuId), PIKACHU_SIZE, PIKACHU_SIZE);
               break;
-          case m_eState2:
+          case m_eState3:
               GRAPHICS_vDrawByColourArray(SPRITE_sBackground,
                       ANIMATION_sGetPosition(u8DigimonBackgroundGlyphs0),
                       BACKGROUND_WIDTH, BACKGROUND_HEIGHT);
