@@ -2,6 +2,19 @@
 
 Driving an LED dotmatrix with an STM32F411e-Discovery.
 
+Datasheet hosted on RS: https://docs.rs-online.com/9099/0900766b81368481.pdf
+
+## I2C
+I2C is used to comunicate with a DS3231 RTC. I'm using the breakout from Adafruit (bought from Pimoroni in UK https://shop.pimoroni.com/products/adafruit-ds3231-precision-rtc-breakout).
+
+Examples to help with I2C setup for STM32 HAL are here: https://github.com/STMicroelectronics/STM32CubeF4/tree/master/Projects/STM32F411E-Discovery/Examples/I2C
+
+Adafruit host a datasheet for the DS3231 RTC: https://cdn-shop.adafruit.com/product-files/3013/DS3231.pdf
+
+This blog was helpful explaining how DS3231 works: https://controllerstech.com/ds3231-rtc-module-with-stm32/
+
+This digikey video was helpful understanding I2C on STM32 HAL: https://www.youtube.com/watch?v=isOekyygpR8
+
 ## Unit Testing
 
 ### Running tests
