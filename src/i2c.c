@@ -18,25 +18,6 @@ I2C_HandleTypeDef I2cHandle;
 uint8_t aTxBuffer[TXBUFFERSIZE] = { 0 };
 uint8_t aRxBuffer[RXBUFFERSIZE];
 
-static volatile uint8_t seconds = 0;
-static volatile uint8_t minutes = 0;
-static volatile uint8_t hour = 0;
-static volatile uint8_t dayofweek = 0;
-static volatile uint8_t dayofmonth = 0;
-static volatile uint8_t month = 0;
-static volatile uint8_t year = 0;
-
-// Convert normal decimal numbers to binary coded decimal
-uint8_t decToBcd(int val)
-{
-  return (uint8_t)( (val/10*16) + (val%10) );
-}
-// Convert binary coded decimal to normal decimal numbers
-int bcdToDec(uint8_t val)
-{
-  return (int)( (val/16*10) + (val%16) );
-}
-
 static void I2Cx_MspInit(I2C_HandleTypeDef *hi2c)
 {
 
@@ -107,6 +88,16 @@ bool I2C_vInit(void)
     return (bResult);
 }
 
+void I2C_vWriteMemory(uint8_t u8MemoryAddress, uint8_t* pu8Buffer, uint8_t u8Length)
+{
+    HAL_I2C_Mem_Write(&I2cHandle, 0xD0, u8MemoryAddress, 1, pu8Buffer, u8Length, HAL_MAX_DELAY);
+}
+
+void I2C_vReadMemory(uint8_t u8MemoryAddress, uint8_t* pu8Buffer, uint8_t u8Length)
+{
+    HAL_I2C_Mem_Read(&I2cHandle, 0xD0, u8MemoryAddress, 1, pu8Buffer, u8Length, HAL_MAX_DELAY);
+}
+#if 0
 void I2C_bTask(void)
 {
     static bool doOnce = true;
@@ -146,3 +137,4 @@ void I2C_bTask(void)
     }
 
 }
+#endif

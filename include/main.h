@@ -85,6 +85,8 @@ typedef struct {
 #define COLOUR_VISIBLE (1)
 #define COLOUR_INVISIBLE (0)
 
+#define CALL(x) if(!x)Error_Handler();
+
 /* Exported functions ------------------------------------------------------- */
 
 MAIN_tsColour MAIN_sRed;
@@ -100,6 +102,7 @@ MAIN_tsColour MAIN_sTransparent;
 uint32_t MAIN_u32MainCounter;
 uint32_t MAIN_u32MainCounter_ms;
 uint8_t* MAIN_pau8Buffer[COLOUR_DEPTH]; /* The buffers in Graphics.c are 2D arrays */
+void Error_Handler(void);
 
 #endif /* __MAIN_H */
 

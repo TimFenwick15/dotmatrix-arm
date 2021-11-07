@@ -56,7 +56,7 @@ static uint64_t m_au64ASCII[] = {
         0,                                                                  /* , */
         0,                                                                  /* - */
         0,                                                                  /* . */
-        0,                                                                  /* / */
+        0b0000000000000010000001100000110000011000001100000110000001000000, /* / */
         0b0000000000011100001000100010011000101010001100100010001000011100, /* 0 */
         0b0000000000001000000110000000100000001000000010000000100000011100, /* 1 */
         0b0000000000011100001000100000010000001000000100000010000000111110, /* 2 */
@@ -259,7 +259,7 @@ void GRAPHICS_vDrawNumber(MAIN_tsColour colour,
             {
                 if (fillBlankDigitsWithZeros)
                 {
-                    m_vDrawCharacter(sprite, colour, m_au64ASCII[ASCII_NUMBER_OFFSET], fontSize);
+                    m_vDrawCharacter(sprite, colour, m_au64ASCII[ASCII_NUMBER_OFFSET - ASCII_DEFINED_OFFSET], fontSize);
                     vAddToBuffer(sprite, position, sideLength, sideLength);
                 }
             }
