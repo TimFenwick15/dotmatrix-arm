@@ -256,8 +256,15 @@ void UI_vTask(uint32_t u32Counter_ms)
                             m_sTime.month = 0;
                         }
                         break;
+                    case m_eProgState_ChangeYear:
+                        m_sTime.year++;
+                        if (m_sTime.year >= 100)
+                        {
+                            m_sTime.year = 0;
+                        }
+                        break;
 
-                    // We've skipped day of week and year because they're not on screen yet
+                    // We've skipped day of week because it's not on screen yet
 
                     default:
                         m_eProgState++;
@@ -275,11 +282,13 @@ void UI_vTask(uint32_t u32Counter_ms)
             GRAPHICS_vDrawNumber(ANIMATION_sGetColour(u8DisplayNumber), (MAIN_tsPosition){0,0}, m_sTime.hour, 2, true, GRAPHICS_eFontSize16x16);
             GRAPHICS_vDrawCharacter(MAIN_sWhite, (MAIN_tsPosition){29,5}, ':', GRAPHICS_eFontSize8x8);
             GRAPHICS_vDrawNumber(ANIMATION_sGetColour(u8DisplayNumber), (MAIN_tsPosition){32,0}, m_sTime.minutes, 2, true, GRAPHICS_eFontSize16x16);
-            GRAPHICS_vDrawNumber(ANIMATION_sGetColour(u8DisplayNumber), (MAIN_tsPosition){48,20}, m_sTime.seconds, 2, true, GRAPHICS_eFontSize8x8);
+            GRAPHICS_vDrawBox(MAIN_sWhite, (MAIN_tsPosition) {2,30}, m_sTime.seconds, 2);
 
             GRAPHICS_vDrawNumber(MAIN_sPurple, (MAIN_tsPosition){0,20}, m_sTime.dayofmonth, 2, true, GRAPHICS_eFontSize8x8);
             GRAPHICS_vDrawCharacter(MAIN_sWhite, (MAIN_tsPosition){16,20}, '/', GRAPHICS_eFontSize8x8);
             GRAPHICS_vDrawNumber(MAIN_sPurple, (MAIN_tsPosition){23,20}, m_sTime.month, 2, true, GRAPHICS_eFontSize8x8);
+            GRAPHICS_vDrawCharacter(MAIN_sWhite, (MAIN_tsPosition){39,20}, '/', GRAPHICS_eFontSize8x8);
+            GRAPHICS_vDrawNumber(MAIN_sPurple, (MAIN_tsPosition){47,20}, m_sTime.year, 2, true, GRAPHICS_eFontSize8x8);
             break;
 
         case m_eState1:

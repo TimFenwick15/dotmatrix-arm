@@ -158,11 +158,9 @@ int main(void) {
   MAIN_u32MainCounter = 0;
   MAIN_u32MainCounter_ms = 0;
 
-  uint64_t u64MainCounterToMs = (INTERRUPT_PERIOD + 1) *
-          SECONDS_TO_MS / CLOCK_FREQUENCY;
-
   /* Infinite loop */
-  while (1) {
+  while (1)
+  {
       MAIN_u32MainCounter_ms = (uint32_t)((uint64_t)MAIN_u32MainCounter * (uint64_t)((INTERRUPT_PERIOD + 1) * SECONDS_TO_MS) / (uint64_t)CLOCK_FREQUENCY);
       UI_vTask(MAIN_u32MainCounter_ms);
   }
