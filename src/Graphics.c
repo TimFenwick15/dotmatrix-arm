@@ -76,7 +76,7 @@ static uint64_t m_au64ASCII[] = {
         0b0,                                                                /* @ */
         0b0,                                                                /* A */
         0b0,                                                                /* B */
-        0b0,                                                                /* C */
+        0b0000000000011100001000100010000000100000001000000010001000011100, /* C */
         0b0,                                                                /* D */
         0b0,                                                                /* E */
         0b0,                                                                /* F */
@@ -93,6 +93,11 @@ static uint64_t m_au64ASCII[] = {
         0b0,                                                                /* Q */
         0b0,                                                                /* R */
 };
+
+static uint64_t m_au64NonASCII[GRAPHICS_eNonAsciiCharacters_Max] = {
+        0b1110000010100000111000000000000000000000000000000000000000000000, /* GRAPHICS_eNonAsciiCharacters_Degrees */
+};
+
 
 /**
  * Call before accessing other members/data in the module.
@@ -243,6 +248,20 @@ void GRAPHICS_vDrawCharacter(MAIN_tsColour colour,
         uint16_t sideLength = (uint16_t)fontSize;
         MAIN_tsColour sprite[sideLength * sideLength];
         m_vDrawCharacter(sprite, colour, m_au64ASCII[character - ASCII_DEFINED_OFFSET], fontSize);
+        vAddToBuffer(sprite, position, sideLength, sideLength);
+    }
+}
+
+void GRAPHICS_vDrawNonAsciiCharacter(MAIN_tsColour colour,
+                                     MAIN_tsPosition position,
+                                     GRAPHICS_teNonAsciiCharacters character,
+                                     GRAPHICS_teFontSize fontSize)
+{
+    if (character < GRAPHICS_eNonAsciiCharacters_Max)
+    {
+        uint16_t sideLength = (uint16_t)fontSize;
+        MAIN_tsColour sprite[sideLength * sideLength];
+        m_vDrawCharacter(sprite, colour, m_au64NonASCII[character], fontSize);
         vAddToBuffer(sprite, position, sideLength, sideLength);
     }
 }

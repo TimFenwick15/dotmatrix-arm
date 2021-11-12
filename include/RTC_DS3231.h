@@ -14,5 +14,6 @@ typedef struct _RTC_DS3231_tsTime
 
 void RTC_DS3231_vSetTime(RTC_DS3231_tsTime* sTime);
 void RTC_DS3231_vGetTime(RTC_DS3231_tsTime* sTime);
+int8_t RTC_DS3231_i8GetTemperature(void);
 
 #endif // _RTC_DS3231_H

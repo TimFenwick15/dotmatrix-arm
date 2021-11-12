@@ -9,7 +9,8 @@
 #include "i2c.h"
 #include "RTC_DS3231.h"
 
-#define DS3231_TIME_MEMORY_ADDRESS (0)
+#define DS3231_TIME_MEMORY_ADDRESS        (0)
+#define DS3231_TEMPERATURE_MEMORY_ADDRESS (0x11)
 
 static uint8_t decToBcd(int val);
 static int bcdToDec(uint8_t val);
@@ -38,6 +39,13 @@ void RTC_DS3231_vGetTime(RTC_DS3231_tsTime* sTime)
     sTime->dayofmonth = bcdToDec(pu8Buffer[4]);
     sTime->month      = bcdToDec(pu8Buffer[5]);
     sTime->year       = bcdToDec(pu8Buffer[6]);
+}
+
+int8_t RTC_DS3231_i8GetTemperature(void)
+{
+    int8_t i8Temperature;
+    I2C_vReadMemory(DS3231_TEMPERATURE_MEMORY_ADDRESS, &i8Temperature, 1); /* The first byte is the temperature as an int, the top two bits of the second byte are 0, 0.25, 0.5, and 0.75 respectively */
+    return (i8Temperature);
 }
 
 // Convert normal decimal numbers to binary coded decimal

@@ -22,6 +22,7 @@ typedef enum {
     m_eState0,
     m_eState1,
     m_eState2,
+    m_eState3,
     m_eStateMax
 } m_teState;
 
@@ -43,6 +44,7 @@ static bool m_bProgValueIncreaseNeeded = false;
 static m_teState m_eState = m_eState0;
 static m_teProgState m_eProgState = m_eProgState_None;
 static RTC_DS3231_tsTime m_sTime;
+static int16_t m_i8Temperature = 0;
 
 static uint32_t m_u32NextDisplayUpdate_ms = 0;
 static uint32_t m_u32NextRTCRead_ms = 0;
@@ -292,6 +294,30 @@ void UI_vTask(uint32_t u32Counter_ms)
             break;
 
         case m_eState1:
+            if (u32Counter_ms >= m_u32NextRTCRead_ms)
+            {
+                m_u32NextRTCRead_ms = u32Counter_ms + RTC_READ_TIME;
+                m_i8Temperature = RTC_DS3231_i8GetTemperature();
+            }
+            MAIN_tsColour* colour;
+            if (m_i8Temperature < 18)
+            {
+                colour = &MAIN_sBlue;
+            }
+            else if (m_i8Temperature < 24)
+            {
+                colour = &MAIN_sPurple;
+            }
+            else
+            {
+                colour = &MAIN_sRed;
+            }
+            GRAPHICS_vDrawNumber(*colour, (MAIN_tsPosition){4,8}, (uint16_t)m_i8Temperature, 2, false, GRAPHICS_eFontSize16x16);
+            GRAPHICS_vDrawNonAsciiCharacter(MAIN_sWhite, (MAIN_tsPosition){38,8}, GRAPHICS_eNonAsciiCharacters_Degrees, GRAPHICS_eFontSize16x16);
+            GRAPHICS_vDrawCharacter(MAIN_sWhite, (MAIN_tsPosition){44,8}, 'C', GRAPHICS_eFontSize16x16);
+            break;
+
+        case m_eState2:
             GRAPHICS_vDrawCircle(ANIMATION_sGetColour(u8CircleId1),
                     ANIMATION_sGetPosition(u8CircleId1), 8);
             GRAPHICS_vDrawCircle(ANIMATION_sGetColour(u8CircleId2),
@@ -305,7 +331,7 @@ void UI_vTask(uint32_t u32Counter_ms)
             GRAPHICS_vDrawByColourArray(ANIMATION_psGetFrame(u8PikachuId),
                     ANIMATION_sGetPosition(u8PikachuId), PIKACHU_SIZE, PIKACHU_SIZE);
             break;
-        case m_eState2:
+        case m_eState3:
             GRAPHICS_vDrawByColourArray(SPRITE_sBackground,
                     ANIMATION_sGetPosition(u8DigimonBackgroundGlyphs0),
                     BACKGROUND_WIDTH, BACKGROUND_HEIGHT);

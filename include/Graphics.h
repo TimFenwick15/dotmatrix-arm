@@ -8,6 +8,12 @@ typedef enum
     GRAPHICS_eFontSize32x32 = 32,
 } GRAPHICS_teFontSize;
 
+typedef enum
+{
+    GRAPHICS_eNonAsciiCharacters_Degrees,
+    GRAPHICS_eNonAsciiCharacters_Max,
+} GRAPHICS_teNonAsciiCharacters;
+
 void GRAPHICS_vInit(void);
 void GRAPHICS_vUpdate(void);
 
@@ -29,6 +35,11 @@ void GRAPHICS_vDrawCharacter(MAIN_tsColour colour,
                              MAIN_tsPosition position,
                              unsigned char character,
                              GRAPHICS_teFontSize fontSize);
+
+void GRAPHICS_vDrawNonAsciiCharacter(MAIN_tsColour colour,
+                                     MAIN_tsPosition position,
+                                     GRAPHICS_teNonAsciiCharacters character,
+                                     GRAPHICS_teFontSize fontSize);
 
 void GRAPHICS_vDrawNumber(MAIN_tsColour colour,
                           MAIN_tsPosition position,
